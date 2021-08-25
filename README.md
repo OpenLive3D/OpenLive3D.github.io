@@ -1,6 +1,6 @@
 # OpenLive3D
 
-<img src="asset/OpenLive3D.png" width="150px"/>
+<img src="asset/logo.png" width="150px"/>
 
 The open source project for Live3D Virtual Avatar.
 
@@ -12,6 +12,19 @@ The project aims to connect the half-body movement with facial landmarks to the 
  - Adjustable config to map landmarks to the avatar
  - Rich documentation
  - Modularized and flexible structure
+
+## Project Architecture
+
+![block-diagram](asset/block-diagram.png)
+
+ - Media Source Manager
+ - Facial Landmark Recognizer
+ - Model Manager
+ - Controller
+ - Effect Manager
+ - State Manager
+ - Config Manager
+ - Live3D GUI
 
 ## Development Status
 
