@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="asset/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="asset/favicon/favicon-16x16.png">
+    <link rel="manifest" href="asset/favicon/site.webmanifest">
+</head>
+<body>
+    <script src="https://unpkg.com/@tensorflow/tfjs-core@3.8.0/dist/tf-core.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@3.8.0/dist/tf-backend-webgl.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-converter@3.8.0/dist/tf-converter.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.3"></script>
+    
+    <script src="src/js/media/media-manager.js"></script>
+    <script src="src/js/gui/gui-layout.js"></script>
+    <script src="src/js/landmark/facekey.js"></script>
+    <script src="src/js/landmark/landmark-manager.js"></script>
+    <script src="src/js/control/control-manager.js"></script>
+    <script>
+
+// config
+const MAX_FACES = 1;
+const CANVAS_RATIO = 0.5;
+const CAMERA_FLIP = true;
+const PREDICT_IRISES = true;
+const NUM_KEYPOINTS = 468;
+const NUM_IRIS_KEYPOINTS = 5;
+
+// start camera, load resources, link things
+initialize();
+
+// kick off the rendering loop!
+loop();
+
+    </script>
+</body>
+</html>

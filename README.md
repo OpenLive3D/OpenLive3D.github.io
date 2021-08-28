@@ -36,4 +36,6 @@ Currently, the project is in its initialization state.
 ## Development Logs
 
  - 2021-08-26: Project creation
- 
+ - 2021-08-29: [Create MVP Development Plan](log/2021-08-28-MVP-Development-Process.md)
+   - Complete: Show Camera on Screen
+   - Complete: Show Landmarks and Info
