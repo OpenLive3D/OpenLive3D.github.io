@@ -19,8 +19,7 @@ Show Landmarks and Info
 
 Show Avatar
 
-- [ ] Model Manager - Load VRM
-- [ ] Live3D GUI - Framerate
+- [x] Model Manager - Load VRM
 - [ ] Controller - Integrate VRM to GUI
 - [ ] Live3D GUI - Show VRM
 

@@ -15,6 +15,17 @@ function initialize(){
         console.log("landmark model connected");
     });
 
+    // load vrm model
+    loadVRMModel('https://pixiv.github.io/three-vrm/examples/models/three-vrm-girl.vrm', function(vrm){
+        // if(currentVrm){
+        //     scene.remove(currentVrm.scene);
+        //     currentVrm.dispose();
+        // }
+        // currentVrm = vrm;
+        // scene.add(vrm.scene);
+        console.log("vrm model loaded");
+    });
+
     console.log("controller initialized");
 }
 
