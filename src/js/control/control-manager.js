@@ -1,3 +1,17 @@
+// global scene and light variable
+const scene = new THREE.Scene();
+const light = new THREE.DirectionalLight(0xffffff);
+light.position.set(1.0, 1.0, 1.0).normalize();
+scene.add(light);
+
+// global camera and clock
+const camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
+camera.position.set(0.0, 1.0, 5.0);
+const clock = new THREE.Clock();
+clock.start();
+
+let currentVrm = undefined;
+
 // initialize the control
 function initialize(){
 
@@ -16,13 +30,13 @@ function initialize(){
     });
 
     // load vrm model
-    loadVRMModel('https://pixiv.github.io/three-vrm/examples/models/three-vrm-girl.vrm', function(vrm){
-        // if(currentVrm){
-        //     scene.remove(currentVrm.scene);
-        //     currentVrm.dispose();
-        // }
-        // currentVrm = vrm;
-        // scene.add(vrm.scene);
+    loadVRMModel(DEFAULT_VRM_URL, function(vrm){
+        if(currentVrm){
+            scene.remove(currentVrm.scene);
+            currentVrm.dispose();
+        }
+        currentVrm = vrm;
+        scene.add(vrm.scene);
         console.log("vrm model loaded");
     });
 
@@ -32,8 +46,8 @@ function initialize(){
 // the main render loop
 function loop(){
 
-    var image = getCameraFrame();
-    var info = [];
+    let image = getCameraFrame();
+    let info = [];
 
     getFaceInfo(image, function(_info){
         info = _info;
@@ -43,6 +57,12 @@ function loop(){
             printInfo('logbox', info[1]);
         }
     });
+
+    if(currentVrm){
+        currentVrm.update(clock.getDelta());
+    }
+
+    drawVRM(scene, camera);
 
     requestAnimationFrame(loop);
 }

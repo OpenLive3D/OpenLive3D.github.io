@@ -1,4 +1,4 @@
-var capture = document.createElement("video");
+const capture = document.createElement("video");
 capture.playsinline = "playsinline";
 capture.autoplay = "autoplay";
 

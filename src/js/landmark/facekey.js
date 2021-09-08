@@ -1,7 +1,7 @@
 // Face Point of Interests
 // left right top down center
 
-var MARKCOLOR = {
+const MARKCOLOR = {
     "head" : "#f00", // red
     "righteye" : "#7ff", // cyan
     "lefteye" : "#7ff", // cyan
@@ -10,7 +10,7 @@ var MARKCOLOR = {
     "leftbrow": "#f7f" // purple
 };
 
-var FPoI = {
+const FPoI = {
     "head": [127, 356, 10, 152],
     "righteye": [33, 133, 159, 145, 468],
     "lefteye": [362, 263, 386, 374, 473],
@@ -51,7 +51,7 @@ function getHeadRotation(head){
     const yawSlope = slope(0, 2, head[1], head[0]);
     const yaw = Math.atan(yawSlope);
     const pitchSlope = slope(2, 1, head[2], head[3]);
-    var pitch = Math.atan(pitchSlope);
+    let pitch = Math.atan(pitchSlope);
     if(pitch > 0){
         pitch -= Math.PI;
     }
@@ -59,8 +59,8 @@ function getHeadRotation(head){
 }
 
 function face2Info(face){
-    var keyInfo = {};
-    var headRotate = getHeadRotation(face["head"]);
+    let keyInfo = {};
+    let headRotate = getHeadRotation(face["head"]);
     keyInfo["roll"] = headRotate[0];
     keyInfo["pitch"] = headRotate[1];
     keyInfo["yaw"] = headRotate[2];
@@ -74,11 +74,11 @@ function face2Info(face){
 
 // reduce vertices to the desired set, and compress data as well
 function packFace(_face){
-    var fsm = _face.scaledMesh;
-    var ret = {};
+    let fsm = _face.scaledMesh;
+    let ret = {};
     Object.keys(FPoI).forEach(function (key) {
         ret[key] = [];
-        for (var i = 0; i < FPoI[key].length; i++){
+        for (let i = 0; i < FPoI[key].length; i++){
             ret[key][i] = fsm[FPoI[key][i]];
         }
     });

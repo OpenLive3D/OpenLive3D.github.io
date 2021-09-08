@@ -40,4 +40,6 @@ Currently, the project is in its initialization state.
    - Complete: Show Camera on Screen
    - Complete: Show Landmarks and Info
  - 2021-09-08: [Create Word Definition](log/2021-09-08-Word-Definition.md)
+ - 2021-09-09: [Create Dependencies](log/2021-09-09-Dependencies.md)
+   - Complete: Show Avatar
  

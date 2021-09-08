@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/three@0.126.1/build/three.js"></script>
     <script src="https://unpkg.com/three@0.126.1/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://unpkg.com/three@0.126.1/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://pixiv.github.io/three-vrm/lib/three-vrm.js"></script>
+    <script src="lib/js/vrm/three-vrm.min.js"></script>
     <!-- local dependencies -->
     <script src="src/js/media/media-manager.js"></script>
     <script src="src/js/gui/gui-layout.js"></script>
@@ -28,11 +28,12 @@
 
 // config
 const MAX_FACES = 1;
-const CANVAS_RATIO = 0.5;
+const CANVAS_RATIO = 0.2;
 const CAMERA_FLIP = true;
 const PREDICT_IRISES = true;
 const NUM_KEYPOINTS = 468;
 const NUM_IRIS_KEYPOINTS = 5;
+const DEFAULT_VRM_URL = 'https://pixiv.github.io/three-vrm/examples/models/three-vrm-girl.vrm';
 
 // start camera, load resources, link things
 initialize();

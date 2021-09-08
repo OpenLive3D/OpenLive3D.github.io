@@ -1,4 +1,4 @@
-var lmModel = null; // landmark model placeholder
+let lmModel = null; // landmark model placeholder
 
 function loadLandmarkModel(cb){
     // load the MediaPipe facemesh model assets.

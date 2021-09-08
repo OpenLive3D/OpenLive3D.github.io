@@ -20,8 +20,8 @@ Show Landmarks and Info
 Show Avatar
 
 - [x] Model Manager - Load VRM
-- [ ] Controller - Integrate VRM to GUI
-- [ ] Live3D GUI - Show VRM
+- [x] Controller - Integrate VRM to GUI
+- [x] Live3D GUI - Show VRM
 
 Operate Avatar
 
