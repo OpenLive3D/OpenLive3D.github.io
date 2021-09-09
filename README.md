@@ -32,6 +32,7 @@ Currently, the project is in its initialization state.
 
  - Initial documentation
  - Placeholder files creation
+ - MVP Design
 
 ## Development Logs
 
@@ -42,4 +43,5 @@ Currently, the project is in its initialization state.
  - 2021-09-08: [Create Word Definition](log/2021-09-08-Word-Definition.md)
  - 2021-09-09: [Create Dependencies](log/2021-09-09-Dependencies.md)
    - Complete: Show Avatar
- 
+ - 2021-09-10: MVP Scope add Avatar Link
+   - Complete: Operate Avatar

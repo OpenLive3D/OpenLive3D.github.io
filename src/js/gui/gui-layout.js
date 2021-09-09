@@ -1,6 +1,17 @@
-let renderer = new THREE.WebGLRenderer();
+// 3D renderer
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
+
+// camera
+const camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
+camera.position.set(0.0, 1.0, 5.0);
+
+// camera controls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.screenSpacePanning = true;
+controls.target.set(0.0, 1.0, 0.0);
+controls.update();
 
 function createLayout(){
 
@@ -87,6 +98,19 @@ function printInfo(target, jsonObj){
     });
 }
 
-function drawVRM(scene, camera){
+function drawVRM(scene){
     renderer.render(scene, camera);
 }
+
+document.addEventListener('keypress', function(e){
+    let step = Math.sqrt(camera.position.x ** 2 + camera.position.z ** 2) / 100;
+    let y = currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).position.y;
+    switch(e.code) {
+        case "KeyW":
+            currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).position.setY(y + step);
+            break;
+        case "KeyS":
+            currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).position.setY(y - step);
+            break;
+    }
+});

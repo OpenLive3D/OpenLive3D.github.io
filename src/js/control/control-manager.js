@@ -1,12 +1,8 @@
-// global scene and light variable
+// global scene, light, and clock variable
 const scene = new THREE.Scene();
 const light = new THREE.DirectionalLight(0xffffff);
 light.position.set(1.0, 1.0, 1.0).normalize();
 scene.add(light);
-
-// global camera and clock
-const camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
-camera.position.set(0.0, 1.0, 5.0);
 const clock = new THREE.Clock();
 clock.start();
 
@@ -62,7 +58,7 @@ function loop(){
         currentVrm.update(clock.getDelta());
     }
 
-    drawVRM(scene, camera);
+    drawVRM(scene);
 
     requestAnimationFrame(loop);
 }
