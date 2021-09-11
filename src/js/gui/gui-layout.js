@@ -84,33 +84,20 @@ function drawLandmark(target, landmark){
     dbg.restore();
 }
 
-function printInfo(target, jsonObj){
+function printKeys(target, keys){
     let obj = document.getElementById(target);
     obj.innerHTML = '';
 
-    Object.keys(jsonObj).forEach(function (key) {
+    Object.keys(keys).forEach(function (key) {
 
         let jsonItem = document.createElement('p');
-        jsonItem.innerHTML = key + ": " + Math.floor(jsonObj[key] * 1000) / 1000;
+        jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000;
         jsonItem.style.color = "red";
         obj.appendChild(jsonItem);
 
     });
 }
 
-function drawVRM(scene){
+function drawScene(scene){
     renderer.render(scene, camera);
 }
-
-document.addEventListener('keypress', function(e){
-    let step = Math.sqrt(camera.position.x ** 2 + camera.position.z ** 2) / 100;
-    let y = currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).position.y;
-    switch(e.code) {
-        case "KeyW":
-            currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).position.setY(y + step);
-            break;
-        case "KeyS":
-            currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).position.setY(y - step);
-            break;
-    }
-});

@@ -39,26 +39,49 @@ function initialize(){
     console.log("controller initialized");
 }
 
+function updateModel(keys){
+    let Cbsp = currentVrm.blendShapeProxy;
+    let Tvrmsbspn = THREE.VRMSchema.BlendShapePresetName;
+    let Ch = currentVrm.humanoid;
+    let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
+    // head
+    var neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
+    neck.x = keys['pitch'] + Math.PI / 2;
+    neck.y = keys['yaw'];
+    neck.z = keys['roll'];
+    var chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
+    chest.x = 0;
+    chest.y = keys['yaw'] / 3;
+    chest.z = keys['roll'] / 3;
+    // mouth
+    Cbsp.setValue(Tvrmsbspn.A, keys['mouth'] * 1.6);
+    // eyes
+    if(keys['righteyeopen'] < 0.26) Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
+    else Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
+    if(keys['lefteyeopen'] < 0.26) Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
+    else Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
+}
+
 // the main render loop
 function loop(){
 
     let image = getCameraFrame();
-    let info = [];
+    let info = getDefaultInfo();
 
     getFaceInfo(image, function(_info){
-        info = _info;
-        if(info.length == 2){
+        if(_info.length == 2){
+            info = _info;
             drawImage('dbg', image);
             drawLandmark('dbg', info[0]);
-            printInfo('logbox', info[1]);
+            printKeys('logbox', info[1]);
+            updateModel(info[1]);
         }
     });
 
     if(currentVrm){
         currentVrm.update(clock.getDelta());
+        drawScene(scene);
     }
-
-    drawVRM(scene);
 
     requestAnimationFrame(loop);
 }

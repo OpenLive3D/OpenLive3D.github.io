@@ -29,12 +29,12 @@ Operate Avatar
 - [x] Live3D GUI - Zoom VRM
 - [x] Live3D GUI - Move VRM
 
-Link Avatar and Landmark Info
+Avatar and Landmark Info Link
 
-- [ ] Live3D GUI - Head Rotate
-- [ ] Live3D GUI - Eye Blink
-- [ ] Live3D GUI - Mouth Open
-- [ ] Controller - Link Landmark Info to Avatar
+- [x] Live3D GUI - Head Rotate
+- [x] Live3D GUI - Eye Blink
+- [x] Live3D GUI - Mouth Open
+- [x] Controller - Link Landmark Info to Avatar
 
 Plan for Config and State
 - [ ] Design the process to move from MVP to alpha
