@@ -1,5 +1,6 @@
 // 3D renderer
 const renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(0x00FF00, 1);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 

@@ -37,4 +37,4 @@ Avatar and Landmark Info Link
 - [x] Controller - Link Landmark Info to Avatar
 
 Plan for Config and State
-- [ ] Design the process to move from MVP to alpha
+- [x] Design the process to move from MVP to alpha

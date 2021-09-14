@@ -47,3 +47,4 @@ Currently, the project is in its initialization state.
    - Complete: Operate Avatar
  - 2021-09-12: three.js:v0.132.2 three-vrm:v0.6.6
    - Complete: Avatar and Landmark Info Link
+ - 2021-09-15: [Create Alpha Development Plan](log/2021-09-15-Alpha-Development-Process.md)
