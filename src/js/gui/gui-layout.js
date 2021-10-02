@@ -1,20 +1,20 @@
 // 3D renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(0x00FF00, 1);
+let renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
 // camera
-const camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
+let camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
 camera.position.set(0.0, 1.0, 5.0);
 
 // camera controls
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
+let controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.screenSpacePanning = true;
 controls.target.set(0.0, 1.0, 0.0);
 controls.update();
 
-function createLayout(){
+function createLayout(cbgc){
+    renderer.setClearColor(cbgc, 1);
 
     // html canvas for drawing debug view
     let dbg = document.createElement("canvas").getContext('2d');
@@ -44,32 +44,32 @@ function createLayout(){
     console.log("gui layout initialized");
 }
 
-function drawImage(target, image){
+function drawImage(cm, target, image){
 
     // get debug camera canvas
     let dbg = document.getElementById(target).getContext('2d');
     dbg.clearRect(0, 0, dbg.canvas.width, dbg.canvas.height);
     dbg.save();
-    if (CAMERA_FLIP){
+    if (cm['CAMERA_FLIP']){
         dbg.translate(dbg.canvas.width, 0);
-        dbg.scale(- CANVAS_RATIO, CANVAS_RATIO);
+        dbg.scale(- cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
     }else{
-        dbg.scale(CANVAS_RATIO, CANVAS_RATIO);
+        dbg.scale(cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
     }
     dbg.drawImage(image, 0, 0); // print the camera
     dbg.restore();
 }
 
-function drawLandmark(target, landmark){
+function drawLandmark(cm, target, landmark){
 
     // get debug camera canvas
     let dbg = document.getElementById(target).getContext('2d');
     dbg.save();
-    if (CAMERA_FLIP){
+    if (cm['CAMERA_FLIP']){
         dbg.translate(dbg.canvas.width, 0);
-        dbg.scale(- CANVAS_RATIO, CANVAS_RATIO);
+        dbg.scale(- cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
     }else{
-        dbg.scale(CANVAS_RATIO, CANVAS_RATIO);
+        dbg.scale(cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
     }
 
     Object.keys(landmark).forEach(function (key) {
@@ -99,6 +99,10 @@ function printKeys(target, keys){
     });
 }
 
-function drawScene(scene){
+function drawScene(scene, cm){
+    if (cm['CAMERA_FLIP'] != cm['SCENE_FLIP']){
+        cm['SCENE_FLIP'] = !cm['SCENE_FLIP'];
+        scene.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
+    }
     renderer.render(scene, camera);
 }
