@@ -42,7 +42,7 @@ To be able to work for different users out of the box:
 
 ## Tasks List and Order
 
- - [ ] Module / Code Re-organization
+ - [x] Module / Code Re-organization
  - [ ] Iris Target
  - [ ] Mood Selection
  - [ ] Model Upload

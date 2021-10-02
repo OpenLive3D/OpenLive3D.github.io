@@ -17,14 +17,14 @@ function getDefaultInfo(){
     }];
 }
 
-function getFaceInfo(image, cb){
+function getFaceInfo(image, cmf, cpi, cb){
     if(lmModel && image.readyState === 4){
-        lmModel.pipeline.maxFaces = MAX_FACES;
+        lmModel.pipeline.maxFaces = cmf;
         lmModel.estimateFaces({
             input: image,
             returnTensors: false,
             flipHorizontal: false,
-            predictIrises: PREDICT_IRISES
+            predictIrises: cpi
         }).then(function(_faces){
             // update the global myFaces
             if(_faces.length > 0){

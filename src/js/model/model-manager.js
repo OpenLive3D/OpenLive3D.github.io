@@ -1,4 +1,4 @@
-const loader = new THREE.GLTFLoader();
+let loader = new THREE.GLTFLoader();
 
 function loadVRMModel(url, cb) {
     loader.crossOrigin = 'anonymous';
