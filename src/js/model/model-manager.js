@@ -4,6 +4,7 @@ function loadVRMModel(url, cb) {
     loader.crossOrigin = 'anonymous';
     loader.load(url,
         (gltf) => {
+            THREE.VRMUtils.removeUnnecessaryVertices(gltf.scene);
             THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);
             THREE.VRM.from(gltf).then((vrm) => {
                 vrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Hips).rotation.y = Math.PI;

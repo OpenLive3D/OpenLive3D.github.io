@@ -9,7 +9,7 @@ function getCM(){
 
 function initCM(){
     configManager['TIME'] = new Date();
-    configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/examples/models/three-vrm-girl.vrm';
+    configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
     configManager['SCENE_FLIP'] = false;
     configManager['BG_COLOR'] = 0x0000FF;
     configManager['MAX_FACES'] = 1;
