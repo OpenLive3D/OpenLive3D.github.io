@@ -50,3 +50,5 @@ Currently, the project is in its initialization state.
  - 2021-09-15: [Create Alpha Development Plan](log/2021-09-15-Alpha-Development-Process.md)
  - 2021-10-02: Config Establishment
    - Complete: Module / Code Re-organization
+ - 2022-03-06: Default Pose, Pose Limiter
+   - Complete: Eyes Link

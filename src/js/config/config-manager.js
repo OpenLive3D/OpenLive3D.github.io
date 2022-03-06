@@ -20,6 +20,12 @@ function initCM(){
     configManager['NUM_IRIS_KEYPOINTS'] = 5;
     configManager['CHEST_RATIO'] = 0.3;
     configManager['MOUTH_RATIO'] = 3;
-    configManager['RIGHT_EYE_THRESHOLD'] = 0.27;
-    configManager['LEFT_EYE_THRESHOLD'] = 0.27;
+    configManager['MOUTH_OFFSET'] = -0.02;
+    configManager['EYE_LINK_THRESHOLD'] = 0.05;
+    configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.4;
+    configManager['LEFT_EYE_SQUINT_RATIO'] = 0.4;
+    configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
+    configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
+    configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
+    configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
 }

@@ -5,12 +5,12 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // camera
 let camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
-camera.position.set(0.0, 1.0, 5.0);
+camera.position.set(0.0, 1.4, -1.5);
 
 // camera controls
 let controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.screenSpacePanning = true;
-controls.target.set(0.0, 1.0, 0.0);
+controls.target.set(0.0, 1.4, 0.0);
 controls.update();
 
 function createLayout(cbgc){

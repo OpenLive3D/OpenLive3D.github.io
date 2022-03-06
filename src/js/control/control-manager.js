@@ -44,6 +44,11 @@ function initialize(){
     console.log("controller initialized");
 }
 
+function radLimit(rad){
+    let limit = Math.PI / 12;
+    return Math.max(-limit, Math.min(limit, rad));
+}
+
 function updateModel(keys){
     if(currentVrm){
         let Cbsp = currentVrm.blendShapeProxy;
@@ -52,23 +57,38 @@ function updateModel(keys){
         let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
         // head
         var neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
-        neck.x = keys['pitch'] + Math.PI / 2;
-        neck.y = keys['yaw'];
-        neck.z = keys['roll'];
+        neck.x = radLimit(keys['pitch'] + Math.PI / 2);
+        neck.y = radLimit(keys['yaw']);
+        neck.z = radLimit(keys['roll']);
         var chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
         chest.x = 0;
-        chest.y = keys['yaw'] * cm['CHEST_RATIO'];
-        chest.z = keys['roll'] * cm['CHEST_RATIO'];
+        chest.y = radLimit(keys['yaw'] * cm['CHEST_RATIO']);
+        chest.z = radLimit(keys['roll'] * cm['CHEST_RATIO']);
         // mouth
-        Cbsp.setValue(Tvrmsbspn.A,
-            Math.min(1, keys['mouth'] * cm['MOUTH_RATIO']));
+        let mouthRatio = Math.max(0, Math.min(1, keys['mouth'] * cm['MOUTH_RATIO'] + cm['MOUTH_OFFSET']));
+        Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
         // eyes
-        if(keys['righteyeopen'] < cm['RIGHT_EYE_THRESHOLD']){
+        if(Math.abs(keys['righteyeopen'] - keys['lefteyeopen']) < cm['EYE_LINK_THRESHOLD']){
+            let avgEye = (keys['righteyeopen'] + keys['lefteyeopen']) / 2;
+            keys['righteyeopen'] = avgEye;
+            keys['lefteyeopen'] = avgEye;
+        }
+        if(keys['righteyeopen'] < cm['RIGHT_EYE_CLOSE_THRESHOLD']){
             Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
-        }else Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
-        if(keys['lefteyeopen'] < cm['LEFT_EYE_THRESHOLD']){
+        }else if(keys['righteyeopen'] < cm['RIGHT_EYE_OPEN_THRESHOLD']){
+            let eRatio = (keys['righteyeopen'] - cm['RIGHT_EYE_CLOSE_THRESHOLD']) / (cm['RIGHT_EYE_OPEN_THRESHOLD'] - cm['RIGHT_EYE_CLOSE_THRESHOLD']);
+            Cbsp.setValue(Tvrmsbspn.BlinkR, (1 - eRatio) * cm['RIGHT_EYE_SQUINT_RATIO']);
+        }else{
+            Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
+        }
+        if(keys['lefteyeopen'] < cm['LEFT_EYE_CLOSE_THRESHOLD']){
             Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
-        }else Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
+        }else if(keys['lefteyeopen'] < cm['LEFT_EYE_OPEN_THRESHOLD']){
+            let eRatio = (keys['lefteyeopen'] - cm['LEFT_EYE_CLOSE_THRESHOLD']) / (cm['LEFT_EYE_OPEN_THRESHOLD'] - cm['LEFT_EYE_CLOSE_THRESHOLD']);
+            Cbsp.setValue(Tvrmsbspn.BlinkL, (1 - eRatio) * cm['LEFT_EYE_SQUINT_RATIO']);
+        }else{
+            Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
+        }
     }
 }
 
