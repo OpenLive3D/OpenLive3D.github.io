@@ -1,5 +1,25 @@
+// layout
+let layout = document.getElementById("layout");
+layout.style.visibility = "hidden";
+let system = document.getElementById("system");
+system.onclick = function(){
+    console.log("click SYSTEM_IMG");
+    if(layout.style.visibility == "hidden"){
+        layout.style.visibility = "visible";
+    }else{
+        layout.style.visibility = "hidden";
+    }
+};
+let systemtext = document.getElementById("systemtext");
+system.onmouseover = function(){
+    systemtext.style.color = "#FFFFFFFF";
+}
+system.onmouseout = function(){
+    systemtext.style.color = "#FFFFFF00";
+}
+
 // 3D renderer
-let renderer = new THREE.WebGLRenderer();
+let renderer = new THREE.WebGLRenderer({canvas: canvas, alpha: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -19,27 +39,31 @@ function createLayout(cbgc){
     // html canvas for drawing debug view
     let dbg = document.createElement("canvas").getContext('2d');
     dbg.canvas.id = "dbg";
-    dbg.canvas.style.position = "absolute";
-    dbg.canvas.style.left = "0px";
-    dbg.canvas.style.top = "0px";
-    dbg.canvas.style.zIndex = 1; // "bring to back"
-    document.body.appendChild(dbg.canvas);
+    layout.appendChild(dbg.canvas);
+
+    // html canvas for drawing debug view
+    layout.appendChild(document.createElement("br"));
+    let vrmbtn = document.createElement("input");
+    vrmbtn.id = "vrmbtn";
+    vrmbtn.setAttribute("type", "file");
+    vrmbtn.onchange = function(){
+        let txt = "";
+        if('files' in vrmbtn && vrmbtn.files.length > 0){
+            let files = vrmbtn.files;
+            let file = files[0];
+            let blob = new Blob([file], {type: "application/octet-stream"});
+            let url = URL.createObjectURL(blob);
+            loadVRM(url);
+        }else{
+            console.log("No VRM Loaded");
+        }
+    }
+    layout.appendChild(vrmbtn);
 
     // text div for debug log
     let logbox = document.createElement('div');
     logbox.id = "logbox";
-    logbox.style.position = "absolute";
-    logbox.style.left = "5px";
-    logbox.style.top = "0px";
-    logbox.style.zIndex = 2; // "bring to front"
-    document.body.appendChild(logbox);
-
-    // vrm renderer
-    renderer.domElement.id = "vrmbox";
-    renderer.domElement.style.position = "absolute";
-    renderer.domElement.style.left = "0px";
-    renderer.domElement.style.top = "0px";
-    document.body.appendChild(renderer.domElement);
+    layout.appendChild(logbox);
 
     console.log("gui layout initialized");
 }
@@ -93,7 +117,7 @@ function printKeys(target, keys){
 
         let jsonItem = document.createElement('p');
         jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000;
-        jsonItem.style.color = "red";
+        jsonItem.style.color = "white";
         obj.appendChild(jsonItem);
 
     });

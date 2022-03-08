@@ -4,6 +4,8 @@
 
 The open source project for Live3D Virtual Avatar.
 
+<img src="asset/design/screenshot.png" width="300px"/>
+
 ## Features
 
 The project aims to connect the half-body movement with facial landmarks to the 3D `VRM` avatar.
@@ -52,3 +54,4 @@ Currently, the project is in its initialization state.
    - Complete: Module / Code Re-organization
  - 2022-03-06: Default Pose, Pose Limiter
    - Complete: Eyes Link
+ - 2022-03-08: VRM Model Upload

@@ -10,6 +10,20 @@ clock.start();
 let cm = getCM();
 let currentVrm = undefined;
 
+// initialize / reinitialize VRM
+function loadVRM(vrmurl){
+    loadVRMModel(vrmurl,
+        function(vrm){
+            if(currentVrm){
+                scene.remove(currentVrm.scene);
+                currentVrm.dispose();
+            }
+            currentVrm = vrm;
+            scene.add(vrm.scene);
+            console.log("vrm model loaded");
+        });
+}
+
 // initialize the control
 function initialize(){
 
@@ -30,16 +44,7 @@ function initialize(){
     });
 
     // load vrm model
-    loadVRMModel(cm['MODEL'],
-        function(vrm){
-            if(currentVrm){
-                scene.remove(currentVrm.scene);
-                currentVrm.dispose();
-            }
-            currentVrm = vrm;
-            scene.add(vrm.scene);
-            console.log("vrm model loaded");
-        });
+    loadVRM(cm['MODEL']);
 
     console.log("controller initialized");
 }
