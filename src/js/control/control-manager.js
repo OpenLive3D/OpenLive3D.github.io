@@ -28,13 +28,13 @@ function loadVRM(vrmurl){
 function initialize(){
 
     // html canvas for drawing debug view
-    createLayout(cm['BG_COLOR']);
+    createLayout(getCMV('BG_COLOR'));
 
     // start video
     startCamera(function(){
         linkCamera2Context(
             document.getElementById('dbg'),
-            cm['CANVAS_RATIO']);
+            getCMV('CANVAS_RATIO'));
         console.log("video connected");
     });
 
@@ -44,7 +44,7 @@ function initialize(){
     });
 
     // load vrm model
-    loadVRM(cm['MODEL']);
+    loadVRM(getCMV('MODEL'));
 
     console.log("controller initialized");
 }
@@ -67,30 +67,30 @@ function updateModel(keys){
         neck.z = radLimit(keys['roll']);
         var chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
         chest.x = 0;
-        chest.y = radLimit(keys['yaw'] * cm['CHEST_RATIO']);
-        chest.z = radLimit(keys['roll'] * cm['CHEST_RATIO']);
+        chest.y = radLimit(keys['yaw'] * getCMV('CHEST_RATIO'));
+        chest.z = radLimit(keys['roll'] * getCMV('CHEST_RATIO'));
         // mouth
-        let mouthRatio = Math.max(0, Math.min(1, keys['mouth'] * cm['MOUTH_RATIO'] + cm['MOUTH_OFFSET']));
+        let mouthRatio = Math.max(0, Math.min(1, keys['mouth'] * getCMV('MOUTH_RATIO') + getCMV('MOUTH_OFFSET')));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
         // eyes
-        if(Math.abs(keys['righteyeopen'] - keys['lefteyeopen']) < cm['EYE_LINK_THRESHOLD']){
+        if(Math.abs(keys['righteyeopen'] - keys['lefteyeopen']) < getCMV('EYE_LINK_THRESHOLD')){
             let avgEye = (keys['righteyeopen'] + keys['lefteyeopen']) / 2;
             keys['righteyeopen'] = avgEye;
             keys['lefteyeopen'] = avgEye;
         }
-        if(keys['righteyeopen'] < cm['RIGHT_EYE_CLOSE_THRESHOLD']){
+        if(keys['righteyeopen'] < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
             Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
-        }else if(keys['righteyeopen'] < cm['RIGHT_EYE_OPEN_THRESHOLD']){
-            let eRatio = (keys['righteyeopen'] - cm['RIGHT_EYE_CLOSE_THRESHOLD']) / (cm['RIGHT_EYE_OPEN_THRESHOLD'] - cm['RIGHT_EYE_CLOSE_THRESHOLD']);
-            Cbsp.setValue(Tvrmsbspn.BlinkR, (1 - eRatio) * cm['RIGHT_EYE_SQUINT_RATIO']);
+        }else if(keys['righteyeopen'] < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
+            let eRatio = (keys['righteyeopen'] - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
+            Cbsp.setValue(Tvrmsbspn.BlinkR, (1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO'));
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
         }
-        if(keys['lefteyeopen'] < cm['LEFT_EYE_CLOSE_THRESHOLD']){
+        if(keys['lefteyeopen'] < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
             Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
-        }else if(keys['lefteyeopen'] < cm['LEFT_EYE_OPEN_THRESHOLD']){
-            let eRatio = (keys['lefteyeopen'] - cm['LEFT_EYE_CLOSE_THRESHOLD']) / (cm['LEFT_EYE_OPEN_THRESHOLD'] - cm['LEFT_EYE_CLOSE_THRESHOLD']);
-            Cbsp.setValue(Tvrmsbspn.BlinkL, (1 - eRatio) * cm['LEFT_EYE_SQUINT_RATIO']);
+        }else if(keys['lefteyeopen'] < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
+            let eRatio = (keys['lefteyeopen'] - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
+            Cbsp.setValue(Tvrmsbspn.BlinkL, (1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO'));
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
         }
@@ -104,13 +104,13 @@ function loop(){
     let info = getDefaultInfo();
 
     getFaceInfo(image,
-        cm['MAX_FACES'],
-        cm['PREDICT_IRISES'],
+        getCMV('MAX_FACES'),
+        getCMV('PREDICT_IRISES'),
         function(_info){
             if(_info.length == 2){
                 info = _info;
-                drawImage(cm, 'dbg', image);
-                drawLandmark(cm, 'dbg', info[0]);
+                drawImage('dbg', image);
+                drawLandmark('dbg', info[0]);
                 printKeys('logbox', info[1]);
                 updateModel(info[1]);
             }
@@ -118,7 +118,7 @@ function loop(){
 
     if(currentVrm){
         currentVrm.update(clock.getDelta());
-        drawScene(scene, cm);
+        drawScene(scene);
     }
 
     requestAnimationFrame(loop);

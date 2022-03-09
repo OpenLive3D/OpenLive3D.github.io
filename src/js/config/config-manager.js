@@ -29,3 +29,23 @@ function initCM(){
     configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
     configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
 }
+
+function getCMV(key){
+    return configManager[key];
+}
+
+function setCMV(key, value){
+    if(key in configManager){
+        configManager[key] = value;
+        return true;
+    }
+    return false;
+}
+
+
+function getConstModifier(){
+    return [
+        ['RIGHT_EYE_CLOSE_THRESHOLD', 'righteyeopen'],
+        ['LEFT_EYE_CLOSE_THRESHOLD', 'lefteyeopen']
+    ];
+}

@@ -60,6 +60,34 @@ function createLayout(cbgc){
     }
     layout.appendChild(vrmbtn);
 
+    // constant modifier
+    let constbox = document.createElement('div');
+    let constmodifiers = getConstModifier();
+    for(let i = 0; i < constmodifiers.length; i ++){
+        let constmodifier = constmodifiers[i];
+        let name = document.createElement('p');
+        name.style.color = "#fff";
+        name.innerHTML = constmodifier[0];
+        let item = document.createElement('input');
+        item.id = constmodifier[0] + "_box";
+        item.style.textAlign = "right";
+        item.style.width = "100px";
+        item.value = getCMV(constmodifier[0]);
+        item.onchange = function(){
+            console.log(item.value);
+            setCMV(constmodifier[0], item.value);
+        };
+        let value = document.createElement('text');
+        value.id = constmodifier[1] + "_value";
+        value.style.color = "#fff";
+        value.innerHTML = "x";
+        constbox.appendChild(name);
+        constbox.appendChild(item);
+        constbox.appendChild(value);
+        constbox.appendChild(document.createElement("br"));
+    }
+    layout.appendChild(constbox);
+
     // text div for debug log
     let logbox = document.createElement('div');
     logbox.id = "logbox";
@@ -68,32 +96,32 @@ function createLayout(cbgc){
     console.log("gui layout initialized");
 }
 
-function drawImage(cm, target, image){
+function drawImage(target, image){
 
     // get debug camera canvas
     let dbg = document.getElementById(target).getContext('2d');
     dbg.clearRect(0, 0, dbg.canvas.width, dbg.canvas.height);
     dbg.save();
-    if (cm['CAMERA_FLIP']){
+    if (getCMV('CAMERA_FLIP')){
         dbg.translate(dbg.canvas.width, 0);
-        dbg.scale(- cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
+        dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
     }else{
-        dbg.scale(cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
+        dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
     }
     dbg.drawImage(image, 0, 0); // print the camera
     dbg.restore();
 }
 
-function drawLandmark(cm, target, landmark){
+function drawLandmark(target, landmark){
 
     // get debug camera canvas
     let dbg = document.getElementById(target).getContext('2d');
     dbg.save();
-    if (cm['CAMERA_FLIP']){
+    if (getCMV('CAMERA_FLIP')){
         dbg.translate(dbg.canvas.width, 0);
-        dbg.scale(- cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
+        dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
     }else{
-        dbg.scale(cm['CANVAS_RATIO'], cm['CANVAS_RATIO']);
+        dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
     }
 
     Object.keys(landmark).forEach(function (key) {
@@ -120,12 +148,18 @@ function printKeys(target, keys){
         jsonItem.style.color = "white";
         obj.appendChild(jsonItem);
 
+        let value = document.getElementById(key + "_value");
+        if(value){
+            value.innerHTML = Math.floor(keys[key] * 1000) / 1000;
+        }
+
     });
 }
 
-function drawScene(scene, cm){
-    if (cm['CAMERA_FLIP'] != cm['SCENE_FLIP']){
-        cm['SCENE_FLIP'] = !cm['SCENE_FLIP'];
+function drawScene(scene){
+    if (getCMV('CAMERA_FLIP') != getCMV('SCENE_FLIP')){
+        setCMV('SCENE_FLIP', getCMV('CAMERA_FLIP'));
+        console.log(getCMV('CAMERA_FLIP'), getCMV('SCENE_FLIP'));
         scene.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
     }
     renderer.render(scene, camera);
