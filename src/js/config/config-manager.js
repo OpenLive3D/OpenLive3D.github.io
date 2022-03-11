@@ -42,10 +42,13 @@ function setCMV(key, value){
     return false;
 }
 
-
 function getConstModifier(){
     return [
-        ['RIGHT_EYE_CLOSE_THRESHOLD', 'righteyeopen'],
-        ['LEFT_EYE_CLOSE_THRESHOLD', 'lefteyeopen']
+        ['RIGHT_EYE_CLOSE_THRESHOLD', 'Right Eye Close'],
+        ['LEFT_EYE_CLOSE_THRESHOLD', 'Left Eye Close'],
+        ['RIGHT_EYE_OPEN_THRESHOLD', 'Right Eye Open'],
+        ['LEFT_EYE_OPEN_THRESHOLD', 'Left Eye Open'],
+        ['EYE_LINK_THRESHOLD', 'Link Eyes Threshold'],
+        ['MOUTH_RATIO', 'Mouth Open Ratio']
     ];
 }

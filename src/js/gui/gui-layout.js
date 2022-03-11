@@ -1,22 +1,24 @@
 // layout
+let sidebar = document.getElementById("thesidebar");
 let layout = document.getElementById("layout");
-layout.style.visibility = "hidden";
 let system = document.getElementById("system");
 system.onclick = function(){
     console.log("click SYSTEM_IMG");
-    if(layout.style.visibility == "hidden"){
-        layout.style.visibility = "visible";
+    if(sidebar.style.display == "none"){
+        sidebar.style.display = "block";
     }else{
-        layout.style.visibility = "hidden";
+        sidebar.style.display = "none";
     }
 };
 let systemtext = document.getElementById("systemtext");
 system.onmouseover = function(){
     systemtext.style.color = "#FFFFFFFF";
-}
+};
 system.onmouseout = function(){
-    systemtext.style.color = "#FFFFFF00";
-}
+    if(sidebar.style.display == "none"){
+        systemtext.style.color = "#FFFFFF00";
+    }
+};
 
 // 3D renderer
 let renderer = new THREE.WebGLRenderer({canvas: canvas, alpha: true});
@@ -37,15 +39,11 @@ function createLayout(cbgc){
     renderer.setClearColor(cbgc, 1);
 
     // html canvas for drawing debug view
-    let dbg = document.createElement("canvas").getContext('2d');
-    dbg.canvas.id = "dbg";
-    layout.appendChild(dbg.canvas);
+    let dbg = document.getElementById("dbg");
+    dbg.style.width = "100%";
 
-    // html canvas for drawing debug view
-    layout.appendChild(document.createElement("br"));
-    let vrmbtn = document.createElement("input");
-    vrmbtn.id = "vrmbtn";
-    vrmbtn.setAttribute("type", "file");
+    // vrm loading button
+    let vrmbtn = document.getElementById("vrmbtn");
     vrmbtn.onchange = function(){
         let txt = "";
         if('files' in vrmbtn && vrmbtn.files.length > 0){
@@ -58,16 +56,15 @@ function createLayout(cbgc){
             console.log("No VRM Loaded");
         }
     }
-    layout.appendChild(vrmbtn);
 
-    // constant modifier
-    let constbox = document.createElement('div');
+    // // constant modifier
+    let constbox = document.getElementById("constbox");
     let constmodifiers = getConstModifier();
     for(let i = 0; i < constmodifiers.length; i ++){
         let constmodifier = constmodifiers[i];
         let name = document.createElement('p');
         name.style.color = "#fff";
-        name.innerHTML = constmodifier[0];
+        name.innerHTML = constmodifier[1];
         let item = document.createElement('input');
         item.id = constmodifier[0] + "_box";
         item.style.textAlign = "right";
@@ -77,29 +74,18 @@ function createLayout(cbgc){
             console.log(item.value);
             setCMV(constmodifier[0], item.value);
         };
-        let value = document.createElement('text');
-        value.id = constmodifier[1] + "_value";
-        value.style.color = "#fff";
-        value.innerHTML = "x";
         constbox.appendChild(name);
         constbox.appendChild(item);
-        constbox.appendChild(value);
         constbox.appendChild(document.createElement("br"));
     }
-    layout.appendChild(constbox);
-
-    // text div for debug log
-    let logbox = document.createElement('div');
-    logbox.id = "logbox";
-    layout.appendChild(logbox);
 
     console.log("gui layout initialized");
 }
 
-function drawImage(target, image){
+function drawImage(image){
 
     // get debug camera canvas
-    let dbg = document.getElementById(target).getContext('2d');
+    let dbg = document.getElementById("dbg").getContext('2d');
     dbg.clearRect(0, 0, dbg.canvas.width, dbg.canvas.height);
     dbg.save();
     if (getCMV('CAMERA_FLIP')){
@@ -112,10 +98,10 @@ function drawImage(target, image){
     dbg.restore();
 }
 
-function drawLandmark(target, landmark){
+function drawLandmark(landmark){
 
     // get debug camera canvas
-    let dbg = document.getElementById(target).getContext('2d');
+    let dbg = document.getElementById("dbg").getContext('2d');
     dbg.save();
     if (getCMV('CAMERA_FLIP')){
         dbg.translate(dbg.canvas.width, 0);
@@ -137,16 +123,16 @@ function drawLandmark(target, landmark){
     dbg.restore();
 }
 
-function printKeys(target, keys){
-    let obj = document.getElementById(target);
-    obj.innerHTML = '';
+function printKeys(keys){
+    let logbox = document.getElementById('logbox');
+    logbox.innerHTML = '';
 
     Object.keys(keys).forEach(function (key) {
 
         let jsonItem = document.createElement('p');
         jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000;
         jsonItem.style.color = "white";
-        obj.appendChild(jsonItem);
+        logbox.appendChild(jsonItem);
 
         let value = document.getElementById(key + "_value");
         if(value){
@@ -157,10 +143,18 @@ function printKeys(target, keys){
 }
 
 function drawScene(scene){
-    if (getCMV('CAMERA_FLIP') != getCMV('SCENE_FLIP')){
+    if(getCMV('CAMERA_FLIP') != getCMV('SCENE_FLIP')){
         setCMV('SCENE_FLIP', getCMV('CAMERA_FLIP'));
-        console.log(getCMV('CAMERA_FLIP'), getCMV('SCENE_FLIP'));
         scene.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
     }
     renderer.render(scene, camera);
+}
+
+function hideObj(target){
+    let obj = document.getElementById(target);
+    if(obj.className.indexOf("w3-hide") == -1){
+        obj.className += " w3-hide";
+    }else{
+        obj.className = obj.className.replace(" w3-hide", "");
+    }
 }

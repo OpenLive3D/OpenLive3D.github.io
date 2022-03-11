@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="apple-touch-icon" sizes="180x180" href="asset/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="asset/favicon/favicon-16x16.png">
@@ -17,25 +18,39 @@
             top: 5px;
             left: 7px;
             z-index: 3;
-            font-family: verdana;
         }
-        text.systemtext {
+        text.systembox {
             color: #FFFFFF00;
             position: absolute;
-            top: 7px;
-            left: 33px;
+            top: 5px;
+            left: 50px;
+            font-family: verdana;
+            font-size: 28px;
+            cursor: pointer;
+            user-select: none;
         }
     </style>
 </head>
 <body>
     <!-- layout -->
     <canvas class="vrm" id="canvas"></canvas>
+    <div class="w3-sidebar w3-animate-left" style="width:280px;background-color:#0008;display:none" id="thesidebar">
+        <div class="w3-bar-item" style="height:60px;color:#0000"> . </div>
+        <br/>
+        <button onclick="document.getElementById('vrmbtn').click();" class="w3-button w3-block w3-left-align w3-text-white">Upload Model</button>
+        <input type="file" id="vrmbtn" style="display: none;" />
+        <button onclick="hideObj('dbg')" class="w3-button w3-block w3-left-align w3-text-white">Debug Video</button>
+        <canvas class="w3-bar-item w3-hide" id="dbg"></canvas>
+        <button onclick="hideObj('constbox')" class="w3-button w3-block w3-left-align w3-text-white">Setting</button>
+        <div class="w3-bar-item w3-margin w3-hide" id="constbox"></div>
+        <button onclick="hideObj('logbox')" class="w3-button w3-block w3-left-align w3-text-white">Parameters</button>
+        <div class="w3-bar-item w3-margin" id="logbox"></div>
+    </div>
     <div class="layoutbox" id="layoutbox">
         <div id="system">
-            <img id="systemimg" src="asset/favicon/favicon-32x32.png"/>
-            <text class="systemtext" id="systemtext">SYSTEM</text>
+            <img id="systemimg" src="asset/favicon/favicon-32x32.png" style="height:50px;cursor:pointer"/>
+            <text class="systembox" id="systemtext"> OpenLive3D </text>
         </div>
-        <div id="layout"></div>
     </div>
     <!-- tf.js dependencies -->
     <script src="https://unpkg.com/@tensorflow/tfjs-core@3.13.0/dist/tf-core.min.js"></script>

@@ -109,9 +109,9 @@ function loop(){
         function(_info){
             if(_info.length == 2){
                 info = _info;
-                drawImage('dbg', image);
-                drawLandmark('dbg', info[0]);
-                printKeys('logbox', info[1]);
+                drawImage(image);
+                drawLandmark(info[0]);
+                printKeys(info[1]);
                 updateModel(info[1]);
             }
         });
