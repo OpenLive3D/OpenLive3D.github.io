@@ -36,7 +36,7 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 5. Upload your own VRM file
 
-![Upload](asset/doc/load.png)
+![Upload](asset/doc/upload.png)
 
 6. Change the setting if you would like
 
