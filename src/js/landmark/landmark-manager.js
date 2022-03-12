@@ -10,11 +10,11 @@ function loadLandmarkModel(cb){
 }
 
 function getDefaultInfo(){
-    return [{}, {
+    return {
         "roll": 0, "pitch": 0, "yaw": 0,
         "lefteyeopen": 0, "righteyeopen": 0,
         "mouth": 0
-    }];
+    };
 }
 
 function getFaceInfo(image, cmf, cpi, cb){
@@ -28,9 +28,11 @@ function getFaceInfo(image, cmf, cpi, cb){
         }).then(function(_faces){
             // update the global myFaces
             if(_faces.length > 0){
-                var keyPoints = packFace(_faces[0]);
-                var faceInfo = face2Info(keyPoints);
-                cb([keyPoints, faceInfo]);
+                let keyPoints = packFace(_faces[0]);
+                let faceInfo = face2Info(keyPoints);
+                cb(keyPoints, faceInfo);
+            }else{
+                cb(null, null);
             }
         });
     }

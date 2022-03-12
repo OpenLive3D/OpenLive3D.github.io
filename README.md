@@ -87,3 +87,5 @@ Currently, the project is in its initialization state.
  - 2022-03-08: VRM Model Upload
  - 2022-03-11: W3CSS Frame Beautify
  - 2022-03-12: Add About: Alpha Test
+ - 2022-03-13: Motion Stablizer
+ 
