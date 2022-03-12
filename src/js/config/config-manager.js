@@ -11,9 +11,9 @@ function initCM(){
     configManager['TIME'] = new Date();
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
     configManager['SCENE_FLIP'] = false;
-    configManager['BG_COLOR'] = 0x0000FF;
+    configManager['BG_COLOR'] = "#00F";
     configManager['MAX_FACES'] = 1;
-    configManager['CANVAS_RATIO'] = 0.2;
+    configManager['CANVAS_RATIO'] = 0.5;
     configManager['CAMERA_FLIP'] = true;
     configManager['PREDICT_IRISES'] = true;
     configManager['NUM_KEYPOINTS'] = 468;
@@ -21,7 +21,7 @@ function initCM(){
     configManager['CHEST_RATIO'] = 0.3;
     configManager['MOUTH_RATIO'] = 3;
     configManager['MOUTH_OFFSET'] = -0.02;
-    configManager['EYE_LINK_THRESHOLD'] = 0.08;
+    configManager['EYE_LINK_THRESHOLD'] = 0.07;
     configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.4;
     configManager['LEFT_EYE_SQUINT_RATIO'] = 0.4;
     configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
@@ -44,6 +44,7 @@ function setCMV(key, value){
 
 function getConstModifier(){
     return [
+        ['BG_COLOR', 'Background Color'],
         ['RIGHT_EYE_CLOSE_THRESHOLD', 'Right Eye Close'],
         ['LEFT_EYE_CLOSE_THRESHOLD', 'Left Eye Close'],
         ['RIGHT_EYE_OPEN_THRESHOLD', 'Right Eye Open'],

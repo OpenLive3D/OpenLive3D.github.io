@@ -35,8 +35,8 @@ controls.screenSpacePanning = true;
 controls.target.set(0.0, 1.4, 0.0);
 controls.update();
 
-function createLayout(cbgc){
-    renderer.setClearColor(cbgc, 1);
+function createLayout(){
+    renderer.setClearColor(getCMV('BG_COLOR'), 1);
 
     // html canvas for drawing debug view
     let dbg = document.getElementById("dbg");
@@ -57,7 +57,7 @@ function createLayout(cbgc){
         }
     }
 
-    // // constant modifier
+    // constant modifier
     let constbox = document.getElementById("constbox");
     let constmodifiers = getConstModifier();
     for(let i = 0; i < constmodifiers.length; i ++){
@@ -73,11 +73,21 @@ function createLayout(cbgc){
         item.onchange = function(){
             console.log(item.value);
             setCMV(constmodifier[0], item.value);
+            if(constmodifier[0] == "BG_COLOR"){
+                renderer.setClearColor(item.value, 1);
+            }
         };
         constbox.appendChild(name);
         constbox.appendChild(item);
         constbox.appendChild(document.createElement("br"));
     }
+
+    // about the team
+    let about = document.getElementById("about");
+    about.style.color = "white";
+    about.innerHTML = "OpenLive3D - Alpha.0.0.1<br/>";
+    about.innerHTML += "Wei Chen - 2022-03-12<br/>";
+    about.innerHTML += "https://github.com/Wei-1";
 
     console.log("gui layout initialized");
 }
@@ -123,7 +133,7 @@ function drawLandmark(landmark){
     dbg.restore();
 }
 
-function printKeys(keys){
+function printLog(keys){
     let logbox = document.getElementById('logbox');
     logbox.innerHTML = '';
 

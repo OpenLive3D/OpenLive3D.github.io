@@ -28,7 +28,7 @@ function loadVRM(vrmurl){
 function initialize(){
 
     // html canvas for drawing debug view
-    createLayout(getCMV('BG_COLOR'));
+    createLayout();
 
     // start video
     startCamera(function(){
@@ -111,7 +111,7 @@ function loop(){
                 info = _info;
                 drawImage(image);
                 drawLandmark(info[0]);
-                printKeys(info[1]);
+                printLog(info[1]);
                 updateModel(info[1]);
             }
         });

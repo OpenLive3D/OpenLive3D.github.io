@@ -43,8 +43,8 @@ To be able to work for different users out of the box:
 ## Tasks List and Order
 
  - [x] Module / Code Re-organization
+ - [x] Layout for Eye / Mouth Open Threshold
+ - [x] Model Upload
  - [ ] Iris Target
  - [ ] Mood Selection
- - [ ] Model Upload
- - [ ] Layout for Eye / Mouth Open Threshold
  - [ ] Layout for Head / Iris Rotate Ratio
