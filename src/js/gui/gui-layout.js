@@ -87,7 +87,17 @@ function createLayout(){
     about.style.color = "white";
     about.innerHTML = "OpenLive3D - Alpha.0.0.1<br/>";
     about.innerHTML += "Wei Chen - 2022-03-12<br/>";
-    about.innerHTML += "https://github.com/Wei-1";
+    let alinks = ["https://github.com/OpenLive3D",
+        "https://github.com/Wei-1"];
+    for(let i = 0; i < alinks.length; i ++){
+        let alink = document.createElement("a");
+        alink.href = alinks[i];
+        alink.innerHTML = alinks[i];
+        alink.setAttribute("target", "_blank");
+        alink.setAttribute("rel", "noopener noreferrer");
+        about.appendChild(alink);
+        about.appendChild(document.createElement("br"));
+    }
 
     console.log("gui layout initialized");
 }

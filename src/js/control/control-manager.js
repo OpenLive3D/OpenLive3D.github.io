@@ -73,23 +73,25 @@ function updateModel(keys){
         let mouthRatio = Math.max(0, Math.min(1, keys['mouth'] * getCMV('MOUTH_RATIO') + getCMV('MOUTH_OFFSET')));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
         // eyes
-        if(Math.abs(keys['righteyeopen'] - keys['lefteyeopen']) < getCMV('EYE_LINK_THRESHOLD')){
-            let avgEye = (keys['righteyeopen'] + keys['lefteyeopen']) / 2;
-            keys['righteyeopen'] = avgEye;
-            keys['lefteyeopen'] = avgEye;
+        let reo = keys['righteyeopen'];
+        let leo = keys['lefteyeopen'];
+        if(Math.abs(reo - leo) < getCMV('EYE_LINK_THRESHOLD')){
+            let avgEye = (reo + leo) / 2;
+            reo = avgEye;
+            leo = avgEye;
         }
-        if(keys['righteyeopen'] < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
+        if(reo < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
             Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
-        }else if(keys['righteyeopen'] < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
-            let eRatio = (keys['righteyeopen'] - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
+        }else if(reo < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
+            let eRatio = (reo - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
             Cbsp.setValue(Tvrmsbspn.BlinkR, (1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO'));
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
         }
-        if(keys['lefteyeopen'] < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
+        if(leo < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
             Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
-        }else if(keys['lefteyeopen'] < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
-            let eRatio = (keys['lefteyeopen'] - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
+        }else if(leo < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
+            let eRatio = (leo - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
             Cbsp.setValue(Tvrmsbspn.BlinkL, (1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO'));
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
@@ -98,21 +100,24 @@ function updateModel(keys){
 }
 
 // the main render loop
+let info = getDefaultInfo();
 function loop(){
 
     let image = getCameraFrame();
-    let info = getDefaultInfo();
 
     getFaceInfo(image,
         getCMV('MAX_FACES'),
         getCMV('PREDICT_IRISES'),
-        function(_info){
-            if(_info.length == 2){
-                info = _info;
+        function(keyPoints, faceInfo){
+            if(faceInfo){
                 drawImage(image);
-                drawLandmark(info[0]);
-                printLog(info[1]);
-                updateModel(info[1]);
+                drawLandmark(keyPoints);
+                let sr = getCMV('STABLIZE_RATIO');
+                Object.keys(info).forEach(function(key){
+                    info[key] = (1-sr) * faceInfo[key] + sr * info[key];
+                });
+                printLog(info);
+                updateModel(info);
             }
         });
 

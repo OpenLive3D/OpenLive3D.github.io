@@ -18,6 +18,7 @@ function initCM(){
     configManager['PREDICT_IRISES'] = true;
     configManager['NUM_KEYPOINTS'] = 468;
     configManager['NUM_IRIS_KEYPOINTS'] = 5;
+    configManager['STABLIZE_RATIO'] = 0.7;
     configManager['CHEST_RATIO'] = 0.3;
     configManager['MOUTH_RATIO'] = 3;
     configManager['MOUTH_OFFSET'] = -0.02;
