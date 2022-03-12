@@ -6,6 +6,7 @@ The open source project for Live3D Virtual Avatar.
 
 <img src="asset/design/screenshot.png" width="300px"/>
 
+
 ## Features
 
 The project aims to connect the half-body movement with facial landmarks to the 3D `VRM` avatar.
@@ -14,6 +15,33 @@ The project aims to connect the half-body movement with facial landmarks to the 
  - Adjustable config to map landmarks to the avatar
  - Rich documentation
  - Modularized and flexible structure
+
+
+## Step by Step Guide:
+
+1. Open the OpenLive3D website: https://openlive3d.github.io/OpenLive3D/
+
+2. Allow the camera capture
+
+![Camera Permission](asset/doc/allow-camera.png)
+
+3. Wait for 10 seconds
+ - Avatar VRM Model Loading
+ - Machine Learning Motion Tracker Connection
+
+4. Click the OpenLive3D LOGO on the Top Left
+ - Open the System Menu
+
+![System Menu](asset/doc/system-menu.png)
+
+5. Upload your own VRM file
+
+![Upload](asset/doc/load.png)
+
+6. Change the setting if you would like
+
+![Setting](asset/doc/setting.png)
+
 
 ## Project Architecture
 
@@ -28,6 +56,7 @@ The project aims to connect the half-body movement with facial landmarks to the 
  - Config Manager
  - Live3D GUI
 
+
 ## Development Status
 
 Currently, the project is in its initialization state.
@@ -35,6 +64,7 @@ Currently, the project is in its initialization state.
  - Initial documentation
  - Placeholder files creation
  - MVP Design
+
 
 ## Development Logs
 
@@ -57,4 +87,3 @@ Currently, the project is in its initialization state.
  - 2022-03-08: VRM Model Upload
  - 2022-03-11: W3CSS Frame Beautify
  - 2022-03-12: Add About: Alpha Test
- 
