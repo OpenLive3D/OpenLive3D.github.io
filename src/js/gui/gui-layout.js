@@ -62,22 +62,45 @@ function createLayout(){
     let constmodifiers = getConstModifier();
     for(let i = 0; i < constmodifiers.length; i ++){
         let constmodifier = constmodifiers[i];
-        let name = document.createElement('p');
+        let name = document.createElement('text');
         name.style.color = "#fff";
-        name.innerHTML = constmodifier[1];
+        name.innerHTML = constmodifier['title'];
         let item = document.createElement('input');
-        item.id = constmodifier[0] + "_box";
+        item.id = constmodifier['key'] + "_box";
         item.style.textAlign = "right";
         item.style.width = "100px";
-        item.value = getCMV(constmodifier[0]);
+        item.value = getCMV(constmodifier['key']);
         item.onchange = function(){
             console.log(item.value);
-            setCMV(constmodifier[0], item.value);
-            if(constmodifier[0] == "BG_COLOR"){
+            if('range' in constmodifier){
+                if(item.value < constmodifier['range'][0]){
+                    item.value = constmodifier['range'][0];
+                }else if(item.value < constmodifier['range'][1]){
+                }else{
+                    item.value = constmodifier['range'][1];
+                }
+            }else if('valid' in constmodifier){
+                if(!constmodifier['valid'].includes(item.value)){
+                    item.value = constmodifier['valid'][0];
+                }
+            }
+            setCMV(constmodifier['key'], item.value);
+            if(constmodifier['key'] == "BG_COLOR"){
                 renderer.setClearColor(item.value, 1);
             }
         };
+        let info = document.createElement('text');
+        info.className = "w3-tooltip";
+        info.style.color = "#fff9";
+        info.innerHTML = " [<i>info</i>] ";
+        let span = document.createElement('span');
+        span.setAttribute('style', "position:absolute;width:200px;left:-100px");
+        span.className = "w3-text w3-tag";
+        span.innerHTML = constmodifier['describe'];
+        info.appendChild(span);
         constbox.appendChild(name);
+        constbox.appendChild(info);
+        constbox.appendChild(document.createElement("br"));
         constbox.appendChild(item);
         constbox.appendChild(document.createElement("br"));
     }
@@ -85,8 +108,8 @@ function createLayout(){
     // about the team
     let about = document.getElementById("about");
     about.style.color = "white";
-    about.innerHTML = "OpenLive3D - Alpha.0.0.1<br/>";
-    about.innerHTML += "Wei Chen - 2022-03-12<br/>";
+    about.innerHTML = "OpenLive3D - Alpha.0.0.2<br/>";
+    about.innerHTML += "Wei Chen - 2022-03-13<br/>";
     let alinks = ["https://github.com/OpenLive3D",
         "https://github.com/Wei-1"];
     for(let i = 0; i < alinks.length; i ++){
