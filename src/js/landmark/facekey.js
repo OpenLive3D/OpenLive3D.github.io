@@ -55,7 +55,7 @@ function getHeadRotation(head){
     if(pitch > 0){
         pitch -= Math.PI;
     }
-    return [roll, pitch, yaw];
+    return [roll, pitch + Math.PI / 2, yaw];
 }
 
 function face2Info(face){

@@ -54,6 +54,10 @@ function radLimit(rad){
     return Math.max(-limit, Math.min(limit, rad));
 }
 
+function ratioLimit(ratio){
+    return Math.max(0, Math.min(1, ratio));
+}
+
 function updateModel(keys){
     if(currentVrm){
         let Cbsp = currentVrm.blendShapeProxy;
@@ -62,15 +66,15 @@ function updateModel(keys){
         let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
         // head
         var neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
-        neck.x = radLimit(keys['pitch'] + Math.PI / 2);
+        neck.x = radLimit(keys['pitch']);
         neck.y = radLimit(keys['yaw']);
         neck.z = radLimit(keys['roll']);
         var chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
-        chest.x = 0;
+        chest.x = radLimit(keys['pitch'] * getCMV('CHEST_RATIO'));
         chest.y = radLimit(keys['yaw'] * getCMV('CHEST_RATIO'));
         chest.z = radLimit(keys['roll'] * getCMV('CHEST_RATIO'));
         // mouth
-        let mouthRatio = Math.max(0, Math.min(1, keys['mouth'] * getCMV('MOUTH_RATIO') + getCMV('MOUTH_OFFSET')));
+        let mouthRatio = ratioLimit(keys['mouth'] * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
         // eyes
         let reo = keys['righteyeopen'];
@@ -84,7 +88,7 @@ function updateModel(keys){
             Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
         }else if(reo < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
             let eRatio = (reo - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
-            Cbsp.setValue(Tvrmsbspn.BlinkR, (1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO'));
+            Cbsp.setValue(Tvrmsbspn.BlinkR, ratioLimit((1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO')));
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
         }
@@ -92,7 +96,7 @@ function updateModel(keys){
             Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
         }else if(leo < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
             let eRatio = (leo - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
-            Cbsp.setValue(Tvrmsbspn.BlinkL, (1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO'));
+            Cbsp.setValue(Tvrmsbspn.BlinkL, ratioLimit((1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO')));
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
         }
