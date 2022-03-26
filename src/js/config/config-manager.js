@@ -114,6 +114,16 @@ function getConstModifier(){
         'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
         'range': [0, 1]
     }, {
+        'key': 'IRIS_POS_OFFSET',
+        'title': 'Iris Offset',
+        'describe': 'The offset of iris turning, default 1.0. Range(0, 2)',
+        'range': [0, 2]
+    }, {
+        'key': 'IRIS_POS_RATIO',
+        'title': 'Iris Ratio',
+        'describe': 'The ratio of iris turning, default 5.0. Range(0, 20)',
+        'range': [0, 20]
+    }, {
         'key': 'STABLIZE_RATIO',
         'title': 'Stablize Ratio',
         'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',

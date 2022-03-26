@@ -90,4 +90,3 @@ Currently, the project is in its initialization state.
  - 2022-03-13: Motion Stablizer
    - Complete: Setting information
  - 2022-03-27: Iris Tracking
- 
