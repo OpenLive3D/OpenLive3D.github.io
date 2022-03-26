@@ -65,11 +65,11 @@ function updateModel(keys){
         let Ch = currentVrm.humanoid;
         let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
         // head
-        var neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
+        let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
         neck.x = radLimit(keys['pitch']);
         neck.y = radLimit(keys['yaw']);
         neck.z = radLimit(keys['roll']);
-        var chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
+        let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
         chest.x = radLimit(keys['pitch'] * getCMV('CHEST_RATIO'));
         chest.y = radLimit(keys['yaw'] * getCMV('CHEST_RATIO'));
         chest.z = radLimit(keys['roll'] * getCMV('CHEST_RATIO'));
@@ -100,6 +100,13 @@ function updateModel(keys){
         }else{
             Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
         }
+        // irises
+        let irispos = keys['irispos'];
+        let irisY = -(irispos - getCMV('IRIS_POS_OFFSET')) * getCMV('IRIS_POS_RATIO');
+        let riris = Ch.getBoneNode(Tvrmshbn.RightEye).rotation;
+        let liris = Ch.getBoneNode(Tvrmshbn.LeftEye).rotation;
+        riris.y = irisY;
+        liris.y = irisY;
     }
 }
 

@@ -28,6 +28,8 @@ function initCM(){
     configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
     configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.4;
     configManager['LEFT_EYE_SQUINT_RATIO'] = 0.4;
+    configManager['IRIS_POS_OFFSET'] = 1.0;
+    configManager['IRIS_POS_RATIO'] = 5.0;
     configManager['STABLIZE_RATIO'] = 0.7;
     configManager['CAMERA_FLIP'] = true;
 }

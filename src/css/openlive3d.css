@@ -1,0 +1,22 @@
+canvas.vrm {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    z-index: -1;
+}
+div.layoutbox {
+    position: absolute;
+    top: 5px;
+    left: 7px;
+    z-index: 3;
+}
+text.systembox {
+    color: #FFFFFF00;
+    position: absolute;
+    top: 5px;
+    left: 50px;
+    font-family: verdana;
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+}
