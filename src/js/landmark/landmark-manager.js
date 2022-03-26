@@ -9,14 +9,6 @@ function loadLandmarkModel(cb){
     });
 }
 
-function getDefaultInfo(){
-    return {
-        "roll": 0, "pitch": 0, "yaw": 0,
-        "lefteyeopen": 0, "righteyeopen": 0,
-        "mouth": 0
-    };
-}
-
 function getFaceInfo(image, cmf, cpi, cb){
     if(lmModel && image.readyState === 4){
         lmModel.pipeline.maxFaces = cmf;

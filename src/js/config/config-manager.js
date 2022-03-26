@@ -28,6 +28,8 @@ function initCM(){
     configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
     configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.4;
     configManager['LEFT_EYE_SQUINT_RATIO'] = 0.4;
+    configManager['IRIS_POS_OFFSET'] = 1.0;
+    configManager['IRIS_POS_RATIO'] = 5.0;
     configManager['STABLIZE_RATIO'] = 0.7;
     configManager['CAMERA_FLIP'] = true;
 }
@@ -111,6 +113,16 @@ function getConstModifier(){
         'title': 'Left Eye Squint',
         'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
         'range': [0, 1]
+    }, {
+        'key': 'IRIS_POS_OFFSET',
+        'title': 'Iris Offset',
+        'describe': 'The offset of iris turning, default 1.0. Range(0, 2)',
+        'range': [0, 2]
+    }, {
+        'key': 'IRIS_POS_RATIO',
+        'title': 'Iris Ratio',
+        'describe': 'The ratio of iris turning, default 5.0. Range(0, 20)',
+        'range': [0, 20]
     }, {
         'key': 'STABLIZE_RATIO',
         'title': 'Stablize Ratio',

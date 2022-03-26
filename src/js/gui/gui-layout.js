@@ -51,6 +51,7 @@ function createLayout(){
             let file = files[0];
             let blob = new Blob([file], {type: "application/octet-stream"});
             let url = URL.createObjectURL(blob);
+            setCMV("MODEL", url);
             loadVRM(url);
         }else{
             console.log("No VRM Loaded");

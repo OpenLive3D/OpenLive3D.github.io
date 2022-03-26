@@ -39,10 +39,9 @@ function getOpenRatio(obj){
 function getPosRatio(obj){
     const dleft = distance3d(obj[0], obj[4]);
     const dright = distance3d(obj[1], obj[4]);
-    const dtop = distance3d(obj[2], obj[4]);
-    const ddown = distance3d(obj[3], obj[4]);
-    return [dleft / (dleft + dright),
-        dtop / (dtop + ddown)];
+    // const dtop = distance3d(obj[2], obj[4]);
+    // const ddown = distance3d(obj[3], obj[4]);
+    return dleft / (dleft + dright);
 }
 
 function getHeadRotation(head){
@@ -58,6 +57,15 @@ function getHeadRotation(head){
     return [roll, pitch + Math.PI / 2, yaw];
 }
 
+function getDefaultInfo(){
+    return {
+        "roll": 0, "pitch": 0, "yaw": 0,
+        "lefteyeopen": 0, "righteyeopen": 0,
+        "irispos": 0,
+        "mouth": 0
+    };
+}
+
 function face2Info(face){
     let keyInfo = {};
     let headRotate = getHeadRotation(face["head"]);
@@ -68,6 +76,7 @@ function face2Info(face){
     // keyInfo["leftiris"] = getPosRatio(face["lefteye"]);
     keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
     // keyInfo["rightiris"] = getPosRatio(face["righteye"]);
+    keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]);
     keyInfo["mouth"] = getOpenRatio(face["mouth"]);
     return keyInfo;
 }
