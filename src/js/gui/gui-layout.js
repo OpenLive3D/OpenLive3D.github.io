@@ -109,14 +109,14 @@ function createLayout(){
     // about the team
     let about = document.getElementById("about");
     about.style.color = "white";
-    about.innerHTML = "OpenLive3D - Alpha.0.0.2<br/>";
-    about.innerHTML += "Wei Chen - 2022-03-13<br/>";
-    let alinks = ["https://github.com/OpenLive3D",
-        "https://github.com/Wei-1"];
+    let alinks = [
+        ["https://github.com/OpenLive3D", "OpenLive3D - Alpha.0.0.3"],
+        ["https://github.com/Wei-1", "Wei Chen - 2022-03-31"]
+    ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");
-        alink.href = alinks[i];
-        alink.innerHTML = alinks[i];
+        alink.href = alinks[i][0];
+        alink.innerHTML = alinks[i][1];
         alink.setAttribute("target", "_blank");
         alink.setAttribute("rel", "noopener noreferrer");
         about.appendChild(alink);

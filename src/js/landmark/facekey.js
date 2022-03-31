@@ -76,7 +76,7 @@ function face2Info(face){
     // keyInfo["leftiris"] = getPosRatio(face["lefteye"]);
     keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
     // keyInfo["rightiris"] = getPosRatio(face["righteye"]);
-    keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]);
+    keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
     keyInfo["mouth"] = getOpenRatio(face["mouth"]);
     return keyInfo;
 }

@@ -10,7 +10,7 @@ As a MacBook user, some softwares just cannot run on my laptop with acceptable p
 
 With "OpenLive3D", I aim to remove the barrier. You can just open the website on your computer with a webcam, and the motion tracker will link to the virtual character directly.
 
- - [OpenLive3D Website](https://openlive3d.github.io/OpenLive3D/)
+ - [OpenLive3D Website](https://openlive3d.com/)
 
 The Website is now open for free Alpha test with no registration requirement. I would like to know your feedbacks and ideas.
 
