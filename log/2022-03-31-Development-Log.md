@@ -1,0 +1,25 @@
+# Development Logs
+
+ - 2021-08-26: Project creation
+ - 2021-08-29: [Create MVP Development Plan](log/2021-08-28-MVP-Development-Process.md)
+   - Complete: Show Camera on Screen
+   - Complete: Show Landmarks and Info
+ - 2021-09-08: [Create Word Definition](log/2021-09-08-Word-Definition.md)
+ - 2021-09-09: [Create Dependencies](log/2021-09-09-Dependencies.md)
+   - Complete: Show Avatar
+ - 2021-09-10: MVP Scope add Avatar Link
+   - Complete: Operate Avatar
+ - 2021-09-12: three.js:v0.132.2 three-vrm:v0.6.6
+   - Complete: Avatar and Landmark Info Link
+ - 2021-09-15: [Create Alpha Development Plan](log/2021-09-15-Alpha-Development-Process.md)
+ - 2021-10-02: Config Establishment
+   - Complete: Module / Code Re-organization
+ - 2022-03-06: Default Pose, Pose Limiter
+   - Complete: Eyes Link
+ - 2022-03-08: VRM Model Upload
+ - 2022-03-11: W3CSS Frame Beautify
+ - 2022-03-12: Add About: Alpha Test
+ - 2022-03-13: Motion Stablizer
+   - Complete: Setting information
+ - 2022-03-27: Iris Tracking
+ - 2022-03-31: Rehost to https://openlive3d.com
