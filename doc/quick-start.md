@@ -4,7 +4,7 @@
 
 2. Allow the camera capture
 
-![Camera Permission](asset/doc/allow-camera.png)
+![Camera Permission](../asset/doc/allow-camera.png)
 
 3. Wait for 10 seconds
  - Avatar VRM Model Loading
@@ -13,12 +13,12 @@
 4. Click the OpenLive3D LOGO on the Top Left
  - Open the System Menu
 
-![System Menu](asset/doc/system-menu.png)
+![System Menu](../asset/doc/system-menu.png)
 
 5. Upload your own VRM file
 
-![Upload](asset/doc/upload.png)
+![Upload](../asset/doc/upload.png)
 
 6. Change the setting if you would like
 
-![Setting](asset/doc/setting.png)
+![Setting](../asset/doc/setting.png)
