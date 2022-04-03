@@ -110,8 +110,8 @@ function createLayout(){
     let about = document.getElementById("about");
     about.style.color = "white";
     let alinks = [
-        ["https://github.com/OpenLive3D", "OpenLive3D - Alpha.0.0.3"],
-        ["https://github.com/Wei-1", "Wei Chen - 2022-03-31"]
+        ["https://github.com/OpenLive3D", "OpenLive3D - Alpha.0.0.4"],
+        ["https://github.com/Wei-1", "Wei Chen - 2022-04-03"]
     ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");
