@@ -1,6 +1,6 @@
 # Project Architecture
 
-![block-diagram](asset/design/block-diagram.png)
+![block-diagram](../asset/design/block-diagram.png)
 
  - Media Source Manager
  - Facial Landmark Recognizer
