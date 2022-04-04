@@ -23,19 +23,21 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
         <div class="w3-bar-item" style="height:60px;color:#0000"> . </div>
         <br/>
         <button onclick="document.getElementById('vrmbtn').click();" class="w3-button w3-block w3-left-align w3-text-white">Upload Model</button>
-        <input type="file" id="vrmbtn" style="display: none;" />
+        <input type="file" id="vrmbtn" style="display:none;" />
         <button onclick="hideObj('dbg')" class="w3-button w3-block w3-left-align w3-text-white">Debug Video</button>
         <canvas class="w3-bar-item w3-hide" id="dbg"></canvas>
         <button onclick="hideObj('constbox')" class="w3-button w3-block w3-left-align w3-text-white">Setting</button>
         <div class="w3-bar-item w3-margin w3-hide" id="constbox"></div>
         <button onclick="hideObj('logbox')" class="w3-button w3-block w3-left-align w3-text-white">Parameters</button>
         <div class="w3-bar-item w3-margin" id="logbox"></div>
+        <button onclick="document.getElementById('docbtn').click();" class="w3-button w3-block w3-left-align w3-text-white">Document</button>
+        <a href="https://github.com/OpenLive3D/OpenLive3D.github.io/tree/master/doc" target="_blank" rel="noopener noreferrer" id="docbtn" style="display: none;"></a>
         <button onclick="hideObj('about')" class="w3-button w3-block w3-left-align w3-text-white">About</button>
         <div class="w3-bar-item w3-margin w3-hide" id="about"></div>
     </div>
     <div class="layoutbox" id="layoutbox">
         <div id="system">
-            <img id="systemimg" src="asset/favicon/favicon-32x32.png" style="height:50px;cursor:pointer"/>
+            <img id="systemimg" src="asset/design/logo.png" style="height:50px;cursor:pointer"/>
             <text class="systembox" id="systemtext"> OpenLive3D </text>
         </div>
     </div>
