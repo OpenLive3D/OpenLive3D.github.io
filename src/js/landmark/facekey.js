@@ -66,6 +66,18 @@ function getDefaultInfo(){
     };
 }
 
+function getKeyType(key){
+    if(["roll", "pitch", "yaw"].includes(key)){
+        return "body";
+    }else if(["lefteyeopen", "righteyeopen", "irispos"].includes(key)){
+        return "eye";
+    }else if(["mouth"].includes(key)){
+        return "mouth";
+    }else{
+        return "body";
+    }
+}
+
 function face2Info(face){
     let keyInfo = {};
     let headRotate = getHeadRotation(face["head"]);
@@ -73,9 +85,7 @@ function face2Info(face){
     keyInfo["pitch"] = headRotate[1];
     keyInfo["yaw"] = headRotate[2];
     keyInfo["lefteyeopen"] = getOpenRatio(face["lefteye"]);
-    // keyInfo["leftiris"] = getPosRatio(face["lefteye"]);
     keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
-    // keyInfo["rightiris"] = getPosRatio(face["righteye"]);
     keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
     keyInfo["mouth"] = getOpenRatio(face["mouth"]);
     return keyInfo;

@@ -17,6 +17,8 @@ function initCM(){
     configManager['PREDICT_IRISES'] = true;
     configManager['SCENE_FLIP'] = false;
     configManager['CANVAS_RATIO'] = 0.5;
+    configManager['VERSION'] = "Alpha.0.1.1";
+    configManager['DEV_DATE'] = "2022-04-18";
     // Modifiable Parameters
     configManager['BG_COLOR'] = "#00F";
     configManager['MOUTH_RATIO'] = 3;
@@ -30,8 +32,22 @@ function initCM(){
     configManager['LEFT_EYE_SQUINT_RATIO'] = 0.4;
     configManager['IRIS_POS_OFFSET'] = 0.0;
     configManager['IRIS_POS_RATIO'] = 5.0;
-    configManager['STABLIZE_RATIO'] = 0.7;
+    configManager['BODY_STABLIZE_RATIO'] = 0.7;
+    configManager['EYE_STABLIZE_RATIO'] = 0.2;
+    configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
     configManager['CAMERA_FLIP'] = true;
+}
+
+function getSR(key){
+    if(key == "body"){
+        return configManager['BODY_STABLIZE_RATIO'];
+    }else if(key == "eye"){
+        return configManager['EYE_STABLIZE_RATIO'];
+    }else if(key == "mouth"){
+        return configManager['MOUTH_STABLIZE_RATIO'];
+    }else{
+        return configManager['BODY_STABLIZE_RATIO'];
+    }
 }
 
 function getCMV(key){
@@ -58,7 +74,9 @@ function getConstModifier(){
         ['LEFT_EYE_OPEN_THRESHOLD', 'Left Eye Open'],
         ['RIGHT_EYE_SQUINT_RATIO', 'Right Eye Squint'],
         ['LEFT_EYE_SQUINT_RATIO', 'Left Eye Squint'],
-        ['STABLIZE_RATIO', 'Stablize Ratio'],
+        ['BODY_STABLIZE_RATIO', 'Body Stablize Ratio'],
+        ['EYE_STABLIZE_RATIO', 'Eye Stablize Ratio'],
+        ['MOUTH_STABLIZE_RATIO', 'Mouth Stablize Ratio'],
         ['CAMERA_FLIP', 'Camera Flip']
     ];
 }
@@ -124,8 +142,18 @@ function getConstModifier(){
         'describe': 'The ratio of iris turning speed, default 5.0. Range(0, 20)',
         'range': [0, 20]
     }, {
-        'key': 'STABLIZE_RATIO',
-        'title': 'Stablize Ratio',
+        'key': 'BODY_STABLIZE_RATIO',
+        'title': 'Body Stablize Ratio',
+        'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+        'range': [0, 0.95]
+    }, {
+        'key': 'EYE_STABLIZE_RATIO',
+        'title': 'Eye Stablize Ratio',
+        'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+        'range': [0, 0.95]
+    }, {
+        'key': 'MOUTH_STABLIZE_RATIO',
+        'title': 'Mouth Stablize Ratio',
         'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
         'range': [0, 0.95]
     }, {

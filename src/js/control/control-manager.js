@@ -1,7 +1,7 @@
 // global scene, light, and clock variable
 let scene = new THREE.Scene();
 let light = new THREE.DirectionalLight(0xffffff);
-light.position.set(1.0, 1.0, 1.0).normalize();
+light.position.set(0.0, 1.0, 0.0).normalize();
 scene.add(light);
 let clock = new THREE.Clock();
 clock.start();
@@ -66,13 +66,13 @@ function updateModel(keys){
         let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
         // head
         let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
-        neck.x = radLimit(keys['pitch']);
-        neck.y = radLimit(keys['yaw']);
-        neck.z = radLimit(keys['roll']);
+        neck.set(radLimit(keys['pitch']),
+            radLimit(keys['yaw']),
+            radLimit(keys['roll']));
         let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
-        chest.x = radLimit(keys['pitch'] * getCMV('CHEST_RATIO'));
-        chest.y = radLimit(keys['yaw'] * getCMV('CHEST_RATIO'));
-        chest.z = radLimit(keys['roll'] * getCMV('CHEST_RATIO'));
+        chest.set(radLimit(keys['pitch'] * getCMV('CHEST_RATIO')),
+            radLimit(keys['yaw'] * getCMV('CHEST_RATIO')),
+            radLimit(keys['roll'] * getCMV('CHEST_RATIO')))
         // mouth
         let mouthRatio = ratioLimit(keys['mouth'] * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
@@ -110,10 +110,9 @@ function updateModel(keys){
     }
 }
 
-// the main render loop
+// the main ML loop
 let info = getDefaultInfo();
-function loop(){
-
+function mlLoop(){
     let image = getCameraFrame();
 
     getFaceInfo(image,
@@ -123,8 +122,8 @@ function loop(){
             if(faceInfo){
                 drawImage(image);
                 drawLandmark(keyPoints);
-                let sr = getCMV('STABLIZE_RATIO');
                 Object.keys(info).forEach(function(key){
+                    let sr = getSR(getKeyType(key));
                     info[key] = (1-sr) * faceInfo[key] + sr * info[key];
                 });
                 printLog(info);
@@ -132,11 +131,16 @@ function loop(){
             }
         });
 
+    requestAnimationFrame(mlLoop);
+}
+
+// the main visualization loop
+function viLoop(){
+
+    requestAnimationFrame(viLoop);
+
     if(currentVrm){
         currentVrm.update(clock.getDelta());
         drawScene(scene);
     }
-
-    requestAnimationFrame(loop);
 }
-
