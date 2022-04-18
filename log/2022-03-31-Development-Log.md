@@ -23,3 +23,9 @@
    - Complete: Setting information
  - 2022-03-27: Iris Tracking
  - 2022-03-31: Rehost to https://openlive3d.com
+ - 2022-04-18: Alpha-0.1.1
+   - Separate ML and Visualization threads
+   - Separate Body, Eye, Mouth Smoothness Factor
+   - Fix hair glitching: three-vrm version problem
+   - three.js:v0.137.4 three-vrm:v0.6.11 tf.js:v3.15.0
+   - Update light direction

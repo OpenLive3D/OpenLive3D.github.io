@@ -81,7 +81,9 @@ function createLayout(){
                     item.value = constmodifier['range'][1];
                 }
             }else if('valid' in constmodifier){
-                if(!constmodifier['valid'].includes(item.value)){
+                if(constmodifier['key'] == "CAMERA_FLIP"){
+                    item.value = item.value != "false";
+                }else if(!constmodifier['valid'].includes(item.value)){
                     item.value = constmodifier['valid'][0];
                 }
             }
@@ -110,8 +112,8 @@ function createLayout(){
     let about = document.getElementById("about");
     about.style.color = "white";
     let alinks = [
-        ["https://github.com/OpenLive3D", "OpenLive3D - Alpha.0.0.4"],
-        ["https://github.com/Wei-1", "Wei Chen - 2022-04-03"]
+        ["https://github.com/OpenLive3D", "OpenLive3D - " + getCMV("VERSION")],
+        ["https://github.com/Wei-1", "Wei Chen - " + getCMV("DEV_DATE")]
     ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");

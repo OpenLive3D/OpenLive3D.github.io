@@ -42,14 +42,14 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
         </div>
     </div>
     <!-- tf.js dependencies -->
-    <script src="https://unpkg.com/@tensorflow/tfjs-core@3.13.0/dist/tf-core.min.js"></script>
-    <script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@3.13.0/dist/tf-backend-webgl.min.js"></script>
-    <script src="https://unpkg.com/@tensorflow/tfjs-converter@3.13.0/dist/tf-converter.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-core@3.15.0/dist/tf-core.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@3.15.0/dist/tf-backend-webgl.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-converter@3.15.0/dist/tf-converter.min.js"></script>
     <script src="https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.3"></script>
     <!-- three-vrm dependencies -->
-    <script src="https://unpkg.com/three@0.136.0/build/three.js"></script>
-    <script src="https://unpkg.com/three@0.136.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://unpkg.com/three@0.136.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/build/three.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
     <script src="lib/js/vrm/three-vrm.min.js"></script>
     <!-- local dependencies -->
     <script src="src/js/config/config-manager.js"></script>
@@ -65,7 +65,8 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
 initialize();
 
 // kick off the rendering loop!
-loop();
+mlLoop();
+viLoop();
 
     </script>
 </body>

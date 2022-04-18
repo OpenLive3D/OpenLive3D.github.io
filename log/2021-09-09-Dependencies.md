@@ -1,7 +1,7 @@
 # Dependencies
 
- - tf.js: 3.13.0
+ - tf.js: 3.15.0
  - tensorflow-models/face-landmarks-detection: 0.0.3
- - three.js: 0.136.0
- - three-vrm: 0.6.8
+ - three.js: 0.137.4
+ - three-vrm: 0.6.11
  
