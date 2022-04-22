@@ -28,8 +28,8 @@ function initCM(){
     configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
     configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
     configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
-    configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.4;
-    configManager['LEFT_EYE_SQUINT_RATIO'] = 0.4;
+    configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
+    configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
     configManager['IRIS_POS_OFFSET'] = 0.0;
     configManager['IRIS_POS_RATIO'] = 5.0;
     configManager['BODY_STABLIZE_RATIO'] = 0.7;

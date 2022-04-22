@@ -1,7 +1,7 @@
 // global scene, light, and clock variable
 let scene = new THREE.Scene();
 let light = new THREE.DirectionalLight(0xffffff);
-light.position.set(0.0, 1.0, 0.0).normalize();
+light.position.set(0.0, 1.0, -1.0).normalize();
 scene.add(light);
 let clock = new THREE.Clock();
 clock.start();
@@ -20,6 +20,14 @@ function loadVRM(vrmurl){
             }
             currentVrm = vrm;
             scene.add(vrm.scene);
+            let head = currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Head);
+            let foot = currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.LeftFoot);
+            let pos = {
+                "x": head.up.x + head.position.x,
+                "y": head.up.y + head.position.y - foot.position.y,
+                "z": head.up.z + head.position.z
+            };
+            resetCameraPos(pos);
             console.log("vrm model loaded");
         });
 }
