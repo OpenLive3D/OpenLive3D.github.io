@@ -74,13 +74,13 @@ function updateModel(keys){
         let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
         // head
         let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
-        neck.set(radLimit(keys['pitch']),
-            radLimit(keys['yaw']),
-            radLimit(keys['roll']));
+        neck.set(radLimit(keys['pitch']) * getCMV('NECK_RATIO'),
+            radLimit(keys['yaw']) * getCMV('NECK_RATIO'),
+            radLimit(keys['roll']) * getCMV('NECK_RATIO'));
         let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
-        chest.set(radLimit(keys['pitch'] * getCMV('CHEST_RATIO')),
-            radLimit(keys['yaw'] * getCMV('CHEST_RATIO')),
-            radLimit(keys['roll'] * getCMV('CHEST_RATIO')))
+        chest.set(radLimit(keys['pitch']) * getCMV('CHEST_RATIO'),
+            radLimit(keys['yaw']) * getCMV('CHEST_RATIO'),
+            radLimit(keys['roll']) * getCMV('CHEST_RATIO'))
         // mouth
         let mouthRatio = ratioLimit(keys['mouth'] * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
@@ -127,9 +127,14 @@ function mlLoop(){
         getCMV('MAX_FACES'),
         getCMV('PREDICT_IRISES'),
         function(keyPoints, faceInfo){
+            clearDebugCvs();
             if(faceInfo){
-                drawImage(image);
-                drawLandmark(keyPoints);
+                if(getCMV('DEBUG_IMAGE')){
+                    drawImage(image);
+                }
+                if(getCMV('DEBUG_LANDMARK')){
+                    drawLandmark(keyPoints);
+                }
                 Object.keys(info).forEach(function(key){
                     let sr = getSR(getKeyType(key));
                     info[key] = (1-sr) * faceInfo[key] + sr * info[key];
@@ -144,11 +149,10 @@ function mlLoop(){
 
 // the main visualization loop
 function viLoop(){
-
-    requestAnimationFrame(viLoop);
-
     if(currentVrm){
         currentVrm.update(clock.getDelta());
         drawScene(scene);
     }
+    
+    requestAnimationFrame(viLoop);
 }

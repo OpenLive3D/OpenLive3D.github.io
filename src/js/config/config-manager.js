@@ -17,11 +17,14 @@ function initCM(){
     configManager['PREDICT_IRISES'] = true;
     configManager['SCENE_FLIP'] = false;
     configManager['CANVAS_RATIO'] = 0.5;
-    configManager['VERSION'] = "Alpha.0.1.1";
-    configManager['DEV_DATE'] = "2022-04-18";
+    configManager['VERSION'] = "Alpha.0.1.2";
+    configManager['DEV_DATE'] = "2022-04-30";
+    configManager['DEBUG_IMAGE'] = false;
+    configManager['DEBUG_LANDMARK'] = true;
     // Modifiable Parameters
     configManager['BG_COLOR'] = "#00F";
     configManager['MOUTH_RATIO'] = 3;
+    configManager['NECK_RATIO'] = 1.0;
     configManager['CHEST_RATIO'] = 0.3;
     configManager['EYE_LINK_THRESHOLD'] = 0.07;
     configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
@@ -66,6 +69,7 @@ function getConstModifier(){
     return [
         ['BG_COLOR', 'Background Color'],
         ['MOUTH_RATIO', 'Mouth Open Ratio'],
+        ['NECK_RATIO', 'Neck Movement Ratio'],
         ['CHEST_RATIO', 'Chest Movement Ratio'],
         ['EYE_LINK_THRESHOLD', 'Link Eyes Threshold'],
         ['RIGHT_EYE_CLOSE_THRESHOLD', 'Right Eye Close'],
@@ -92,10 +96,15 @@ function getConstModifier(){
         'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
         'range': [0, 20]
     }, {
+        'key': 'NECK_RATIO',
+        'title': 'Neck Rotate Ratio',
+        'describe': 'The multiplication parameter to rotate the neck as the head rotation. Range(-2, 2)',
+        'range': [-2, 2]
+    }, {
         'key': 'CHEST_RATIO',
         'title': 'Chest Rotate Ratio',
-        'describe': 'The multiplication parameter to rotate the chest as the head rotation. Range(-1, 1)',
-        'range': [-1, 1]
+        'describe': 'The multiplication parameter to rotate the chest as the head rotation. Range(-2, 2)',
+        'range': [-2, 2]
     }, {
         'key': 'EYE_LINK_THRESHOLD',
         'title': 'Eyes Link',
