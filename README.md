@@ -33,5 +33,6 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.0.4:
+Alpha-0.1.2:
+ - Optimize UI/UX
  - Documentation initialization

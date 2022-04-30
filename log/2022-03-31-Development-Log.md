@@ -29,3 +29,5 @@
    - Fix hair glitching: three-vrm version problem
    - three.js:v0.137.4 three-vrm:v0.6.11 tf.js:v3.15.0
    - Update light direction
+ - 2022-04-30: Alpha-0.1.2
+   - Debug video checkbox for image and landmark
