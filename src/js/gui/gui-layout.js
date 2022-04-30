@@ -27,7 +27,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // camera
 let camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
-camera.position.set(0.0, 1.4, -1.5);
+camera.position.set(0.0, 1.4, -1.4);
 
 // camera controls
 let controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -35,12 +35,31 @@ controls.screenSpacePanning = true;
 controls.target.set(0.0, 1.4, 0.0);
 controls.update();
 
+function resetCameraPos(pos){
+    camera.position.set(pos.x, pos.y, pos.z - 1.4);
+    controls.target.set(pos.x, pos.y, pos.z);
+}
+
 function createLayout(){
     renderer.setClearColor(getCMV('BG_COLOR'), 1);
 
     // html canvas for drawing debug view
     let dbg = document.getElementById("dbg");
     dbg.style.width = "100%";
+    let dbgimcheck = document.getElementById("dbgimcheck");
+    if(getCMV("DEBUG_IMAGE")){
+        dbgimcheck.setAttribute('checked', "checked");
+    }
+    dbgimcheck.onclick = function myFunction(){
+        setCMV("DEBUG_IMAGE", dbgimcheck.checked);
+    }
+    let dbglmcheck = document.getElementById("dbglmcheck");
+    if(getCMV("DEBUG_LANDMARK")){
+        dbglmcheck.setAttribute('checked', "checked");
+    }
+    dbglmcheck.onclick = function myFunction(){
+        setCMV("DEBUG_LANDMARK", dbglmcheck.checked);
+    }
 
     // vrm loading button
     let vrmbtn = document.getElementById("vrmbtn");
@@ -72,7 +91,7 @@ function createLayout(){
         item.style.width = "100px";
         item.value = getCMV(constmodifier['key']);
         item.onchange = function(){
-            console.log(item.value);
+            console.log(constmodifier['key'], item.value);
             if('range' in constmodifier){
                 if(item.value < constmodifier['range'][0]){
                     item.value = constmodifier['range'][0];
@@ -128,11 +147,17 @@ function createLayout(){
     console.log("gui layout initialized");
 }
 
-function drawImage(image){
-
+function clearDebugCvs(){
     // get debug camera canvas
     let dbg = document.getElementById("dbg").getContext('2d');
     dbg.clearRect(0, 0, dbg.canvas.width, dbg.canvas.height);
+    dbg.fillStyle = 'rgba(0,0,0,0.8)';
+    dbg.fillRect(0, 0, dbg.canvas.width, dbg.canvas.height);
+}
+
+function drawImage(image){
+    // get debug camera canvas
+    let dbg = document.getElementById("dbg").getContext('2d');
     dbg.save();
     if (getCMV('CAMERA_FLIP')){
         dbg.translate(dbg.canvas.width, 0);
@@ -145,7 +170,6 @@ function drawImage(image){
 }
 
 function drawLandmark(landmark){
-
     // get debug camera canvas
     let dbg = document.getElementById("dbg").getContext('2d');
     dbg.save();
