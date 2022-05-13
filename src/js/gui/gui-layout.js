@@ -77,55 +77,81 @@ function createLayout(){
         }
     }
 
-    // constant modifier
-    let constbox = document.getElementById("constbox");
-    let constmodifiers = getConstModifier();
-    for(let i = 0; i < constmodifiers.length; i ++){
-        let constmodifier = constmodifiers[i];
-        let name = document.createElement('text');
-        name.style.color = "#fff";
-        name.innerHTML = constmodifier['title'];
-        let item = document.createElement('input');
-        item.id = constmodifier['key'] + "_box";
-        item.style.textAlign = "right";
-        item.style.width = "100px";
-        item.value = getCMV(constmodifier['key']);
-        item.onchange = function(){
-            console.log(constmodifier['key'], item.value);
-            if('range' in constmodifier){
-                if(item.value < constmodifier['range'][0]){
-                    item.value = constmodifier['range'][0];
-                }else if(item.value < constmodifier['range'][1]){
+    // config modifier
+    let confbox = document.getElementById("confbox");
+    let confmodifiers = getConfigModifiers();
+    Object.keys(confmodifiers).forEach(function(key){
+        confmodifier = confmodifiers[key];
+        let confkey = document.createElement('div');
+        confkey.className = "confkey";
+        confkey.id = "confkey_" + key;
+        confkey.innerHTML = "ᐅ " + key;
+        confkey.onclick = function(){
+            Object.keys(confmodifiers).forEach(function(otherkey){
+                let tmpkey = document.getElementById("confkey_" + otherkey);
+                let tmpgroup = document.getElementById("confgroup_" + otherkey);
+                if(otherkey == key && tmpgroup.className == "w3-margin-left w3-hide"){
+                    tmpkey.innerHTML = "ᐁ " + otherkey;
+                    tmpgroup.className = "w3-margin-left";
                 }else{
-                    item.value = constmodifier['range'][1];
+                    tmpkey.innerHTML = "ᐅ " + otherkey;
+                    tmpgroup.className = "w3-margin-left w3-hide";
                 }
-            }else if('valid' in constmodifier){
-                if(constmodifier['key'] == "CAMERA_FLIP"){
-                    item.value = item.value != "false";
-                }else if(!constmodifier['valid'].includes(item.value)){
-                    item.value = constmodifier['valid'][0];
+            });
+        }
+        confbox.appendChild(confkey);
+        let confgroup = document.createElement('div');
+        confgroup.className = "w3-margin-left w3-hide";
+        confgroup.id = "confgroup_" + key;
+        confbox.appendChild(confgroup);
+        for(let i = 0; i < confmodifier.length; i ++){
+            let configitem = confmodifier[i];
+            let name = document.createElement('text');
+            name.style.color = "#fff";
+            name.innerHTML = configitem['title'];
+            let item = document.createElement('input');
+            item.id = configitem['key'] + "_box";
+            item.style.textAlign = "right";
+            item.style.width = "100px";
+            item.value = getCMV(configitem['key']);
+            item.onchange = function(){
+                console.log(configitem['key'], item.value);
+                if('range' in configitem){
+                    if(item.value < configitem['range'][0]){
+                        item.value = configitem['range'][0];
+                    }else if(item.value < configitem['range'][1]){
+                    }else{
+                        item.value = configitem['range'][1];
+                    }
+                }else if('valid' in configitem){
+                    if(configitem['key'] == "CAMERA_FLIP"){
+                        item.value = item.value != "false";
+                    }else if(!configitem['valid'].includes(item.value)){
+                        item.value = configitem['valid'][0];
+                    }
                 }
-            }
-            setCMV(constmodifier['key'], item.value);
-            if(constmodifier['key'] == "BG_COLOR"){
-                renderer.setClearColor(item.value, 1);
-            }
-        };
-        let info = document.createElement('text');
-        info.className = "w3-tooltip";
-        info.style.color = "#fff9";
-        info.innerHTML = " [<i>info</i>] ";
-        let span = document.createElement('span');
-        span.setAttribute('style', "position:absolute;width:200px;left:-100px");
-        span.className = "w3-text w3-tag";
-        span.innerHTML = constmodifier['describe'];
-        info.appendChild(span);
-        constbox.appendChild(name);
-        constbox.appendChild(info);
-        constbox.appendChild(document.createElement("br"));
-        constbox.appendChild(item);
-        constbox.appendChild(document.createElement("br"));
-    }
+                setCMV(configitem['key'], item.value);
+                if(configitem['key'] == "BG_COLOR"){
+                    renderer.setClearColor(item.value, 1);
+                }
+            };
+            let info = document.createElement('text');
+            info.className = "w3-tooltip";
+            info.style.color = "#fff9";
+            info.innerHTML = " [<i>info</i>] ";
+            let span = document.createElement('span');
+            span.setAttribute('style', "position:absolute;width:200px;left:-100px");
+            span.className = "w3-text w3-tag";
+            span.innerHTML = configitem['describe'];
+            info.appendChild(span);
+            confgroup.appendChild(name);
+            confgroup.appendChild(info);
+            confgroup.appendChild(document.createElement("br"));
+            confgroup.appendChild(item);
+            confgroup.appendChild(document.createElement("br"));
+        }
+    });
+    
 
     // about the team
     let about = document.getElementById("about");
@@ -180,7 +206,7 @@ function drawLandmark(landmark){
         dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
     }
 
-    Object.keys(landmark).forEach(function (key) {
+    Object.keys(landmark).forEach(function(key){
         for (let i = 0; i < landmark[key].length; i++){
             let p = landmark[key][i];
             dbg.fillStyle = MARKCOLOR[key];
@@ -197,10 +223,10 @@ function printLog(keys){
     let logbox = document.getElementById('logbox');
     logbox.innerHTML = '';
 
-    Object.keys(keys).forEach(function (key) {
+    Object.keys(keys).forEach(function(key){
 
-        let jsonItem = document.createElement('p');
-        jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000;
+        let jsonItem = document.createElement('text');
+        jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000 + "<br/>";
         jsonItem.style.color = "white";
         logbox.appendChild(jsonItem);
 

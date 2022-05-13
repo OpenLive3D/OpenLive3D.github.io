@@ -10,6 +10,13 @@ div.layoutbox {
     left: 7px;
     z-index: 3;
 }
+div.confkey {
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    background-color: #000a;
+    padding-left: 16px;
+}
 text.systembox {
     color: #FFFFFF00;
     position: absolute;

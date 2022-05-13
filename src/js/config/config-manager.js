@@ -65,110 +65,97 @@ function setCMV(key, value){
     return false;
 }
 
-function getConstModifier(){
-    return [
-        ['BG_COLOR', 'Background Color'],
-        ['MOUTH_RATIO', 'Mouth Open Ratio'],
-        ['NECK_RATIO', 'Neck Movement Ratio'],
-        ['CHEST_RATIO', 'Chest Movement Ratio'],
-        ['EYE_LINK_THRESHOLD', 'Link Eyes Threshold'],
-        ['RIGHT_EYE_CLOSE_THRESHOLD', 'Right Eye Close'],
-        ['LEFT_EYE_CLOSE_THRESHOLD', 'Left Eye Close'],
-        ['RIGHT_EYE_OPEN_THRESHOLD', 'Right Eye Open'],
-        ['LEFT_EYE_OPEN_THRESHOLD', 'Left Eye Open'],
-        ['RIGHT_EYE_SQUINT_RATIO', 'Right Eye Squint'],
-        ['LEFT_EYE_SQUINT_RATIO', 'Left Eye Squint'],
-        ['BODY_STABLIZE_RATIO', 'Body Stablize Ratio'],
-        ['EYE_STABLIZE_RATIO', 'Eye Stablize Ratio'],
-        ['MOUTH_STABLIZE_RATIO', 'Mouth Stablize Ratio'],
-        ['CAMERA_FLIP', 'Camera Flip']
-    ];
-}
-
-function getConstModifier(){
-    return [{
-        'key': 'BG_COLOR',
-        'title': 'Background Color',
-        'describe': 'Accept Color Code with "#" or "rgba", "hsla"'
-    }, {
-        'key': 'MOUTH_RATIO',
-        'title': 'Mouth Open Ratio',
-        'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
-        'range': [0, 20]
-    }, {
-        'key': 'NECK_RATIO',
-        'title': 'Neck Rotate Ratio',
-        'describe': 'The multiplication parameter to rotate the neck as the head rotation. Range(-2, 2)',
-        'range': [-2, 2]
-    }, {
-        'key': 'CHEST_RATIO',
-        'title': 'Chest Rotate Ratio',
-        'describe': 'The multiplication parameter to rotate the chest as the head rotation. Range(-2, 2)',
-        'range': [-2, 2]
-    }, {
-        'key': 'EYE_LINK_THRESHOLD',
-        'title': 'Eyes Link',
-        'describe': 'The threshold that control the coherent of the 2 eyes. When the absolute difference of the 2 eyes openness is smaller then the value, the 2 eyes will move together. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'RIGHT_EYE_CLOSE_THRESHOLD',
-        'title': 'Right Eye Close',
-        'describe': 'Close the eye when the openness is small than the threshold. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'LEFT_EYE_CLOSE_THRESHOLD',
-        'title': 'Left Eye Close',
-        'describe': 'Close the eye when the openness is small than the threshold. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'RIGHT_EYE_OPEN_THRESHOLD',
-        'title': 'Right Eye Open',
-        'describe': 'Fully open the eye when the openness is larger than the threshold. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'LEFT_EYE_OPEN_THRESHOLD',
-        'title': 'Left Eye Open',
-        'describe': 'Fully open the eye when the openness is larger than the threshold. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'RIGHT_EYE_SQUINT_RATIO',
-        'title': 'Right Eye Squint',
-        'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'LEFT_EYE_SQUINT_RATIO',
-        'title': 'Left Eye Squint',
-        'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
-        'range': [0, 1]
-    }, {
-        'key': 'IRIS_POS_OFFSET',
-        'title': 'Iris Offset',
-        'describe': 'The offset of iris turning, default 0.0. Range(-1, 1)',
-        'range': [0, 2]
-    }, {
-        'key': 'IRIS_POS_RATIO',
-        'title': 'Iris Ratio',
-        'describe': 'The ratio of iris turning speed, default 5.0. Range(0, 20)',
-        'range': [0, 20]
-    }, {
-        'key': 'BODY_STABLIZE_RATIO',
-        'title': 'Body Stablize Ratio',
-        'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
-        'range': [0, 0.95]
-    }, {
-        'key': 'EYE_STABLIZE_RATIO',
-        'title': 'Eye Stablize Ratio',
-        'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
-        'range': [0, 0.95]
-    }, {
-        'key': 'MOUTH_STABLIZE_RATIO',
-        'title': 'Mouth Stablize Ratio',
-        'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
-        'range': [0, 0.95]
-    }, {
-        'key': 'CAMERA_FLIP',
-        'title': 'Camera Flip',
-        'describe': 'Flip the camera horizontally. Accept "true|false" value',
-        'valid': [true, false]
-    }];
+function getConfigModifiers(){
+    return {
+        'GENERAL': [{
+            'key': 'BG_COLOR',
+            'title': 'Background Color',
+            'describe': 'Accept Color Code with "#" or "rgba", "hsla"'
+        }, {
+            'key': 'CAMERA_FLIP',
+            'title': 'Camera Flip',
+            'describe': 'Flip the camera horizontally. Accept "true|false" value',
+            'valid': [true, false]
+        }],
+        'BODY': [{
+            'key': 'NECK_RATIO',
+            'title': 'Neck Rotate Ratio',
+            'describe': 'The multiplication parameter to rotate the neck as the head rotation. Range(-2, 2)',
+            'range': [-2, 2]
+        }, {
+            'key': 'CHEST_RATIO',
+            'title': 'Chest Rotate Ratio',
+            'describe': 'The multiplication parameter to rotate the chest as the head rotation. Range(-2, 2)',
+            'range': [-2, 2]
+        }, {
+            'key': 'BODY_STABLIZE_RATIO',
+            'title': 'Body Stablize Ratio',
+            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'range': [0, 0.95]
+        }],
+        'MOUTH': [{
+            'key': 'MOUTH_RATIO',
+            'title': 'Mouth Open Ratio',
+            'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
+            'range': [0, 20]
+        }, {
+            'key': 'MOUTH_STABLIZE_RATIO',
+            'title': 'Mouth Stablize Ratio',
+            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'range': [0, 0.95]
+        }],
+        'EYE_GENERAL': [{
+            'key': 'EYE_LINK_THRESHOLD',
+            'title': 'Eyes Link',
+            'describe': 'The threshold that control the coherent of the 2 eyes. When the absolute difference of the 2 eyes openness is smaller then the value, the 2 eyes will move together. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'EYE_STABLIZE_RATIO',
+            'title': 'Eye Stablize Ratio',
+            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'range': [0, 0.95]
+        }, {
+            'key': 'IRIS_POS_OFFSET',
+            'title': 'Iris Offset',
+            'describe': 'The offset of iris turning, default 0.0. Range(-1, 1)',
+            'range': [0, 2]
+        }, {
+            'key': 'IRIS_POS_RATIO',
+            'title': 'Iris Ratio',
+            'describe': 'The ratio of iris turning speed, default 5.0. Range(0, 20)',
+            'range': [0, 20]
+        }],
+        'EYE_RIGHT': [{
+            'key': 'RIGHT_EYE_CLOSE_THRESHOLD',
+            'title': 'Right Eye Close',
+            'describe': 'Close the eye when the openness is small than the threshold. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'RIGHT_EYE_OPEN_THRESHOLD',
+            'title': 'Right Eye Open',
+            'describe': 'Fully open the eye when the openness is larger than the threshold. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'RIGHT_EYE_SQUINT_RATIO',
+            'title': 'Right Eye Squint',
+            'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
+            'range': [0, 1]
+        }],
+        'EYE_LEFT': [{
+            'key': 'LEFT_EYE_OPEN_THRESHOLD',
+            'title': 'Left Eye Open',
+            'describe': 'Fully open the eye when the openness is larger than the threshold. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'LEFT_EYE_CLOSE_THRESHOLD',
+            'title': 'Left Eye Close',
+            'describe': 'Close the eye when the openness is small than the threshold. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'LEFT_EYE_SQUINT_RATIO',
+            'title': 'Left Eye Squint',
+            'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
+            'range': [0, 1]
+        }]
+    };
 }
