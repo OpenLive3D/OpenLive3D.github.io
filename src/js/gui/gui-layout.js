@@ -90,18 +90,18 @@ function createLayout(){
             Object.keys(confmodifiers).forEach(function(otherkey){
                 let tmpkey = document.getElementById("confkey_" + otherkey);
                 let tmpgroup = document.getElementById("confgroup_" + otherkey);
-                if(otherkey == key && tmpgroup.className == "w3-margin-left w3-hide"){
+                if(otherkey == key && tmpgroup.className == "w3-margin w3-hide"){
                     tmpkey.innerHTML = "ᐁ " + otherkey;
-                    tmpgroup.className = "w3-margin-left";
+                    tmpgroup.className = "w3-margin";
                 }else{
                     tmpkey.innerHTML = "ᐅ " + otherkey;
-                    tmpgroup.className = "w3-margin-left w3-hide";
+                    tmpgroup.className = "w3-margin w3-hide";
                 }
             });
         }
         confbox.appendChild(confkey);
         let confgroup = document.createElement('div');
-        confgroup.className = "w3-margin-left w3-hide";
+        confgroup.className = "w3-margin w3-hide";
         confgroup.id = "confgroup_" + key;
         confbox.appendChild(confgroup);
         for(let i = 0; i < confmodifier.length; i ++){
