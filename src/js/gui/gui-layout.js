@@ -158,7 +158,7 @@ function createLayout(){
     about.style.color = "white";
     let alinks = [
         ["https://github.com/OpenLive3D", "OpenLive3D - " + getCMV("VERSION")],
-        ["https://github.com/Wei-1", "Wei Chen - " + getCMV("DEV_DATE")]
+        ["https://github.com/OpenLive3D/OpenLive3D.github.io", "Dev Date - " + getCMV("DEV_DATE")]
     ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");

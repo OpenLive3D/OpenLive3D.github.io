@@ -7,6 +7,8 @@ let clock = new THREE.Clock();
 clock.start();
 
 // config
+let Tvrmsbspn = THREE.VRMSchema.BlendShapePresetName;
+let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
 let cm = getCM();
 let currentVrm = undefined;
 
@@ -66,12 +68,10 @@ function ratioLimit(ratio){
     return Math.max(0, Math.min(1, ratio));
 }
 
-function updateModel(keys){
+function updateHead(keys){
     if(currentVrm){
         let Cbsp = currentVrm.blendShapeProxy;
-        let Tvrmsbspn = THREE.VRMSchema.BlendShapePresetName;
         let Ch = currentVrm.humanoid;
-        let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
         // head
         let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
         neck.set(radLimit(keys['pitch']) * getCMV('NECK_RATIO'),
@@ -80,7 +80,14 @@ function updateModel(keys){
         let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
         chest.set(radLimit(keys['pitch']) * getCMV('CHEST_RATIO'),
             radLimit(keys['yaw']) * getCMV('CHEST_RATIO'),
-            radLimit(keys['roll']) * getCMV('CHEST_RATIO'))
+            radLimit(keys['roll']) * getCMV('CHEST_RATIO'));
+    }    
+}
+
+function updateMouthEyes(keys){
+    if(currentVrm){
+        let Cbsp = currentVrm.blendShapeProxy;
+        let Ch = currentVrm.humanoid;
         // mouth
         let mouthRatio = ratioLimit(keys['mouth'] * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
@@ -118,8 +125,14 @@ function updateModel(keys){
     }
 }
 
+function updateTweenInfo(){
+    updateHead(info);
+}
+
 // the main ML loop
 let info = getDefaultInfo();
+let tmpInfo = getDefaultInfo();
+let tween = null;
 function mlLoop(){
     let image = getCameraFrame();
 
@@ -135,12 +148,18 @@ function mlLoop(){
                 if(getCMV('DEBUG_LANDMARK')){
                     drawLandmark(keyPoints);
                 }
-                Object.keys(info).forEach(function(key){
+                Object.keys(tmpInfo).forEach(function(key){
                     let sr = getSR(getKeyType(key));
-                    info[key] = (1-sr) * faceInfo[key] + sr * info[key];
+                    tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
                 });
-                printLog(info);
-                updateModel(info);
+                printLog(tmpInfo);
+                updateMouthEyes(tmpInfo);
+                if(tween){
+                    tween.stop();
+                }
+                tween = new TWEEN.Tween(info).to(tmpInfo, 100).easing(TWEEN.Easing.Linear.None)
+                    .onUpdate(() => updateTweenInfo());
+                tween.start();
             }
         });
 
@@ -151,6 +170,7 @@ function mlLoop(){
 function viLoop(){
     if(currentVrm){
         currentVrm.update(clock.getDelta());
+        TWEEN.update();
         drawScene(scene);
     }
     

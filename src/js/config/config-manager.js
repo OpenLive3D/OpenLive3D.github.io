@@ -9,6 +9,8 @@ function getCM(){
 
 function initCM(){
     // System Parameters
+    configManager['VERSION'] = "Alpha.0.2.1";
+    configManager['DEV_DATE'] = "2022-05-28";
     configManager['TIME'] = new Date();
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
     configManager['MAX_FACES'] = 1;
@@ -17,8 +19,6 @@ function initCM(){
     configManager['PREDICT_IRISES'] = true;
     configManager['SCENE_FLIP'] = false;
     configManager['CANVAS_RATIO'] = 0.5;
-    configManager['VERSION'] = "Alpha.0.1.2";
-    configManager['DEV_DATE'] = "2022-04-30";
     configManager['DEBUG_IMAGE'] = false;
     configManager['DEBUG_LANDMARK'] = true;
     // Modifiable Parameters

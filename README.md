@@ -34,6 +34,6 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.1.3:
- - Optimize UI/UX - Config Group
+Alpha-0.2.1:
+ - Optimize Movement - Tween.js
  - Documentation Branch Separation
