@@ -9,8 +9,8 @@ function getCM(){
 
 function initCM(){
     // System Parameters
-    configManager['VERSION'] = "Alpha.0.2.1";
-    configManager['DEV_DATE'] = "2022-05-28";
+    configManager['VERSION'] = "Alpha.0.2.2";
+    configManager['DEV_DATE'] = "2022-06-02";
     configManager['TIME'] = new Date();
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
     configManager['MAX_FACES'] = 1;
