@@ -60,7 +60,7 @@ function initialize(){
 }
 
 function radLimit(rad){
-    let limit = Math.PI / 12;
+    let limit = Math.PI / 3;
     return Math.max(-limit, Math.min(limit, rad));
 }
 
