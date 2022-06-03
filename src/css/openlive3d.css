@@ -22,7 +22,7 @@ text.systembox {
     position: absolute;
     top: 5px;
     left: 50px;
-    font-family: verdana;
+    font-family: sans-serif;
     font-size: 28px;
     cursor: pointer;
     user-select: none;

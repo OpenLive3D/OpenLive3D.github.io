@@ -7,12 +7,53 @@ function getCM(){
     return configManager;
 }
 
+function saveCM(){
+    document.cookie = JSON.stringify(configManager);
+}
+
+function loadCM(){
+    if(document.cookie){
+        let cuti = document.cookie.indexOf("{");
+        if(cuti == -1){
+            return false;
+        }else{
+            let cookie = document.cookie.substring(cuti);
+            configManager = JSON.parse(cookie);
+            return true;
+        }
+    }else{
+        return false;
+    }
+}
+
 function initCM(){
+    if(loadCM()){
+        console.log("Load Cookie Config");
+    }else{
+        // Modifiable Parameters
+        configManager['BG_COLOR'] = "#0F0";
+        configManager['MOUTH_RATIO'] = 3;
+        configManager['NECK_RATIO'] = 1.0;
+        configManager['CHEST_RATIO'] = 0.3;
+        configManager['EYE_LINK_THRESHOLD'] = 0.07;
+        configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
+        configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
+        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
+        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
+        configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
+        configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
+        configManager['IRIS_POS_OFFSET'] = 0.0;
+        configManager['IRIS_POS_RATIO'] = 5.0;
+        configManager['BODY_STABLIZE_RATIO'] = 0.7;
+        configManager['EYE_STABLIZE_RATIO'] = 0.2;
+        configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
+        configManager['CAMERA_FLIP'] = true;
+    }
     // System Parameters
-    configManager['VERSION'] = "Alpha.0.2.2";
-    configManager['DEV_DATE'] = "2022-06-02";
-    configManager['TIME'] = new Date();
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
+    configManager['VERSION'] = "Alpha.0.2.3";
+    configManager['DEV_DATE'] = "2022-06-03";
+    configManager['TIME'] = new Date();
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
     configManager['NUM_IRIS_KEYPOINTS'] = 5;
@@ -21,24 +62,6 @@ function initCM(){
     configManager['CANVAS_RATIO'] = 0.5;
     configManager['DEBUG_IMAGE'] = false;
     configManager['DEBUG_LANDMARK'] = true;
-    // Modifiable Parameters
-    configManager['BG_COLOR'] = "#00F";
-    configManager['MOUTH_RATIO'] = 3;
-    configManager['NECK_RATIO'] = 1.0;
-    configManager['CHEST_RATIO'] = 0.3;
-    configManager['EYE_LINK_THRESHOLD'] = 0.07;
-    configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
-    configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
-    configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
-    configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
-    configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
-    configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
-    configManager['IRIS_POS_OFFSET'] = 0.0;
-    configManager['IRIS_POS_RATIO'] = 5.0;
-    configManager['BODY_STABLIZE_RATIO'] = 0.7;
-    configManager['EYE_STABLIZE_RATIO'] = 0.2;
-    configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
-    configManager['CAMERA_FLIP'] = true;
 }
 
 function getSR(key){
@@ -60,6 +83,7 @@ function getCMV(key){
 function setCMV(key, value){
     if(key in configManager){
         configManager[key] = value;
+        saveCM();
         return true;
     }
     return false;
