@@ -8,10 +8,11 @@ The open source project for Live3D Virtual Avatar.
 ## TRY NOW!
 
  - Live Website: https://openlive3d.com/
+ - Organization: https://github.com/OpenLive3D
  - Document:
-   - [Quick Start](https://github.com/OpenLive3D/OpenLive3D.github.io/tree/document/doc/quick-start.md)
-   - [Document List](https://github.com/OpenLive3D/OpenLive3D.github.io/tree/document/doc)
-   - [Dev Log](https://github.com/OpenLive3D/OpenLive3D.github.io/tree/document/log)
+   - [Quick Start](https://github.com/OpenLive3D/OpenLive3D.document/tree/document/doc/quick-start.md)
+   - [Document List](https://github.com/OpenLive3D/OpenLive3D.document/tree/document/doc)
+   - [Dev Log](https://github.com/OpenLive3D/OpenLive3D.document/tree/document/log)
 
 
 ## Project Features
@@ -34,5 +35,8 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.2.2:
- - Optimize Movement Range
+Alpha-0.2.3:
+ - Default Color Change
+ - Logo Gray-Scale
+ - Document Repository Separation
+ - Config Save to Cookie
