@@ -65,8 +65,8 @@ function initCM(){
     }
     // System Parameters
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
-    configManager['VERSION'] = "Alpha.0.2.3";
-    configManager['DEV_DATE'] = "2022-06-03";
+    configManager['VERSION'] = "Alpha.0.2.4";
+    configManager['DEV_DATE'] = "2022-06-10";
     configManager['TIME'] = new Date();
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
