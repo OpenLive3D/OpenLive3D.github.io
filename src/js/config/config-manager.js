@@ -18,8 +18,22 @@ function loadCM(){
             return false;
         }else{
             let cookie = document.cookie.substring(cuti);
-            configManager = JSON.parse(cookie);
-            return true;
+            try{
+                configManager = JSON.parse(cookie);
+                let checkModifiers = getConfigModifiers();
+                for(let key in checkModifiers){
+                    let cmk = checkModifiers[key];
+                    for(let i = 0; i < cmk.length; i ++){
+                        if(!cmk[i]['key'] in configManager){
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }catch(e){
+                console.log(cookie);
+                return false;
+            }
         }
     }else{
         return false;
