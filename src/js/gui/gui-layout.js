@@ -174,68 +174,70 @@ function createLayout(){
 }
 
 function clearDebugCvs(){
-    // get debug camera canvas
-    let dbg = document.getElementById("dbg").getContext('2d');
-    dbg.clearRect(0, 0, dbg.canvas.width, dbg.canvas.height);
-    dbg.fillStyle = 'rgba(0,0,0,0.8)';
-    dbg.fillRect(0, 0, dbg.canvas.width, dbg.canvas.height);
+    if(isVisible("dbgbox")){
+        // get debug camera canvas
+        let dbg = document.getElementById("dbg").getContext('2d');
+        dbg.clearRect(0, 0, dbg.canvas.width, dbg.canvas.height);
+        dbg.fillStyle = 'rgba(0,0,0,0.8)';
+        dbg.fillRect(0, 0, dbg.canvas.width, dbg.canvas.height);
+    }
 }
 
 function drawImage(image){
-    // get debug camera canvas
-    let dbg = document.getElementById("dbg").getContext('2d');
-    dbg.save();
-    if (getCMV('CAMERA_FLIP')){
-        dbg.translate(dbg.canvas.width, 0);
-        dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
-    }else{
-        dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
+    if(isVisible("dbgbox")){
+        // get debug camera canvas
+        let dbg = document.getElementById("dbg").getContext('2d');
+        dbg.save();
+        if (getCMV('CAMERA_FLIP')){
+            dbg.translate(dbg.canvas.width, 0);
+            dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
+        }else{
+            dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
+        }
+        dbg.drawImage(image, 0, 0); // print the camera
+        dbg.restore();
     }
-    dbg.drawImage(image, 0, 0); // print the camera
-    dbg.restore();
 }
 
 function drawLandmark(landmark){
-    // get debug camera canvas
-    let dbg = document.getElementById("dbg").getContext('2d');
-    dbg.save();
-    if (getCMV('CAMERA_FLIP')){
-        dbg.translate(dbg.canvas.width, 0);
-        dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
-    }else{
-        dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
-    }
-
-    Object.keys(landmark).forEach(function(key){
-        for (let i = 0; i < landmark[key].length; i++){
-            let p = landmark[key][i];
-            dbg.fillStyle = MARKCOLOR[key];
-            dbg.beginPath();
-            dbg.arc(p[0], p[1], 4, 0, 2 * Math.PI);
-            dbg.fill();
+    if(isVisible("dbgbox")){
+        // get debug camera canvas
+        let dbg = document.getElementById("dbg").getContext('2d');
+        dbg.save();
+        if (getCMV('CAMERA_FLIP')){
+            dbg.translate(dbg.canvas.width, 0);
+            dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
+        }else{
+            dbg.scale(getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
         }
-    });
-
-    dbg.restore();
+        Object.keys(landmark).forEach(function(key){
+            for (let i = 0; i < landmark[key].length; i++){
+                let p = landmark[key][i];
+                dbg.fillStyle = MARKCOLOR[key];
+                dbg.beginPath();
+                dbg.arc(p[0], p[1], 4, 0, 2 * Math.PI);
+                dbg.fill();
+            }
+        });
+        dbg.restore();
+    }
 }
 
 function printLog(keys){
-    let logbox = document.getElementById('logbox');
-    logbox.innerHTML = '';
-
-    Object.keys(keys).forEach(function(key){
-
-        let jsonItem = document.createElement('text');
-        jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000 + "<br/>";
-        jsonItem.style.color = "white";
-        logbox.appendChild(jsonItem);
-
-        let value = document.getElementById(key + "_value");
-        if(value){
-            value.innerHTML = Math.floor(keys[key] * 1000) / 1000;
-        }
-
-    });
+    if(isVisible("logbox")){
+        let logbox = document.getElementById('logbox');
+        logbox.innerHTML = '';
+        Object.keys(keys).forEach(function(key){
+            let jsonItem = document.createElement('text');
+            jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000 + "<br/>";
+            jsonItem.style.color = "white";
+            logbox.appendChild(jsonItem);
+            let value = document.getElementById(key + "_value");
+            if(value){
+                value.innerHTML = Math.floor(keys[key] * 1000) / 1000;
+            }
+        });
+    }
 }
 
 function drawScene(scene){
@@ -244,6 +246,12 @@ function drawScene(scene){
         scene.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
     }
     renderer.render(scene, camera);
+}
+
+function isVisible(target){
+    let obj = document.getElementById(target);
+    return obj.className.indexOf("w3-hide") == -1 &&
+        sidebar.style.display != "none";
 }
 
 function hideObj(target){

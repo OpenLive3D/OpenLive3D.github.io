@@ -47,7 +47,7 @@ function initCM(){
         // Modifiable Parameters
         configManager['BG_COLOR'] = "#0F0";
         configManager['MOUTH_RATIO'] = 3;
-        configManager['NECK_RATIO'] = 1.0;
+        configManager['NECK_RATIO'] = 0.4;
         configManager['CHEST_RATIO'] = 0.3;
         configManager['EYE_LINK_THRESHOLD'] = 0.07;
         configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
@@ -62,6 +62,8 @@ function initCM(){
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
         configManager['CAMERA_FLIP'] = true;
+        configManager['BREATH_FREQUENCY'] = 0.3;
+        configManager['BREATH_STRENGTH'] = 1;
     }
     // System Parameters
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
@@ -114,6 +116,16 @@ function getConfigModifiers(){
             'title': 'Camera Flip',
             'describe': 'Flip the camera horizontally. Accept "true|false" value',
             'valid': [true, false]
+        }, {
+            'key': 'BREATH_FREQUENCY',
+            'title': 'Breath Frequency',
+            'describe': 'Breath count per second, default as 0.3. Range(0, 4)',
+            'range': [0, 4]
+        }, {
+            'key': 'BREATH_STRENGTH',
+            'title': 'Breath Strength',
+            'describe': 'The moving length of breathing effect, default as 1. Range(0, 10)',
+            'range': [0, 10]
         }],
         'BODY': [{
             'key': 'NECK_RATIO',
