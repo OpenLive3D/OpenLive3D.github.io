@@ -130,6 +130,9 @@ function updateBreath(){
         let Ch = currentVrm.humanoid;
         // breath offset
         let bos = getCMV("BREATH_STRENGTH") / 3000 * Math.sin(clock.elapsedTime * Math.PI * getCMV('BREATH_FREQUENCY'));
+        if(isNaN(bos)){
+            bos = 0.0;
+        }
         // hips
         let hips = Ch.getBoneNode(Tvrmshbn.Hips).position;
         hips.y += bos;
