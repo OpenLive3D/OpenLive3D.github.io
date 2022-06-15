@@ -24,7 +24,7 @@ function loadCM(){
                 for(let key in checkModifiers){
                     let cmk = checkModifiers[key];
                     for(let i = 0; i < cmk.length; i ++){
-                        if(!cmk[i]['key'] in configManager){
+                        if(!(cmk[i]['key'] in configManager)){
                             return false;
                         }
                     }
