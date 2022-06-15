@@ -32,6 +32,7 @@ function loadVRM(vrmurl){
             resetCameraPos(pos);
             console.log("vrm model loaded");
         });
+    setMood("neutral");
 }
 
 // initialize the control
@@ -66,22 +67,6 @@ function radLimit(rad){
 
 function ratioLimit(ratio){
     return Math.max(0, Math.min(1, ratio));
-}
-
-function updateHead(keys){
-    if(currentVrm){
-        let Cbsp = currentVrm.blendShapeProxy;
-        let Ch = currentVrm.humanoid;
-        // head
-        let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
-        neck.set(radLimit(keys['pitch']) * getCMV('NECK_RATIO'),
-            radLimit(keys['yaw']) * getCMV('NECK_RATIO'),
-            radLimit(keys['roll']) * getCMV('NECK_RATIO'));
-        let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
-        chest.set(radLimit(keys['pitch']) * getCMV('CHEST_RATIO'),
-            radLimit(keys['yaw']) * getCMV('CHEST_RATIO'),
-            radLimit(keys['roll']) * getCMV('CHEST_RATIO'));
-    }    
 }
 
 function updateMouthEyes(keys){
@@ -125,8 +110,62 @@ function updateMouthEyes(keys){
     }
 }
 
+function updateHead(keys){
+    if(currentVrm){
+        let Ch = currentVrm.humanoid;
+        // head
+        let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
+        neck.set(radLimit(keys['pitch']) * getCMV('NECK_RATIO'),
+            radLimit(keys['yaw']) * getCMV('NECK_RATIO'),
+            radLimit(keys['roll']) * getCMV('NECK_RATIO'));
+        let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
+        chest.set(radLimit(keys['pitch']) * getCMV('CHEST_RATIO'),
+            radLimit(keys['yaw']) * getCMV('CHEST_RATIO'),
+            radLimit(keys['roll']) * getCMV('CHEST_RATIO'));
+    }    
+}
+
+function updateBreath(){
+    if(currentVrm){
+        let Ch = currentVrm.humanoid;
+        // breath offset
+        let bos = getCMV("BREATH_STRENGTH") / 3000 * Math.sin(clock.elapsedTime * Math.PI * getCMV('BREATH_FREQUENCY'));
+        // hips
+        let hips = Ch.getBoneNode(Tvrmshbn.Hips).position;
+        hips.y += bos;
+    }
+}
+
+function updateMood(){
+    if(mood != oldmood){
+        let Cbsp = currentVrm.blendShapeProxy;
+        Cbsp.setValue(oldmood, 0);
+        Cbsp.setValue(mood, 1);
+        oldmood = mood;
+    }
+}
+
 function updateTweenInfo(){
     updateHead(info);
+    updateBreath();
+    updateMood();
+}
+
+// Mood
+let mood = Tvrmsbspn.Neutral;
+let oldmood = Tvrmsbspn.Neutral;
+function getMood(){
+    return mood;
+}
+function setMood(newmood){
+    oldmood = mood;
+    mood = {
+        "angry": Tvrmsbspn.Angry,
+        "sorrow": Tvrmsbspn.Sorrow,
+        "fun": Tvrmsbspn.Fun,
+        "joy": Tvrmsbspn.Joy,
+        "neutral": Tvrmsbspn.Neutral
+    }[newmood];
 }
 
 // the main ML loop

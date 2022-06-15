@@ -47,7 +47,7 @@ function initCM(){
         // Modifiable Parameters
         configManager['BG_COLOR'] = "#0F0";
         configManager['MOUTH_RATIO'] = 3;
-        configManager['NECK_RATIO'] = 1.0;
+        configManager['NECK_RATIO'] = 0.4;
         configManager['CHEST_RATIO'] = 0.3;
         configManager['EYE_LINK_THRESHOLD'] = 0.07;
         configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
@@ -62,11 +62,13 @@ function initCM(){
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
         configManager['CAMERA_FLIP'] = true;
+        configManager['BREATH_FREQUENCY'] = 0.3;
+        configManager['BREATH_STRENGTH'] = 1;
     }
     // System Parameters
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
-    configManager['VERSION'] = "Alpha.0.2.4";
-    configManager['DEV_DATE'] = "2022-06-10";
+    configManager['VERSION'] = "Alpha.0.3.1";
+    configManager['DEV_DATE'] = "2022-06-15";
     configManager['TIME'] = new Date();
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
@@ -76,6 +78,11 @@ function initCM(){
     configManager['CANVAS_RATIO'] = 0.5;
     configManager['DEBUG_IMAGE'] = false;
     configManager['DEBUG_LANDMARK'] = true;
+    configManager['MOOD_ANGRY'] = true;
+    configManager['MOOD_SORROW'] = true;
+    configManager['MOOD_FUN'] = true;
+    configManager['MOOD_JOY'] = false;
+    configManager['MOOD_NEUTRAL'] = true;
 }
 
 function getSR(key){
@@ -103,6 +110,11 @@ function setCMV(key, value){
     return false;
 }
 
+function getBinaryCM(){
+    return ["CAMERA_FLIP", 'MOOD_ANGRY', 'MOOD_SORROW',
+        'MOOD_FUN', 'MOOD_JOY', 'MOOD_NEUTRAL'];
+}
+
 function getConfigModifiers(){
     return {
         'GENERAL': [{
@@ -114,6 +126,16 @@ function getConfigModifiers(){
             'title': 'Camera Flip',
             'describe': 'Flip the camera horizontally. Accept "true|false" value',
             'valid': [true, false]
+        }, {
+            'key': 'BREATH_FREQUENCY',
+            'title': 'Breath Frequency',
+            'describe': 'Breath count per second, default as 0.3. Range(0, 4)',
+            'range': [0, 4]
+        }, {
+            'key': 'BREATH_STRENGTH',
+            'title': 'Breath Strength',
+            'describe': 'The moving length of breathing effect, default as 1. Range(0, 10)',
+            'range': [0, 10]
         }],
         'BODY': [{
             'key': 'NECK_RATIO',
