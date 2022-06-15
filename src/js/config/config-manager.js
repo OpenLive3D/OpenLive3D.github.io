@@ -78,6 +78,11 @@ function initCM(){
     configManager['CANVAS_RATIO'] = 0.5;
     configManager['DEBUG_IMAGE'] = false;
     configManager['DEBUG_LANDMARK'] = true;
+    configManager['MOOD_ANGRY'] = true;
+    configManager['MOOD_SORROW'] = true;
+    configManager['MOOD_FUN'] = true;
+    configManager['MOOD_JOY'] = false;
+    configManager['MOOD_NEUTRAL'] = true;
 }
 
 function getSR(key){
@@ -103,6 +108,11 @@ function setCMV(key, value){
         return true;
     }
     return false;
+}
+
+function getBinaryCM(){
+    return ["CAMERA_FLIP", 'MOOD_ANGRY', 'MOOD_SORROW',
+        'MOOD_FUN', 'MOOD_JOY', 'MOOD_NEUTRAL'];
 }
 
 function getConfigModifiers(){

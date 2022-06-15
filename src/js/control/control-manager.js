@@ -135,9 +135,36 @@ function updateBreath(){
     }
 }
 
+function updateMood(){
+    if(mood != oldmood){
+        let Cbsp = currentVrm.blendShapeProxy;
+        Cbsp.setValue(oldmood, 0);
+        Cbsp.setValue(mood, 1);
+        oldmood = mood;
+    }
+}
+
 function updateTweenInfo(){
     updateHead(info);
     updateBreath();
+    updateMood();
+}
+
+// Mood
+let mood = Tvrmsbspn.Neutral;
+let oldmood = Tvrmsbspn.Neutral;
+function getMood(){
+    return mood;
+}
+function setMood(newmood){
+    oldmood = mood;
+    mood = {
+        "angry": Tvrmsbspn.Angry,
+        "sorrow": Tvrmsbspn.Sorrow,
+        "fun": Tvrmsbspn.Fun,
+        "joy": Tvrmsbspn.Joy,
+        "neutral": Tvrmsbspn.Neutral
+    }[newmood];
 }
 
 // the main ML loop

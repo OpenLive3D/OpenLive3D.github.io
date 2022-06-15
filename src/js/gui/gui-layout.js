@@ -1,13 +1,16 @@
 // layout
 let sidebar = document.getElementById("thesidebar");
+let moodbar = document.getElementById("themoodbar");
 let layout = document.getElementById("layout");
 let system = document.getElementById("system");
 system.onclick = function(){
     console.log("click SYSTEM_IMG");
     if(sidebar.style.display == "none"){
         sidebar.style.display = "block";
+        moodbar.style.display = "none";
     }else{
         sidebar.style.display = "none";
+        moodbar.style.display = "block";
     }
 };
 let systemtext = document.getElementById("systemtext");
@@ -124,7 +127,7 @@ function createLayout(){
                         item.value = configitem['range'][1];
                     }
                 }else if('valid' in configitem){
-                    if(configitem['key'] == "CAMERA_FLIP"){
+                    if(configitem['key'] in getBinaryCM()){
                         item.value = item.value != "false";
                     }else if(!configitem['valid'].includes(item.value)){
                         item.value = configitem['valid'][0];
@@ -151,7 +154,25 @@ function createLayout(){
             confgroup.appendChild(document.createElement("br"));
         }
     });
-    
+
+    // mood
+    let moods = ['angry', 'sorrow', 'fun', 'joy', 'neutral'];
+    for(let i = 0; i < moods.length; i ++){
+        let mood = moods[i];
+        if(getCMV("MOOD_" + mood.toUpperCase())){
+            let moodobj = document.createElement('img');
+            moodobj.src = "asset/mood/" + mood + ".png";
+            moodobj.style.width = "30px";
+            moodobj.style.cursor = "pointer";
+            moodobj.style.marginLeft = "12px";
+            moodobj.onclick = function(){
+                setMood(mood);
+            }
+            moodbar.appendChild(moodobj);
+            moodbar.appendChild(document.createElement("br"));
+            moodbar.appendChild(document.createElement("br"));
+        }
+    }
 
     // about the team
     let about = document.getElementById("about");
