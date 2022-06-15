@@ -35,5 +35,6 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.2.4:
- - Config Load Cookie Debug
+Alpha-0.3.1:
+ - Breathing
+ - Mood Selection

@@ -32,6 +32,7 @@ function loadVRM(vrmurl){
             resetCameraPos(pos);
             console.log("vrm model loaded");
         });
+    setMood("neutral");
 }
 
 // initialize the control
