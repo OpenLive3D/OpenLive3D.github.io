@@ -47,3 +47,7 @@
    - Config Load Cookie Debug
  - 2022-06-14: Add breathing
    - Add dev log back to main repo
+ - 2022-06-15: Alpha-0.3.1
+   - Mood Selection
+ - 2022-06-16: Alpha-0.3.2
+   - Breathing debug
