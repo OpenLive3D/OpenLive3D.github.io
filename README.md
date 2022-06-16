@@ -12,7 +12,7 @@ The open source project for Live3D Virtual Avatar.
  - Document:
    - [Quick Start](https://github.com/OpenLive3D/OpenLive3D.document/tree/document/doc/quick-start.md)
    - [Document List](https://github.com/OpenLive3D/OpenLive3D.document/tree/document/doc)
-   - [Dev Log](https://github.com/OpenLive3D/OpenLive3D.document/tree/document/log)
+   - [Dev Log](DEVLOG.md)
 
 
 ## Project Features
@@ -35,6 +35,7 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.3.1:
+Alpha-0.3.X:
  - Breathing
  - Mood Selection
+ - Devlog is Back!
