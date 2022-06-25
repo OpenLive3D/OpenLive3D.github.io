@@ -272,6 +272,7 @@ function drawScene(scene){
 function hideLoadbox(){
     let loadbox = document.getElementById('loadbox');
     loadbox.style.display = "none";
+    loadbox.innerHTML = "";
 }
 
 function drawLoading(){
@@ -281,6 +282,14 @@ function drawLoading(){
         let checkintegrate = document.createElement('p');
         loadbox.appendChild(checkintegrate);
         checkintegrate.innerHTML = "⟳ Integration Validating...";
+        let tmp1 = document.createElement('p');
+        loadbox.appendChild(tmp1);
+        tmp1.innerHTML = ".";
+        tmp1.style.color = "#0000";
+        let tmp2 = document.createElement('p');
+        loadbox.appendChild(tmp2);
+        tmp2.innerHTML = ".";
+        tmp2.style.color = "#0000";
     }else{
         let checkvrm = document.createElement('p');
         loadbox.appendChild(checkvrm);
