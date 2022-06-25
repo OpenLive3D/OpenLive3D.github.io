@@ -269,6 +269,52 @@ function drawScene(scene){
     renderer.render(scene, camera);
 }
 
+function hideLoadbox(){
+    let loadbox = document.getElementById('loadbox');
+    loadbox.style.display = "none";
+    loadbox.innerHTML = "";
+}
+
+function drawLoading(){
+    let loadbox = document.getElementById('loadinfo');
+    loadbox.innerHTML = "";
+    if(checkVRMModel() && checkLMModel() && checkImage()){
+        let checkintegrate = document.createElement('p');
+        loadbox.appendChild(checkintegrate);
+        checkintegrate.innerHTML = "⟳ Integration Validating...";
+        let tmp1 = document.createElement('p');
+        loadbox.appendChild(tmp1);
+        tmp1.innerHTML = ".";
+        tmp1.style.color = "#0000";
+        let tmp2 = document.createElement('p');
+        loadbox.appendChild(tmp2);
+        tmp2.innerHTML = ".";
+        tmp2.style.color = "#0000";
+    }else{
+        let checkvrm = document.createElement('p');
+        loadbox.appendChild(checkvrm);
+        if(checkVRMModel()){
+            checkvrm.innerHTML = "✅ VRM-Model Loading...";
+        }else{
+            checkvrm.innerHTML = "⟳ VRM-Model Loading...";
+        }
+        let checklm = document.createElement('p');
+        loadbox.appendChild(checklm);
+        if(checkLMModel()){
+            checklm.innerHTML = "✅ FaceLandMark-Model Loading...";
+        }else{
+            checklm.innerHTML = "⟳ FaceLandMark-Model Loading...";
+        }
+        let checkcamera = document.createElement('p');
+        loadbox.appendChild(checkcamera);
+        if(checkImage()){
+            checkcamera.innerHTML = "✅ Camera Loading...";
+        }else{
+            checkcamera.innerHTML = "⟳ Camera Loading...";
+        }
+    }
+}
+
 function isVisible(target){
     let obj = document.getElementById(target);
     return obj.className.indexOf("w3-hide") == -1 &&

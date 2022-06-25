@@ -29,3 +29,11 @@ function getFaceInfo(image, cmf, cpi, cb){
         });
     }
 }
+
+function checkLMModel(){
+    if(lmModel){
+        return true;
+    }else{
+        return false;
+    }
+}

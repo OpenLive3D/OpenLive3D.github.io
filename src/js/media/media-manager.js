@@ -32,3 +32,12 @@ function linkCamera2Context(canvas, cr){
 function getCameraFrame(){
     return capture;
 }
+
+// validate image readiness
+function checkImage(){
+    if(capture.readyState === 4){
+        return true;
+    }else{
+        return false;
+    }
+}

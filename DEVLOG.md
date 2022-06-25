@@ -51,3 +51,5 @@
    - Mood Selection
  - 2022-06-16: Alpha-0.3.2
    - Breathing debug
+ - 2022-06-24: Alpha-0.3.3
+   - Loading Screen
