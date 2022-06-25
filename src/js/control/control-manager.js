@@ -177,7 +177,6 @@ let tmpInfo = getDefaultInfo();
 let tween = null;
 function mlLoop(){
     let image = getCameraFrame();
-
     getFaceInfo(image,
         getCMV('MAX_FACES'),
         getCMV('PREDICT_IRISES'),
@@ -204,7 +203,6 @@ function mlLoop(){
                 tween.start();
             }
         });
-
     requestAnimationFrame(mlLoop);
 }
 
@@ -215,6 +213,39 @@ function viLoop(){
         TWEEN.update();
         drawScene(scene);
     }
-    
     requestAnimationFrame(viLoop);
+}
+
+// integration check
+function checkIntegrate(){
+    let image = getCameraFrame();
+    getFaceInfo(image,
+        getCMV('MAX_FACES'),
+        getCMV('PREDICT_IRISES'),
+        function(keyPoints, faceInfo){
+            requestAnimationFrame(mlLoop);
+            requestAnimationFrame(viLoop);
+            console.log("ml & visual loops initialized");
+            hideLoadbox();
+        });
+}
+
+// check VRM model
+function checkVRMModel(){
+    if(currentVrm){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+// initialization loop
+function initLoop(){
+    drawLoading();
+    if(checkVRMModel() && checkLMModel() && checkImage()){
+        console.log("start integration validation");
+        checkIntegrate();
+    }else{
+        requestAnimationFrame(initLoop);
+    }
 }
