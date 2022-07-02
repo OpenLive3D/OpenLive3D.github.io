@@ -46,6 +46,10 @@ function resetCameraPos(pos){
 function createLayout(){
     renderer.setClearColor(getCMV('BG_COLOR'), 1);
 
+    // document link
+    let docbtn = document.getElementById('docbtn');
+    docbtn.href = getCMV("DOC_URL");
+
     // html canvas for drawing debug view
     let dbg = document.getElementById("dbg");
     dbg.style.width = "100%";
@@ -178,8 +182,8 @@ function createLayout(){
     let about = document.getElementById("about");
     about.style.color = "white";
     let alinks = [
-        ["https://github.com/OpenLive3D", "OpenLive3D - " + getCMV("VERSION")],
-        ["https://github.com/OpenLive3D/OpenLive3D.github.io", "Dev Date - " + getCMV("DEV_DATE")]
+        [getCMV("ORG_URL"), "OpenLive3D - " + getCMV("VERSION")],
+        [getCMV("REPO_URL"), "Dev Date - " + getCMV("DEV_DATE")]
     ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");

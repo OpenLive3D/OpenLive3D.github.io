@@ -67,8 +67,11 @@ function initCM(){
     }
     // System Parameters
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
-    configManager['VERSION'] = "Alpha.0.3.2";
-    configManager['DEV_DATE'] = "2022-06-16";
+    configManager['VERSION'] = "Alpha.0.3.5";
+    configManager['DEV_DATE'] = "2022-07-02";
+    configManager['ORG_URL'] = "https://github.com/OpenLive3D";
+    configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
+    configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
     configManager['TIME'] = new Date();
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
