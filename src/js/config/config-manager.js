@@ -46,24 +46,24 @@ function initCM(){
     }else{
         // Modifiable Parameters
         configManager['BG_COLOR'] = "#0F0";
-        configManager['MOUTH_RATIO'] = 3;
-        configManager['NECK_RATIO'] = 0.4;
-        configManager['CHEST_RATIO'] = 0.3;
-        configManager['EYE_LINK_THRESHOLD'] = 0.07;
-        configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
-        configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
-        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
-        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
-        configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['IRIS_POS_OFFSET'] = 0.0;
-        configManager['IRIS_POS_RATIO'] = 5.0;
-        configManager['BODY_STABLIZE_RATIO'] = 0.7;
-        configManager['EYE_STABLIZE_RATIO'] = 0.2;
-        configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
         configManager['BREATH_STRENGTH'] = 1;
+        configManager['NECK_RATIO'] = 0.4;
+        configManager['CHEST_RATIO'] = 0.3;
+        configManager['BODY_STABLIZE_RATIO'] = 0.7;
+        configManager['MOUTH_RATIO'] = 3;
+        configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
+        configManager['EYE_LINK_THRESHOLD'] = 0.07;
+        configManager['EYE_STABLIZE_RATIO'] = 0.2;
+        configManager['IRIS_POS_OFFSET'] = 0.0;
+        configManager['IRIS_POS_RATIO'] = 5.0;
+        configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
+        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
+        configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
+        configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
+        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
+        configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
     }
     // System Parameters
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
@@ -202,14 +202,14 @@ function getConfigModifiers(){
             'range': [0, 1]
         }],
         'EYE_LEFT': [{
-            'key': 'LEFT_EYE_OPEN_THRESHOLD',
-            'title': 'Left Eye Open',
-            'describe': 'Fully open the eye when the openness is larger than the threshold. Range(0, 1)',
-            'range': [0, 1]
-        }, {
             'key': 'LEFT_EYE_CLOSE_THRESHOLD',
             'title': 'Left Eye Close',
             'describe': 'Close the eye when the openness is small than the threshold. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'LEFT_EYE_OPEN_THRESHOLD',
+            'title': 'Left Eye Open',
+            'describe': 'Fully open the eye when the openness is larger than the threshold. Range(0, 1)',
             'range': [0, 1]
         }, {
             'key': 'LEFT_EYE_SQUINT_RATIO',
