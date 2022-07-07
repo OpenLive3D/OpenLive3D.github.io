@@ -38,3 +38,4 @@ Alpha-0.3.X:
  - Mood Selection
  - Devlog is Back!
  - Loading Screen
+ - Mobile Check

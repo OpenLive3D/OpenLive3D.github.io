@@ -241,11 +241,15 @@ function checkVRMModel(){
 
 // initialization loop
 function initLoop(){
-    drawLoading();
-    if(checkVRMModel() && checkLMModel() && checkImage()){
-        console.log("start integration validation");
-        checkIntegrate();
+    if(window.mobileCheck()){
+        drawMobile();
     }else{
-        requestAnimationFrame(initLoop);
+        drawLoading();
+        if(checkVRMModel() && checkLMModel() && checkImage()){
+            console.log("start integration validation");
+            checkIntegrate();
+        }else{
+            requestAnimationFrame(initLoop);
+        }
     }
 }

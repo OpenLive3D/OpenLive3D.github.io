@@ -279,6 +279,11 @@ function hideLoadbox(){
     loadbox.innerHTML = "";
 }
 
+function drawMobile(){
+    let loadbox = document.getElementById('loadinfo');
+    loadbox.innerHTML = "MOBILE NOT SUPPORTED!!";
+}
+
 function drawLoading(){
     let loadbox = document.getElementById('loadinfo');
     loadbox.innerHTML = "";
