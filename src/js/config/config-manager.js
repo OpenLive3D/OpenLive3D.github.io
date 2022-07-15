@@ -52,8 +52,8 @@ function initCM(){
         configManager['NECK_RATIO'] = 0.55;
         configManager['CHEST_RATIO'] = 0.45;
         configManager['BODY_STABLIZE_RATIO'] = 0.7;
-        configManager['MOUTH_RATIO'] = 3;
-        configManager['MOUTH_STABLIZE_RATIO'] = 0.1;
+        configManager['MOUTH_RATIO'] = 7;
+        configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
         configManager['EYE_LINK_THRESHOLD'] = 0.07;
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
         configManager['IRIS_POS_OFFSET'] = 0.0;
@@ -67,8 +67,8 @@ function initCM(){
     }
     // System Parameters
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
-    configManager['VERSION'] = "Alpha.0.3.6";
-    configManager['DEV_DATE'] = "2022-07-07";
+    configManager['VERSION'] = "Alpha.0.3.7";
+    configManager['DEV_DATE'] = "2022-07-15";
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
