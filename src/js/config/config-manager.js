@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-16";
-const VERSION = "Alpha.0.4.1";
+const DEV_DATE = "2022-07-17";
+const VERSION = "Alpha.0.4.2";
 
 let configManager = {};
 
@@ -74,6 +74,9 @@ function initCM(){
         configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
         configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
+        configManager['POSITION_X_RATIO'] = 0.12;
+        configManager['POSITION_Y_RATIO'] = 0.12;
+        configManager['POSITION_Z_RATIO'] = 0.12;
     }
     // System Parameters
     configManager['VERSION'] = VERSION;
@@ -243,6 +246,22 @@ function getConfigModifiers(){
             'title': 'Left Eye Squint',
             'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
             'range': [0, 1]
+        }],
+        'POSITION': [{
+            'key': 'POSITION_X_RATIO',
+            'title': 'Position X Ratio',
+            'describe': 'The larger the number is, the faster the VRM model move horizontally. Range(-1, 1)',
+            'range': [-1, 1]
+        }, {
+            'key': 'POSITION_Y_RATIO',
+            'title': 'Position Y Ratio',
+            'describe': 'The larger the number is, the faster the VRM model move vertically. Range(-1, 1)',
+            'range': [-1, 1]
+        }, {
+            'key': 'POSITION_Z_RATIO',
+            'title': 'Position Z Ratio',
+            'describe': 'The larger the number is, the faster the VRM model move forward and backward. Range(-1, 1)',
+            'range': [-1, 1]
         }]
     };
 }

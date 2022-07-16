@@ -38,3 +38,4 @@ Alpha-0.4.X:
  - Background color saturation
  - VRM model only
  - Mouth openness offset
+ - Position

@@ -55,3 +55,5 @@
    - Loading Screen
  - 2022-07-16: Alpha-0.4.1
    - Collect feedback from users
+ - 2022-07-17: Alpha-0.4.2
+   - Position

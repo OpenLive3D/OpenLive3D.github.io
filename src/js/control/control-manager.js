@@ -11,6 +11,7 @@ let Tvrmsbspn = THREE.VRMSchema.BlendShapePresetName;
 let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
 let cm = getCM(); // required for ConfigManager Setup
 let currentVrm = undefined;
+let defaultXYZ = undefined;
 
 // initialize / reinitialize VRM
 function loadVRM(vrmurl){
@@ -22,14 +23,16 @@ function loadVRM(vrmurl){
             }
             currentVrm = vrm;
             scene.add(vrm.scene);
-            let head = currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.Head);
-            let foot = currentVrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.LeftFoot);
+            let head = currentVrm.humanoid.getBoneNode(Tvrmshbn.Head);
+            let foot = currentVrm.humanoid.getBoneNode(Tvrmshbn.LeftFoot);
             let pos = {
                 "x": head.up.x + head.position.x,
                 "y": head.up.y + head.position.y - foot.position.y,
                 "z": head.up.z + head.position.z
             };
             resetCameraPos(pos);
+            let hips = currentVrm.humanoid.getBoneNode(Tvrmshbn.Hips).position;
+            defaultXYZ = [hips.x, hips.y, hips.z];
             console.log("vrm model loaded");
         });
     setMood(getCMV('DEFAULT_MOOD'));
@@ -125,11 +128,21 @@ function updateHead(keys){
     }    
 }
 
+function updateBody(keys){
+    if(currentVrm && defaultXYZ){
+        let Ch = currentVrm.humanoid;
+        let hips = Ch.getBoneNode(Tvrmshbn.Hips).position;
+        hips.x = defaultXYZ[0] - keys['x'] * getCMV("POSITION_X_RATIO");
+        hips.y = defaultXYZ[1] - keys['y'] * getCMV("POSITION_Y_RATIO");
+        hips.z = defaultXYZ[2] + keys['z'] * getCMV("POSITION_Z_RATIO");
+    }
+}
+
 function updateBreath(){
     if(currentVrm){
         let Ch = currentVrm.humanoid;
         // breath offset
-        let bos = getCMV("BREATH_STRENGTH") / 3000 * Math.sin(clock.elapsedTime * Math.PI * getCMV('BREATH_FREQUENCY'));
+        let bos = getCMV("BREATH_STRENGTH") / 100 * Math.sin(clock.elapsedTime * Math.PI * getCMV('BREATH_FREQUENCY'));
         if(isNaN(bos)){
             bos = 0.0;
         }
@@ -157,6 +170,7 @@ function updateMood(){
 
 function updateTweenInfo(){
     updateHead(info);
+    updateBody(info);
     updateBreath();
     updateMood();
 }

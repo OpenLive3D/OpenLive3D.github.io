@@ -28,6 +28,11 @@ function linkCamera2Context(canvas, cr){
         capture.videoHeight * cr);
 }
 
+// video width and height
+function getCameraWH(){
+    return [capture.videoWidth, capture.videoHeight];
+}
+
 // return the capture as frame
 function getCameraFrame(){
     return capture;

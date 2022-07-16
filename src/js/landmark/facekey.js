@@ -57,12 +57,25 @@ function getHeadRotation(head){
     return [roll, pitch + Math.PI / 2, yaw];
 }
 
+function getHeadXYZ(head){
+    let wh = getCameraWH();
+    let topx = head[2][0];
+    let topy = head[2][1];
+    let downx = head[3][0];
+    let downy = head[3][1];
+    let x = Math.max(-1, Math.min(1, (topx + downx) / wh[0] - 1));
+    let y = Math.max(-1, Math.min(1, (topy + downy) / wh[0] - 1));
+    let z = Math.max(-1, Math.min(1, wh[1] / distance3d(head[2], head[3]) - 3));
+    return [x, y, z];
+}
+
 function getDefaultInfo(){
     return {
         "roll": 0, "pitch": 0, "yaw": 0,
         "lefteyeopen": 0, "righteyeopen": 0,
         "irispos": 0,
-        "mouth": 0
+        "mouth": 0,
+        "x": 0, "y": 0, "z": 0 // -1 < x,y,z < 1
     };
 }
 
@@ -81,6 +94,7 @@ function getKeyType(key){
 function face2Info(face){
     let keyInfo = {};
     let headRotate = getHeadRotation(face["head"]);
+    let headXYZ = getHeadXYZ(face["head"]);
     keyInfo["roll"] = headRotate[0];
     keyInfo["pitch"] = headRotate[1];
     keyInfo["yaw"] = headRotate[2];
@@ -88,6 +102,9 @@ function face2Info(face){
     keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
     keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
     keyInfo["mouth"] = Math.max(0, getOpenRatio(face["mouth"]) - Math.abs(headRotate[1] / 10));
+    keyInfo["x"] = headXYZ[0];
+    keyInfo["y"] = headXYZ[1];
+    keyInfo["z"] = headXYZ[2];
     return keyInfo;
 }
 
