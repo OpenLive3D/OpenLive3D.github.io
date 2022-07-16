@@ -53,3 +53,5 @@
    - Breathing debug
  - 2022-06-24: Alpha-0.3.3
    - Loading Screen
+ - 2022-07-16: Alpha-0.4.1
+   - Collect feedback from users

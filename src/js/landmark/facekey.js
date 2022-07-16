@@ -87,7 +87,7 @@ function face2Info(face){
     keyInfo["lefteyeopen"] = getOpenRatio(face["lefteye"]);
     keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
     keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
-    keyInfo["mouth"] = Math.max(0, getOpenRatio(face["mouth"]) - 0.01 - Math.abs(headRotate[1] / 10));
+    keyInfo["mouth"] = Math.max(0, getOpenRatio(face["mouth"]) - Math.abs(headRotate[1] / 10));
     return keyInfo;
 }
 

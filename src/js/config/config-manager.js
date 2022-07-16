@@ -1,3 +1,7 @@
+// version configuration
+const DEV_DATE = "2022-07-16";
+const VERSION = "Alpha.0.4.1";
+
 let configManager = {};
 
 function getCM(){
@@ -20,6 +24,9 @@ function loadCM(){
             let cookie = document.cookie.substring(cuti);
             try{
                 configManager = JSON.parse(cookie);
+                if(VERSION != configManager['VERSION']){
+                    return false;
+                }
                 let checkModifiers = getConfigModifiers();
                 for(let key in checkModifiers){
                     let cmk = checkModifiers[key];
@@ -45,16 +52,19 @@ function initCM(){
         console.log("Load Cookie Config");
     }else{
         // Modifiable Parameters
-        configManager['BG_COLOR'] = "#0F0";
+        console.log("Initial Config");
+        configManager['BG_COLOR'] = "#0C0";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
         configManager['BREATH_STRENGTH'] = 1;
         configManager['NECK_RATIO'] = 0.55;
         configManager['CHEST_RATIO'] = 0.45;
         configManager['BODY_STABLIZE_RATIO'] = 0.7;
+        configManager['MOUTH_OPEN_OFFSET'] = 0.015;
         configManager['MOUTH_RATIO'] = 7;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
-        configManager['EYE_LINK_THRESHOLD'] = 0.07;
+        configManager['EYE_SYNC'] = true;
+        configManager['EYE_LINK_THRESHOLD'] = 0.05;
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
         configManager['IRIS_POS_OFFSET'] = 0.0;
         configManager['IRIS_POS_RATIO'] = 5.0;
@@ -66,9 +76,9 @@ function initCM(){
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
     }
     // System Parameters
+    configManager['VERSION'] = VERSION;
+    configManager['DEV_DATE'] = DEV_DATE;
     configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
-    configManager['VERSION'] = "Alpha.0.3.7";
-    configManager['DEV_DATE'] = "2022-07-15";
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
@@ -86,6 +96,8 @@ function initCM(){
     configManager['MOOD_FUN'] = true;
     configManager['MOOD_JOY'] = false;
     configManager['MOOD_NEUTRAL'] = true;
+    configManager['MOOD_AUTO'] = false;
+    configManager['DEFAULT_MOOD'] = "auto";
 }
 
 function getSR(key){
@@ -114,8 +126,10 @@ function setCMV(key, value){
 }
 
 function getBinaryCM(){
-    return ["CAMERA_FLIP", 'MOOD_ANGRY', 'MOOD_SORROW',
-        'MOOD_FUN', 'MOOD_JOY', 'MOOD_NEUTRAL'];
+    return ["CAMERA_FLIP", "EYE_SYNC",
+        'MOOD_ANGRY', 'MOOD_SORROW',
+        'MOOD_FUN', 'MOOD_JOY',
+        'MOOD_NEUTRAL', 'MOOD_AUTO'];
 }
 
 function getConfigModifiers(){
@@ -157,6 +171,11 @@ function getConfigModifiers(){
             'range': [0, 0.95]
         }],
         'MOUTH': [{
+            'key': 'MOUTH_OPEN_OFFSET',
+            'title': 'Mouth Open Offset',
+            'describe': 'Mouth will only open after the openness value is larger than the offset. Range(0, 1)',
+            'range': [0, 1]
+        }, {
             'key': 'MOUTH_RATIO',
             'title': 'Mouth Open Ratio',
             'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
@@ -168,6 +187,11 @@ function getConfigModifiers(){
             'range': [0, 0.95]
         }],
         'EYE_GENERAL': [{
+            'key': 'EYE_SYNC',
+            'title': 'Eyes Sync',
+            'describe': 'Force the eyes to sync or not. Accept "true|false" value',
+            'valid': [true, false]
+        }, {
             'key': 'EYE_LINK_THRESHOLD',
             'title': 'Eyes Link',
             'describe': 'The threshold that control the coherent of the 2 eyes. When the absolute difference of the 2 eyes openness is smaller then the value, the 2 eyes will move together. Range(0, 1)',

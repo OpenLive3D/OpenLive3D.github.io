@@ -118,30 +118,38 @@ function createLayout(){
             name.innerHTML = configitem['title'];
             let item = document.createElement('input');
             item.id = configitem['key'] + "_box";
-            item.style.textAlign = "right";
-            item.style.width = "100px";
-            item.value = getCMV(configitem['key']);
-            item.onchange = function(){
-                console.log(configitem['key'], item.value);
-                if('range' in configitem){
-                    if(item.value < configitem['range'][0]){
-                        item.value = configitem['range'][0];
-                    }else if(item.value < configitem['range'][1]){
-                    }else{
-                        item.value = configitem['range'][1];
+            if(getBinaryCM().includes(configitem['key'])){
+                item.setAttribute("type", "checkbox");
+                item.checked = getCMV(configitem['key']);
+                item.onclick = function myFunction(){
+                    setCMV(configitem['key'], item.checked);
+                };
+            }else{
+                item.style.textAlign = "right";
+                item.style.width = "100px";
+                item.value = getCMV(configitem['key']);
+                item.onchange = function(){
+                    console.log(configitem['key'], item.value);
+                    if('range' in configitem){
+                        if(item.value < configitem['range'][0]){
+                            item.value = configitem['range'][0];
+                        }else if(item.value < configitem['range'][1]){
+                        }else{
+                            item.value = configitem['range'][1];
+                        }
+                    }else if('valid' in configitem){
+                        if(getBinaryCM().includes(configitem['key'])){
+                            item.value = item.value != "false";
+                        }else if(!configitem['valid'].includes(item.value)){
+                            item.value = configitem['valid'][0];
+                        }
                     }
-                }else if('valid' in configitem){
-                    if(configitem['key'] in getBinaryCM()){
-                        item.value = item.value != "false";
-                    }else if(!configitem['valid'].includes(item.value)){
-                        item.value = configitem['valid'][0];
+                    setCMV(configitem['key'], item.value);
+                    if(configitem['key'] == "BG_COLOR"){
+                        renderer.setClearColor(item.value, 1);
                     }
-                }
-                setCMV(configitem['key'], item.value);
-                if(configitem['key'] == "BG_COLOR"){
-                    renderer.setClearColor(item.value, 1);
-                }
-            };
+                };
+            }
             let info = document.createElement('text');
             info.className = "w3-tooltip";
             info.style.color = "#fff9";
@@ -160,7 +168,7 @@ function createLayout(){
     });
 
     // mood
-    let moods = ['angry', 'sorrow', 'fun', 'joy', 'neutral'];
+    let moods = ['angry', 'sorrow', 'fun', 'joy', 'neutral', 'auto'];
     for(let i = 0; i < moods.length; i ++){
         let mood = moods[i];
         if(getCMV("MOOD_" + mood.toUpperCase())){

@@ -9,7 +9,7 @@ clock.start();
 // config
 let Tvrmsbspn = THREE.VRMSchema.BlendShapePresetName;
 let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
-let cm = getCM();
+let cm = getCM(); // required for ConfigManager Setup
 let currentVrm = undefined;
 
 // initialize / reinitialize VRM
@@ -32,7 +32,7 @@ function loadVRM(vrmurl){
             resetCameraPos(pos);
             console.log("vrm model loaded");
         });
-    setMood("neutral");
+    setMood(getCMV('DEFAULT_MOOD'));
 }
 
 // initialize the control
@@ -74,12 +74,12 @@ function updateMouthEyes(keys){
         let Cbsp = currentVrm.blendShapeProxy;
         let Ch = currentVrm.humanoid;
         // mouth
-        let mouthRatio = ratioLimit(keys['mouth'] * getCMV('MOUTH_RATIO'));
+        let mouthRatio = ratioLimit((keys['mouth'] - getCMV("MOUTH_OPEN_OFFSET")) * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
         // eyes
         let reo = keys['righteyeopen'];
         let leo = keys['lefteyeopen'];
-        if(Math.abs(reo - leo) < getCMV('EYE_LINK_THRESHOLD')){
+        if(getCMV("EYE_SYNC") || Math.abs(reo - leo) < getCMV('EYE_LINK_THRESHOLD')){
             let avgEye = (reo + leo) / 2;
             reo = avgEye;
             leo = avgEye;
@@ -142,8 +142,15 @@ function updateBreath(){
 function updateMood(){
     if(mood != oldmood){
         let Cbsp = currentVrm.blendShapeProxy;
-        Cbsp.setValue(oldmood, 0);
-        Cbsp.setValue(mood, 1);
+        if(oldmood != "AUTO_MOOD_DETECTION"){
+            Cbsp.setValue(oldmood, 0);
+        }
+        if(mood != "AUTO_MOOD_DETECTION"){
+            Cbsp.setValue(mood, 1);
+        }else{
+            // Placeholder for Emotion detection result
+            Cbsp.setValue(Tvrmsbspn.Neutral, 1);
+        }
         oldmood = mood;
     }
 }
@@ -167,7 +174,8 @@ function setMood(newmood){
         "sorrow": Tvrmsbspn.Sorrow,
         "fun": Tvrmsbspn.Fun,
         "joy": Tvrmsbspn.Joy,
-        "neutral": Tvrmsbspn.Neutral
+        "neutral": Tvrmsbspn.Neutral,
+        "auto": "AUTO_MOOD_DETECTION"
     }[newmood];
 }
 
