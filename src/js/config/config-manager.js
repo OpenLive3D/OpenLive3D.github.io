@@ -1,6 +1,6 @@
 // version configuration
 const DEV_DATE = "2022-07-17";
-const VERSION = "Alpha.0.4.2";
+const VERSION = "Alpha.0.4.3";
 
 let configManager = {};
 
@@ -57,6 +57,8 @@ function initCM(){
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
         configManager['BREATH_STRENGTH'] = 1;
+        configManager['MOOD_AUTO_RATIO'] = 4;
+        configManager['MOOD_AUTO_OFFSET'] = 0.04;
         configManager['NECK_RATIO'] = 0.55;
         configManager['CHEST_RATIO'] = 0.45;
         configManager['BODY_STABLIZE_RATIO'] = 0.7;
@@ -99,7 +101,7 @@ function initCM(){
     configManager['MOOD_FUN'] = true;
     configManager['MOOD_JOY'] = false;
     configManager['MOOD_NEUTRAL'] = true;
-    configManager['MOOD_AUTO'] = false;
+    configManager['MOOD_AUTO'] = true;
     configManager['DEFAULT_MOOD'] = "auto";
 }
 
@@ -156,6 +158,16 @@ function getConfigModifiers(){
             'title': 'Breath Strength',
             'describe': 'The moving length of breathing effect, default as 1. Range(0, 10)',
             'range': [0, 10]
+        }, {
+            'key': 'MOOD_AUTO_RATIO',
+            'title': 'MOOD_AUTO Ratio',
+            'describe': 'The dramatic-degree of the auto-mood detection, default as 2. Range(0, 10)',
+            'range': [0, 10]
+        }, {
+            'key': 'MOOD_AUTO_OFFSET',
+            'title': 'MOOD_AUTO Offset',
+            'describe': 'Auto-mood works when the value is larger than the offset, default as 0.1. Range(0, 1)',
+            'range': [0, 1]
         }],
         'BODY': [{
             'key': 'NECK_RATIO',

@@ -19,11 +19,21 @@ const FPoI = {
     "leftbrow": [336, 334]
 };
 
+function average3d(p1, p2){
+    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2, (p1[2] + p2[2]) / 2];
+}
+
 function distance3d(p1, p2){
     const horiz = p2[0] - p1[0];
     const vert = p2[1] - p1[1];
     const depth = p2[2] - p1[2];
     return Math.sqrt((horiz * horiz) + (vert * vert) + (depth * depth));
+}
+
+function distance2d(p1, p2){
+    const horiz = p2[0] - p1[0];
+    const vert = p2[1] - p1[1];
+    return Math.sqrt((horiz * horiz) + (vert * vert));
 }
 
 function slope(xIdx, yIdx, p1, p2){
@@ -69,13 +79,25 @@ function getHeadXYZ(head){
     return [x, y, z];
 }
 
+function getMoodAuto(mouth){
+    let mbalance = average3d(mouth[0], mouth[1]);
+    let mmove = average3d(mouth[2], mouth[3]);
+    let absauto = Math.min(1, distance2d(mbalance, mmove) / distance3d(mouth[0], mouth[1]));
+    if(mbalance[1] > mmove[1]){ // compare Y
+        return -absauto;
+    }else{
+        return absauto;
+    }
+}
+
 function getDefaultInfo(){
     return {
         "roll": 0, "pitch": 0, "yaw": 0,
         "lefteyeopen": 0, "righteyeopen": 0,
         "irispos": 0,
         "mouth": 0,
-        "x": 0, "y": 0, "z": 0 // -1 < x,y,z < 1
+        "x": 0, "y": 0, "z": 0, // -1 < x,y,z < 1
+        "auto": 0
     };
 }
 
@@ -105,6 +127,7 @@ function face2Info(face){
     keyInfo["x"] = headXYZ[0];
     keyInfo["y"] = headXYZ[1];
     keyInfo["z"] = headXYZ[2];
+    keyInfo["auto"] = getMoodAuto(face["mouth"]);
     return keyInfo;
 }
 

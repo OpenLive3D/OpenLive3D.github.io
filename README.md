@@ -39,3 +39,4 @@ Alpha-0.4.X:
  - VRM model only
  - Mouth openness offset
  - Position
+ - Emotion Detection

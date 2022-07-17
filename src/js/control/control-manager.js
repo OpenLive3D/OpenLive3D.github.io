@@ -79,6 +79,19 @@ function updateMouthEyes(keys){
         // mouth
         let mouthRatio = ratioLimit((keys['mouth'] - getCMV("MOUTH_OPEN_OFFSET")) * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
+        if(mood == "AUTO_MOOD_DETECTION"){
+            let autoV = Math.max(-1, Math.min(1, keys["auto"] * getCMV("MOOD_AUTO_RATIO")));
+            let absauto = Math.max(0, Math.abs(autoV) - getCMV("MOOD_AUTO_OFFSET"));
+            if(autoV < 0){
+                Cbsp.setValue(Tvrmsbspn.Fun, 0);
+                Cbsp.setValue(Tvrmsbspn.Sorrow, absauto);
+                Cbsp.setValue(Tvrmsbspn.E, 0);
+            }else{
+                Cbsp.setValue(Tvrmsbspn.Fun, absauto);
+                Cbsp.setValue(Tvrmsbspn.Sorrow, 0);
+                Cbsp.setValue(Tvrmsbspn.E, absauto);
+            }
+        }
         // eyes
         let reo = keys['righteyeopen'];
         let leo = keys['lefteyeopen'];
@@ -154,15 +167,17 @@ function updateBreath(){
 
 function updateMood(){
     if(mood != oldmood){
+        console.log(mood, oldmood);
         let Cbsp = currentVrm.blendShapeProxy;
         if(oldmood != "AUTO_MOOD_DETECTION"){
             Cbsp.setValue(oldmood, 0);
+        }else{
+            Cbsp.setValue(Tvrmsbspn.Fun, 0);
+            Cbsp.setValue(Tvrmsbspn.Sorrow, 0);
+            Cbsp.setValue(Tvrmsbspn.E, 0);
         }
         if(mood != "AUTO_MOOD_DETECTION"){
             Cbsp.setValue(mood, 1);
-        }else{
-            // Placeholder for Emotion detection result
-            Cbsp.setValue(Tvrmsbspn.Neutral, 1);
         }
         oldmood = mood;
     }
