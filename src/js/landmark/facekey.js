@@ -90,12 +90,23 @@ function getMoodAuto(mouth){
     }
 }
 
+function getBrowsRatio(face){
+    let htop = face["head"][2];
+    let hdown = face["head"][3];
+    let d = distance3d(face["rightbrow"][0], htop) +
+        distance3d(face["rightbrow"][1], htop) +
+        distance3d(face["leftbrow"][0], htop) +
+        distance3d(face["leftbrow"][1], htop);
+    return d / distance3d(htop, hdown);
+}
+
 function getDefaultInfo(){
     return {
         "roll": 0, "pitch": 0, "yaw": 0,
         "lefteyeopen": 0, "righteyeopen": 0,
         "irispos": 0,
         "mouth": 0,
+        "brows": 0,
         "x": 0, "y": 0, "z": 0, // -1 < x,y,z < 1
         "auto": 0
     };
@@ -124,6 +135,7 @@ function face2Info(face){
     keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
     keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
     keyInfo["mouth"] = Math.max(0, getOpenRatio(face["mouth"]) - Math.abs(headRotate[1] / 10));
+    keyInfo["brows"] = getBrowsRatio(face);
     keyInfo["x"] = headXYZ[0];
     keyInfo["y"] = headXYZ[1];
     keyInfo["z"] = headXYZ[2];

@@ -167,25 +167,6 @@ function createLayout(){
         }
     });
 
-    // mood
-    let moods = ['angry', 'sorrow', 'fun', 'joy', 'neutral', 'auto'];
-    for(let i = 0; i < moods.length; i ++){
-        let mood = moods[i];
-        if(getCMV("MOOD_" + mood.toUpperCase())){
-            let moodobj = document.createElement('img');
-            moodobj.src = "asset/mood/" + mood + ".png";
-            moodobj.style.width = "30px";
-            moodobj.style.cursor = "pointer";
-            moodobj.style.marginLeft = "12px";
-            moodobj.onclick = function(){
-                setMood(mood);
-            }
-            moodbar.appendChild(moodobj);
-            moodbar.appendChild(document.createElement("br"));
-            moodbar.appendChild(document.createElement("br"));
-        }
-    }
-
     // about the team
     let about = document.getElementById("about");
     about.style.color = "white";
@@ -204,6 +185,52 @@ function createLayout(){
     }
 
     console.log("gui layout initialized");
+}
+
+function createMoodLayout(){
+    // reset MoodLayout
+    moodbar.innerHTML = "";
+    let tmp = document.createElement("div");
+    tmp.className = "w3-bar-item";
+    tmp.style.height = "60px";
+    tmp.style.color = "#0000";
+    tmp.innerHTML = ".";
+    moodbar.appendChild(tmp);
+    
+    // mood
+    let moods = getAllMoods();
+    for(let i = 0; i < moods.length; i ++){
+        let mood = moods[i];
+        if(checkVRMMood(mood)){
+            let moodobj = document.createElement('img');
+            moodobj.id = "moodobj_" + mood;
+            moodobj.src = "asset/mood/" + mood + ".png";
+            moodobj.style.width = "30px";
+            moodobj.style.cursor = "pointer";
+            moodobj.style.marginLeft = "12px";
+            moodobj.onclick = function(){
+                setMoodSelect(mood);
+                setMood(mood);
+            }
+            moodbar.appendChild(moodobj);
+            moodbar.appendChild(document.createElement("br"));
+            moodbar.appendChild(document.createElement("br"));
+        }
+    }
+    setMoodSelect(getCMV('DEFAULT_MOOD'));
+}
+
+function setMoodSelect(newmood){
+    let moods = getAllMoods();
+    for(let i = 0; i < moods.length; i ++){
+        let mood = moods[i];
+        if(checkVRMMood(mood)){
+            let moodobj = document.getElementById("moodobj_" + mood);
+            moodobj.style.filter = "";
+        }
+    }
+    let moodobj = document.getElementById("moodobj_" + newmood);
+    moodobj.style.filter = "invert(1)";
 }
 
 function clearDebugCvs(){

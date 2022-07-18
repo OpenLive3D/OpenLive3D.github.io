@@ -31,9 +31,11 @@ function loadVRM(vrmurl){
                 "z": head.up.z + head.position.z
             };
             resetCameraPos(pos);
+            createMoodLayout();
             let hips = currentVrm.humanoid.getBoneNode(Tvrmshbn.Hips).position;
             defaultXYZ = [hips.x, hips.y, hips.z];
             console.log("vrm model loaded");
+            console.log(currentVrm);
         });
     setMood(getCMV('DEFAULT_MOOD'));
 }
@@ -73,7 +75,7 @@ function ratioLimit(ratio){
 }
 
 function updateMouthEyes(keys){
-    if(currentVrm){
+    if(currentVrm && mood != Tvrmsbspn.Joy){
         let Cbsp = currentVrm.blendShapeProxy;
         let Ch = currentVrm.humanoid;
         // mouth
@@ -123,6 +125,11 @@ function updateMouthEyes(keys){
         let liris = Ch.getBoneNode(Tvrmshbn.LeftEye).rotation;
         riris.y = irisY;
         liris.y = irisY;
+        // eyebrows
+        if(checkVRMMood("Brows up")){
+            let browspos = Math.min(1, Math.max(0, keys['brows'] - getCMV("BROWS_OFFSET")) * getCMV("BROWS_RATIO"));
+            Cbsp.setValue("Brows up", browspos);
+        }
     }
 }
 
@@ -138,7 +145,7 @@ function updateHead(keys){
         chest.set(radLimit(keys['pitch']) * getCMV('CHEST_RATIO'),
             radLimit(keys['yaw']) * getCMV('CHEST_RATIO'),
             radLimit(keys['roll']) * getCMV('CHEST_RATIO'));
-    }    
+    }
 }
 
 function updateBody(keys){
@@ -204,6 +211,8 @@ function setMood(newmood){
         "fun": Tvrmsbspn.Fun,
         "joy": Tvrmsbspn.Joy,
         "neutral": Tvrmsbspn.Neutral,
+        "surprised": "Surprised",
+        "relaxed": "Relaxed",
         "auto": "AUTO_MOOD_DETECTION"
     }[newmood];
 }
@@ -251,6 +260,31 @@ function viLoop(){
         drawScene(scene);
     }
     requestAnimationFrame(viLoop);
+}
+
+// mood check
+function checkVRMMood(mood){
+    if(mood == "auto"){
+        return true;
+    }else if(currentVrm){
+        let tmood = {
+            "angry": Tvrmsbspn.Angry,
+            "sorrow": Tvrmsbspn.Sorrow,
+            "fun": Tvrmsbspn.Fun,
+            "joy": Tvrmsbspn.Joy,
+            "neutral": Tvrmsbspn.Neutral,
+            "surprised": "Surprised",
+            "relaxed": "Relaxed",
+            "auto": "AUTO_MOOD_DETECTION"
+        }[mood];
+        if(currentVrm.blendShapeProxy.getBlendShapeTrackName(tmood)){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
 }
 
 // integration check

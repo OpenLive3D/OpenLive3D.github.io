@@ -65,6 +65,9 @@ function initCM(){
         configManager['MOUTH_OPEN_OFFSET'] = 0.015;
         configManager['MOUTH_RATIO'] = 7;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
+        configManager['BROWS_OFFSET'] = 1.2;
+        configManager['BROWS_RATIO'] = 5;
+        configManager['BROWS_STABLIZE_RATIO'] = 0.05;
         configManager['EYE_SYNC'] = true;
         configManager['EYE_LINK_THRESHOLD'] = 0.05;
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
@@ -99,10 +102,24 @@ function initCM(){
     configManager['MOOD_ANGRY'] = true;
     configManager['MOOD_SORROW'] = true;
     configManager['MOOD_FUN'] = true;
-    configManager['MOOD_JOY'] = false;
+    configManager['MOOD_JOY'] = true;
+    configManager['MOOD_SURPRISED'] = true;
+    configManager['MOOD_RELAXED'] = true;
     configManager['MOOD_NEUTRAL'] = true;
     configManager['MOOD_AUTO'] = true;
     configManager['DEFAULT_MOOD'] = "auto";
+}
+
+function getAllMoods(){
+    let moods = ['angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral', 'auto'];
+    let validmoods = [];
+    for(let i = 0; i < moods.length; i ++){
+        let mood = moods[i];
+        if(getCMV("MOOD_" + mood.toUpperCase())){
+            validmoods.push(mood);
+        }
+    }
+    return validmoods;
 }
 
 function getSR(key){
@@ -112,6 +129,8 @@ function getSR(key){
         return configManager['EYE_STABLIZE_RATIO'];
     }else if(key == "mouth"){
         return configManager['MOUTH_STABLIZE_RATIO'];
+    }else if(key == "brows"){
+        return configManager['BROWS_STABLIZE_RATIO'];
     }else{
         return configManager['BODY_STABLIZE_RATIO'];
     }
@@ -201,6 +220,22 @@ function getConfigModifiers(){
             'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }],
+        // 'BROWS': [{
+        //     'key': 'BROWS_OFFSET',
+        //     'title': 'Mouth Open Offset',
+        //     'describe': 'Mouth will only open after the openness value is larger than the offset. Range(0, 1)',
+        //     'range': [0, 1]
+        // }, {
+        //     'key': 'BROWS_RATIO',
+        //     'title': 'Mouth Open Ratio',
+        //     'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
+        //     'range': [0, 20]
+        // }, {
+        //     'key': 'BROWS_STABLIZE_RATIO',
+        //     'title': 'Brows Stablize Ratio',
+        //     'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+        //     'range': [0, 0.95]
+        // }],
         'EYE_GENERAL': [{
             'key': 'EYE_SYNC',
             'title': 'Eyes Sync',
