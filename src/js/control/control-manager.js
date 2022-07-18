@@ -31,6 +31,7 @@ function loadVRM(vrmurl){
                 "z": head.up.z + head.position.z
             };
             resetCameraPos(pos);
+            resetBrows();
             createMoodLayout();
             let hips = currentVrm.humanoid.getBoneNode(Tvrmshbn.Hips).position;
             defaultXYZ = [hips.x, hips.y, hips.z];
@@ -126,7 +127,7 @@ function updateMouthEyes(keys){
         riris.y = irisY;
         liris.y = irisY;
         // eyebrows
-        if(checkVRMMood("Brows up")){
+        if(hasBrows){
             let browspos = Math.min(1, Math.max(0, keys['brows'] - getCMV("BROWS_OFFSET")) * getCMV("BROWS_RATIO"));
             Cbsp.setValue("Brows up", browspos);
         }
@@ -260,6 +261,15 @@ function viLoop(){
         drawScene(scene);
     }
     requestAnimationFrame(viLoop);
+}
+
+let hasBrows = false;
+function resetBrows(){
+    if(currentVrm.blendShapeProxy.getBlendShapeTrackName("Brows up")){
+        hasBrows = true;
+    }else{
+        hasBrows = false;
+    }
 }
 
 // mood check

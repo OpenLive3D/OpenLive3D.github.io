@@ -34,9 +34,6 @@ The project aims to connect the half-body movement with facial landmarks to the 
 ## Project Status
 
 Alpha-0.4.X:
- - Checkbox for some settings
- - Background color saturation
- - VRM model only
- - Mouth openness offset
  - Position
  - Emotion Detection
+ - Brows up
