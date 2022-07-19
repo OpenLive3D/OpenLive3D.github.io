@@ -11,7 +11,7 @@ const MARKCOLOR = {
 };
 
 const FPoI = {
-    "head": [127, 356, 10, 152],
+    "head": [127, 356, 10, 152, 168],
     "righteye": [33, 133, 159, 145, 468],
     "lefteye": [362, 263, 386, 374, 473],
     "mouth": [78, 308, 13, 14],
@@ -92,12 +92,15 @@ function getMoodAuto(mouth){
 
 function getBrowsRatio(face){
     let htop = face["head"][2];
-    let hdown = face["head"][3];
+    let hmid = face["head"][4];
+    let letop = face["lefteye"][2];
+    let retop = face["righteye"][2];
     let d = distance3d(face["rightbrow"][0], htop) +
         distance3d(face["rightbrow"][1], htop) +
         distance3d(face["leftbrow"][0], htop) +
         distance3d(face["leftbrow"][1], htop);
-    return d / distance3d(htop, hdown);
+    let base = distance3d(htop, letop) + distance3d(htop, retop);
+    return d / distance3d(htop, hmid);
 }
 
 function getDefaultInfo(){

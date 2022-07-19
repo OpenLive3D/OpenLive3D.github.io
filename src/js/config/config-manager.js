@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-18";
-const VERSION = "Alpha.0.4.4";
+const DEV_DATE = "2022-07-19";
+const VERSION = "Alpha.0.4.5";
 
 let configManager = {};
 
@@ -65,9 +65,9 @@ function initCM(){
         configManager['MOUTH_OPEN_OFFSET'] = 0.015;
         configManager['MOUTH_RATIO'] = 7;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
-        configManager['BROWS_OFFSET'] = 1.2;
-        configManager['BROWS_RATIO'] = 5;
-        configManager['BROWS_STABLIZE_RATIO'] = 0.05;
+        configManager['BROWS_OFFSET'] = 3.9;
+        configManager['BROWS_RATIO'] = 0.5;
+        configManager['BROWS_STABLIZE_RATIO'] = 0.01;
         configManager['EYE_SYNC'] = true;
         configManager['EYE_LINK_THRESHOLD'] = 0.05;
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
@@ -220,22 +220,22 @@ function getConfigModifiers(){
             'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }],
-        // 'BROWS': [{
-        //     'key': 'BROWS_OFFSET',
-        //     'title': 'Mouth Open Offset',
-        //     'describe': 'Mouth will only open after the openness value is larger than the offset. Range(0, 1)',
-        //     'range': [0, 1]
-        // }, {
-        //     'key': 'BROWS_RATIO',
-        //     'title': 'Mouth Open Ratio',
-        //     'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
-        //     'range': [0, 20]
-        // }, {
-        //     'key': 'BROWS_STABLIZE_RATIO',
-        //     'title': 'Brows Stablize Ratio',
-        //     'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
-        //     'range': [0, 0.95]
-        // }],
+        'BROWS': [{
+            'key': 'BROWS_OFFSET',
+            'title': 'Mouth Open Offset',
+            'describe': 'Mouth will only open after the openness value is larger than the offset. Range(0, 1)',
+            'range': [0, 1]
+        }, {
+            'key': 'BROWS_RATIO',
+            'title': 'Mouth Open Ratio',
+            'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
+            'range': [0, 20]
+        }, {
+            'key': 'BROWS_STABLIZE_RATIO',
+            'title': 'Brows Stablize Ratio',
+            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'range': [0, 0.95]
+        }],
         'EYE_GENERAL': [{
             'key': 'EYE_SYNC',
             'title': 'Eyes Sync',

@@ -57,3 +57,7 @@
    - Collect feedback from users
  - 2022-07-17: Alpha-0.4.2
    - Position
+ - 2022-07-18: Alpha-0.4.4
+   - More emotions and Brows
+ - 2022-07-19: Alpha-0.4.5
+   - More tricks with Brows

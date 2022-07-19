@@ -31,7 +31,7 @@ function loadVRM(vrmurl){
                 "z": head.up.z + head.position.z
             };
             resetCameraPos(pos);
-            resetBrows();
+            resetVRMMood();
             createMoodLayout();
             let hips = currentVrm.humanoid.getBoneNode(Tvrmshbn.Hips).position;
             defaultXYZ = [hips.x, hips.y, hips.z];
@@ -82,19 +82,6 @@ function updateMouthEyes(keys){
         // mouth
         let mouthRatio = ratioLimit((keys['mouth'] - getCMV("MOUTH_OPEN_OFFSET")) * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
-        if(mood == "AUTO_MOOD_DETECTION"){
-            let autoV = Math.max(-1, Math.min(1, keys["auto"] * getCMV("MOOD_AUTO_RATIO")));
-            let absauto = Math.max(0, Math.abs(autoV) - getCMV("MOOD_AUTO_OFFSET"));
-            if(autoV < 0){
-                Cbsp.setValue(Tvrmsbspn.Fun, 0);
-                Cbsp.setValue(Tvrmsbspn.Sorrow, absauto);
-                Cbsp.setValue(Tvrmsbspn.E, 0);
-            }else{
-                Cbsp.setValue(Tvrmsbspn.Fun, absauto);
-                Cbsp.setValue(Tvrmsbspn.Sorrow, 0);
-                Cbsp.setValue(Tvrmsbspn.E, absauto);
-            }
-        }
         // eyes
         let reo = keys['righteyeopen'];
         let leo = keys['lefteyeopen'];
@@ -127,9 +114,35 @@ function updateMouthEyes(keys){
         riris.y = irisY;
         liris.y = irisY;
         // eyebrows
-        if(hasBrows){
+        if(checkVRMMood("Brows up")){
             let browspos = Math.min(1, Math.max(0, keys['brows'] - getCMV("BROWS_OFFSET")) * getCMV("BROWS_RATIO"));
             Cbsp.setValue("Brows up", browspos);
+        }
+        // auto mood
+        if(mood == "AUTO_MOOD_DETECTION"){
+            let autoV = Math.max(-1, Math.min(1, keys["auto"] * getCMV("MOOD_AUTO_RATIO")));
+            let absauto = Math.max(0, Math.abs(autoV) - getCMV("MOOD_AUTO_OFFSET"));
+            let balFun = 0;
+            let balSor = 0;
+            let balAng = 0;
+            if(!checkVRMMood("Brows up")){
+                let browspos = Math.min(1, Math.max(0, keys['brows'] - getCMV("BROWS_OFFSET")) * getCMV("BROWS_RATIO"));
+                let browslimit = 0.1;
+                balFun = Math.min(browslimit, Math.max(0, browspos));
+                balSor = Math.min(browslimit / 2, Math.max(0, (browslimit - balFun) / 2));
+                balAng = Math.min(browslimit / 2, Math.max(0, (browslimit - balFun) / 2));
+            }
+            if(autoV < 0){
+                Cbsp.setValue(Tvrmsbspn.Angry, balAng);
+                Cbsp.setValue(Tvrmsbspn.Sorrow, absauto + balSor);
+                Cbsp.setValue(Tvrmsbspn.Fun, balFun);
+                Cbsp.setValue(Tvrmsbspn.E, 0);
+            }else{
+                Cbsp.setValue(Tvrmsbspn.Angry, balAng);
+                Cbsp.setValue(Tvrmsbspn.Sorrow, balSor);
+                Cbsp.setValue(Tvrmsbspn.Fun, absauto + balFun);
+                Cbsp.setValue(Tvrmsbspn.E, absauto);
+            }
         }
     }
 }
@@ -180,8 +193,9 @@ function updateMood(){
         if(oldmood != "AUTO_MOOD_DETECTION"){
             Cbsp.setValue(oldmood, 0);
         }else{
-            Cbsp.setValue(Tvrmsbspn.Fun, 0);
+            Cbsp.setValue(Tvrmsbspn.Angry, 0);
             Cbsp.setValue(Tvrmsbspn.Sorrow, 0);
+            Cbsp.setValue(Tvrmsbspn.Fun, 0);
             Cbsp.setValue(Tvrmsbspn.E, 0);
         }
         if(mood != "AUTO_MOOD_DETECTION"){
@@ -263,19 +277,16 @@ function viLoop(){
     requestAnimationFrame(viLoop);
 }
 
-let hasBrows = false;
-function resetBrows(){
-    if(currentVrm.blendShapeProxy.getBlendShapeTrackName("Brows up")){
-        hasBrows = true;
-    }else{
-        hasBrows = false;
-    }
-}
-
 // mood check
+let noMoods = [];
+function resetVRMMood(){
+    noMoods = [];
+}
 function checkVRMMood(mood){
     if(mood == "auto"){
         return true;
+    }else if(noMoods.includes(mood)){
+        return false;
     }else if(currentVrm){
         let tmood = {
             "angry": Tvrmsbspn.Angry,
@@ -289,7 +300,10 @@ function checkVRMMood(mood){
         }[mood];
         if(currentVrm.blendShapeProxy.getBlendShapeTrackName(tmood)){
             return true;
+        }else if(currentVrm.blendShapeProxy.getBlendShapeTrackName(mood)){
+            return true;
         }else{
+            noMoods.push(mood);
             return false;
         }
     }else{
