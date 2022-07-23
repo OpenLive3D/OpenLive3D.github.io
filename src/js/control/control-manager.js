@@ -55,10 +55,15 @@ function initialize(){
         console.log("video connected");
     });
 
-    // load ml libraries
-    loadLandmarkModel(function(){
-        console.log("landmark model connected");
+    // load holistic
+    loadHolistic(onHolisticResults, function(){
+        console.log("holistic model connected");
     });
+
+    // // load ml libraries
+    // loadLandmarkModel(function(){
+    //     console.log("landmark model connected");
+    // });
 
     // load vrm model
     loadVRM(getCMV('MODEL'));
@@ -232,6 +237,62 @@ function setMood(newmood){
     }[newmood];
 }
 
+// obtain Holistic Result
+var firstTime = true;
+async function onHolisticResults(results){
+    if(firstTime){
+        firstTime = false;
+        hideLoadbox();
+        setInterval(checkFPS, 1000 * FPSCheckDuration);
+        console.log("ml & visual loops validated");
+        console.log(results);
+    }
+
+    removeLandmarks(results);
+
+    if(results.faceLandmarks){
+        let keyPoints = packFaceHolistic(results.faceLandmarks);
+        let faceInfo = face2Info(keyPoints);
+        onFaceLandmarkResult(keyPoints, faceInfo);
+    }
+
+    if(results.poseLandmarks){
+        for(i in POSE_CONNECTIONS){
+            let ll = POSE_CONNECTIONS[i];
+            let p1 = results.poseLandmarks[ll[0]];
+            let p2 = results.poseLandmarks[ll[1]];
+        }
+    }
+    if(results.rightHandLandmarks){
+        for(i in HAND_CONNECTIONS){
+            let ll = HAND_CONNECTIONS[i];
+            let p1 = results.rightHandLandmarks[ll[0]];
+            let p2 = results.rightHandLandmarks[ll[1]];
+        }
+    }
+    if(results.leftHandLandmarks){
+        for(i in HAND_CONNECTIONS){
+            let ll = HAND_CONNECTIONS[i];
+            let p1 = results.leftHandLandmarks[ll[0]];
+            let p2 = results.leftHandLandmarks[ll[1]];
+        }
+    }
+
+    if(results.poseLandmarks){
+        if(results.rightHandLandmarks){
+            let p1 = results.poseLandmarks[POSE_LANDMARKS.RIGHT_ELBOW];
+            let p2 = results.rightHandLandmarks[0];
+        }
+        if(results.leftHandLandmarks){
+            let p1 = results.poseLandmarks[POSE_LANDMARKS.LEFT_ELBOW];
+            let p2 = results.leftHandLandmarks[0];
+        }
+    }
+    setTimeout(function(){
+        mlLoop();
+    }, 100);
+}
+
 // face landmark resolver
 function onFaceLandmarkResult(keyPoints, faceInfo){
     clearDebugCvs();
@@ -255,7 +316,6 @@ function onFaceLandmarkResult(keyPoints, faceInfo){
             .onUpdate(() => updateTweenInfo());
         tween.start();
     }
-    requestAnimationFrame(mlLoop);
 }
 
 // the main ML loop
@@ -263,13 +323,14 @@ let info = getDefaultInfo();
 let tmpInfo = getDefaultInfo();
 let tween = null;
 let mlLoopCounter = 0;
-function mlLoop(){
+async function mlLoop(){
     mlLoopCounter += 1;
-    let image = getCameraFrame();
-    getFaceInfo(image,
-        getCMV('MAX_FACES'),
-        getCMV('PREDICT_IRISES'),
-        onFaceLandmarkResult);
+    // getFaceInfo(getCameraFrame(),
+    //     getCMV('MAX_FACES'),
+    //     getCMV('PREDICT_IRISES'),
+    //     onFaceLandmarkResult);
+    let hModel = getHolisticModel();
+    await hModel.send({image: getCameraFrame()});
 }
 
 // the main visualization loop
@@ -319,18 +380,23 @@ function checkVRMMood(mood){
 }
 
 // integration check
-function checkIntegrate(){
+async function checkIntegrate(){
+    drawLoading("⟳ Integration Validating...");
     let image = getCameraFrame();
-    getFaceInfo(image,
-        getCMV('MAX_FACES'),
-        getCMV('PREDICT_IRISES'),
-        function(keyPoints, faceInfo){
-            setInterval(checkFPS, 1000 * FPSCheckDuration);
-            requestAnimationFrame(mlLoop);
-            requestAnimationFrame(viLoop);
-            console.log("ml & visual loops initialized");
-            hideLoadbox();
-        });
+    // getFaceInfo(image,
+    //     getCMV('MAX_FACES'),
+    //     getCMV('PREDICT_IRISES'),
+    //     function(keyPoints, faceInfo){
+    //         drawLoading("⟳ Final Validating...");
+    //         requestAnimationFrame(mlLoop);
+    //         requestAnimationFrame(viLoop);
+    //         console.log("ml & visual loops initialized");
+    //     });
+    let hModel = getHolisticModel();
+    await hModel.send({image: getCameraFrame()});
+    requestAnimationFrame(viLoop);
+    requestAnimationFrame(mlLoop);
+    console.log("ml & visual loops initialized");
 }
 
 // check VRM model
@@ -347,8 +413,8 @@ function initLoop(){
     if(window.mobileCheck()){
         drawMobile();
     }else{
-        drawLoading();
-        if(checkVRMModel() && checkLMModel() && checkImage()){
+        drawLoading("Initializing");
+        if(checkVRMModel() && checkHModel() && checkImage()){
             console.log("start integration validation");
             checkIntegrate();
         }else{

@@ -319,13 +319,13 @@ function drawMobile(){
     loadbox.innerHTML = "MOBILE NOT SUPPORTED!!";
 }
 
-function drawLoading(){
+function drawLoading(loadStage){
     let loadbox = document.getElementById('loadinfo');
     loadbox.innerHTML = "";
-    if(checkVRMModel() && checkLMModel() && checkImage()){
+    if(checkVRMModel() && checkHModel() && checkImage()){
         let checkintegrate = document.createElement('p');
         loadbox.appendChild(checkintegrate);
-        checkintegrate.innerHTML = "⟳ Integration Validating...";
+        checkintegrate.innerHTML = loadStage;
         let tmp1 = document.createElement('p');
         loadbox.appendChild(tmp1);
         tmp1.innerHTML = ".";
@@ -344,7 +344,7 @@ function drawLoading(){
         }
         let checklm = document.createElement('p');
         loadbox.appendChild(checklm);
-        if(checkLMModel()){
+        if(checkHModel()){
             checklm.innerHTML = "✅ FaceLandMark-Model Loading...";
         }else{
             checklm.innerHTML = "⟳ FaceLandMark-Model Loading...";

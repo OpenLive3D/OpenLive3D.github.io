@@ -168,3 +168,18 @@ function packFace(_face){
     });
     return ret;
 }
+
+function packFaceHolistic(_face){
+    let wh = getCameraWH();
+    function pointUnpack(p){
+        return [p.x * wh[0], p.y * wh[1], p.z * wh[1]];
+    }
+    let ret = {};
+    Object.keys(FPoI).forEach(function (key) {
+        ret[key] = [];
+        for (let i = 0; i < FPoI[key].length; i++){
+            ret[key][i] = pointUnpack(_face[FPoI[key][i]]);
+        }
+    });
+    return ret;
+}
