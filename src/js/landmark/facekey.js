@@ -1,5 +1,6 @@
 // Face Point of Interests
 // left right top down center
+// https://i.stack.imgur.com/5Mohl.jpg
 
 const FPoI = {
     "head": [127, 356, 10, 152, 168],
@@ -10,27 +11,6 @@ const FPoI = {
     "leftbrow": [336, 334]
 };
 
-function average3d(p1, p2){
-    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2, (p1[2] + p2[2]) / 2];
-}
-
-function distance3d(p1, p2){
-    const horiz = p2[0] - p1[0];
-    const vert = p2[1] - p1[1];
-    const depth = p2[2] - p1[2];
-    return Math.sqrt((horiz * horiz) + (vert * vert) + (depth * depth));
-}
-
-function distance2d(p1, p2){
-    const horiz = p2[0] - p1[0];
-    const vert = p2[1] - p1[1];
-    return Math.sqrt((horiz * horiz) + (vert * vert));
-}
-
-function slope(xIdx, yIdx, p1, p2){
-  return (p2[yIdx]-p1[yIdx]) / (p2[xIdx]-p1[xIdx]);
-}
-
 function getOpenRatio(obj){
     const width = distance3d(obj[0], obj[1]);
     const height = distance3d(obj[2], obj[3]);
@@ -40,8 +20,6 @@ function getOpenRatio(obj){
 function getPosRatio(obj){
     const dleft = distance3d(obj[0], obj[4]);
     const dright = distance3d(obj[1], obj[4]);
-    // const dtop = distance3d(obj[2], obj[4]);
-    // const ddown = distance3d(obj[3], obj[4]);
     return dleft / (dleft + dright);
 }
 

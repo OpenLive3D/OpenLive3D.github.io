@@ -235,9 +235,6 @@ function setMood(newmood){
 // face landmark resolver
 function onFaceLandmarkResult(keyPoints, faceInfo){
     if(faceInfo){
-        if(getCMV('DEBUG_LANDMARK')){
-            drawLandmark(keyPoints);
-        }
         Object.keys(faceInfo).forEach(function(key){
             let sr = getSR(getKeyType(key));
             tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
@@ -249,37 +246,36 @@ function onFaceLandmarkResult(keyPoints, faceInfo){
 // pose landmark resolver
 function onPoseLandmarkResult(keyPoints, poseInfo){
     if(poseInfo){
-        if(getCMV('DEBUG_LANDMARK')){
-            drawLandmark(keyPoints);
-        }
     }
 }
 
 // hand landmark resolver
 function onLeftHandLandmarkResult(keyPoints, handInfo){
     if(handInfo){
-        if(getCMV('DEBUG_LANDMARK')){
-            drawLandmark(keyPoints);
-        }
     }
 }
 function onRightHandLandmarkResult(keyPoints, handInfo){
     if(handInfo){
-        if(getCMV('DEBUG_LANDMARK')){
-            drawLandmark(keyPoints);
-        }
     }
 }
 
+// arm connection resolver
+function onLeftArmResult(keyPoints, armInfo){
+}
+function onRightArmResult(keyPoints, armInfo){
+}
+
 // obtain Holistic Result
-var firstTime = true;
+let firstTime = true;
+let tween = null;
+let info = getDefaultInfo();
+let tmpInfo = getDefaultInfo();
 async function onHolisticResults(results){
     if(firstTime){
-        firstTime = false;
         hideLoadbox();
         setInterval(checkFPS, 1000 * FPSCheckDuration);
         console.log("ml & visual loops validated");
-        console.log(results);
+        console.log("1st Result: ", results);
     }
 
     clearDebugCvs();
@@ -287,57 +283,81 @@ async function onHolisticResults(results){
         drawImage(getCameraFrame());
     }
 
+    let PoI = {};
+    let allInfo = {};
     if(results.faceLandmarks){
         let keyPoints = packFaceHolistic(results.faceLandmarks);
+        mergePoints(PoI, keyPoints);
         let faceInfo = face2Info(keyPoints);
+        allInfo["face"] = faceInfo;
+        if(firstTime){
+            console.log("1st Face: ", faceInfo);
+        }
         onFaceLandmarkResult(keyPoints, faceInfo);
     }
-
     if(results.poseLandmarks){
         let keyPoints = packPoseHolistic(results.poseLandmarks);
+        mergePoints(PoI, keyPoints);
         let poseInfo = pose2Info(keyPoints);
+        allInfo["pose"] = poseInfo;
+        if(firstTime){
+            console.log("1st Pose: ", poseInfo);
+        }
         onPoseLandmarkResult(keyPoints, poseInfo);
     }
     if(results.leftHandLandmarks){
-        let keyPoints = packHandHolistic(results.leftHandLandmarks);
-        let handInfo = hand2Info(keyPoints);
+        let keyPoints = packHandHolistic(results.leftHandLandmarks, 0);
+        mergePoints(PoI, keyPoints);
+        let handInfo = hand2Info(keyPoints, 0);
+        allInfo["left_hand"] = handInfo;
+        if(firstTime){
+            console.log("1st Left-Hand: ", handInfo);
+        }
         onLeftHandLandmarkResult(keyPoints, handInfo);
     }
     if(results.rightHandLandmarks){
-        let keyPoints = packHandHolistic(results.rightHandLandmarks);
-        let handInfo = hand2Info(keyPoints);
+        let keyPoints = packHandHolistic(results.rightHandLandmarks, 1);
+        mergePoints(PoI, keyPoints);
+        let handInfo = hand2Info(keyPoints, 1);
+        allInfo["right_hand"] = handInfo;
+        if(firstTime){
+            console.log("1st Right-Hand: ", handInfo);
+        }
         onRightHandLandmarkResult(keyPoints, handInfo);
     }
 
     if(results.poseLandmarks){
         if(results.leftHandLandmarks){
-            let p1 = results.poseLandmarks[13];
-            let p2 = results.leftHandLandmarks[0];
+            let armInfo = arm2Info(PoI, 0);
+            mergePoints(allInfo["left_hand"], armInfo);
+            onLeftArmResult(PoI, armInfo);
         }
         if(results.rightHandLandmarks){
-            let p1 = results.poseLandmarks[14];
-            let p2 = results.rightHandLandmarks[0];
+            let armInfo = arm2Info(PoI, 1);
+            mergePoints(allInfo["right_hand"], armInfo);
+            onRightArmResult(PoI, armInfo);
         }
     }
 
-    printLog(tmpInfo);
+    printLog(allInfo);
+    if(getCMV('DEBUG_LANDMARK')){
+        drawLandmark(PoI);
+    }
     if(results.faceLandmarks){
         if(tween){
             tween.stop();
         }
-        tween = new TWEEN.Tween(info).to(tmpInfo, deltaTime + 20).easing(TWEEN.Easing.Linear.None)
+        tween = new TWEEN.Tween(info).to(tmpInfo, deltaTime * 2).easing(TWEEN.Easing.Linear.None)
             .onUpdate(() => updateTweenInfo());
         tween.start();
     }
+    firstTime = false;
     setTimeout(function(){
         mlLoop();
     }, 100);
 }
 
 // the main ML loop
-let info = getDefaultInfo();
-let tmpInfo = getDefaultInfo();
-let tween = null;
 let mlLoopCounter = 0;
 async function mlLoop(){
     mlLoopCounter += 1;
@@ -434,7 +454,7 @@ function prettyNumber(n){
 }
 function checkFPS(){
     if(mlLoopCounter > FPSCheckDuration){
-        deltaTime = Math.floor(Math.min(300, Math.max(80,
+        deltaTime = Math.floor(Math.min(100, Math.max(50,
             deltaTime * 0.5 + 500 / mlLoopCounter * FPSCheckDuration
         )));
     }

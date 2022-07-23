@@ -167,6 +167,34 @@ function createLayout(){
         }
     });
 
+    // log modifier
+    let logbox = document.getElementById("logbox");
+    let logitems = getLogItems();
+    for(let key of logitems){
+        let logkey = document.createElement('div');
+        logkey.className = "confkey";
+        logkey.id = "logkey_" + key;
+        logkey.innerHTML = "ᐅ " + key;
+        let loggroup = document.createElement('div');
+        loggroup.className = "w3-margin w3-hide";
+        if(key == "face"){
+            loggroup.className = "w3-margin";
+        }
+        loggroup.id = "logbox_" + key;
+        loggroup.style.color = "white";
+        logkey.onclick = function(){
+            if(loggroup.className == "w3-margin w3-hide"){
+                logkey.innerHTML = "ᐁ " + key;
+                loggroup.className = "w3-margin";
+            }else{
+                logkey.innerHTML = "ᐅ " + key;
+                loggroup.className = "w3-margin w3-hide";
+            }
+        }
+        logbox.appendChild(logkey);
+        logbox.appendChild(loggroup);
+    }
+
     // about the team
     let about = document.getElementById("about");
     about.style.color = "white";
@@ -285,18 +313,23 @@ function drawLandmark(landmark){
 
 function printLog(keys){
     if(isVisible("logbox")){
-        let logbox = document.getElementById('logbox');
-        logbox.innerHTML = '';
-        Object.keys(keys).forEach(function(key){
-            let jsonItem = document.createElement('text');
-            jsonItem.innerHTML = key + ": " + Math.floor(keys[key] * 1000) / 1000 + "<br/>";
-            jsonItem.style.color = "white";
-            logbox.appendChild(jsonItem);
-            let value = document.getElementById(key + "_value");
-            if(value){
-                value.innerHTML = Math.floor(keys[key] * 1000) / 1000;
+        let logitems = getLogItems();
+        for(let ikey of logitems){
+            if(isVisible("logbox_" + ikey)){
+                let logbox = document.getElementById("logbox_" + ikey);
+                logbox.innerHTML = '';
+                if(keys[ikey]){
+                    Object.keys(keys[ikey]).forEach(function(key){
+                        let jsonItem = document.createElement('text');
+                        jsonItem.innerHTML = key + ": " + Math.floor(keys[ikey][key] * 1000) / 1000 + "<br/>";
+                        jsonItem.style.color = "white";
+                        logbox.appendChild(jsonItem);
+                    });
+                }else{
+                    logbox.innerHTML = 'No ' + ikey + ' Detected';
+                }
             }
-        });
+        }
     }
 }
 

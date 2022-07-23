@@ -5,15 +5,56 @@ const MARKCOLOR = {
     "mouth" : "#ff7", // yellow
     "rightbrow": "#f7f", // purple
     "leftbrow": "#f7f", // purple
+    
     "elbow": "#ccc", // light-gray
     "shoulder": "#fff", // white
-    "paw": "#0f0", // green
-    "thumb": "#070", // dark-green
-    "index": "#070", // dark-green
-    "middle": "#070", // dark-green
-    "ring": "#070", // dark-green
-    "pinky": "#070" // dark-green
+
+    "leftpaw": "#0f0", // green
+    "leftthumb": "#070", // dark-green
+    "leftindex": "#070", // dark-green
+    "leftmiddle": "#070", // dark-green
+    "leftring": "#070", // dark-green
+    "leftpinky": "#070", // dark-green
+
+    "rightpaw": "#0f0", // green
+    "rightthumb": "#070", // dark-green
+    "rightindex": "#070", // dark-green
+    "rightmiddle": "#070", // dark-green
+    "rightring": "#070", // dark-green
+    "rightpinky": "#070", // dark-green
 };
+
+function average3d(p1, p2){
+    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2, (p1[2] + p2[2]) / 2];
+}
+
+function distance3d(p1, p2){
+    const horiz = p2[0] - p1[0];
+    const vert = p2[1] - p1[1];
+    const depth = p2[2] - p1[2];
+    return Math.sqrt((horiz * horiz) + (vert * vert) + (depth * depth));
+}
+
+function distance2d(p1, p2){
+    const horiz = p2[0] - p1[0];
+    const vert = p2[1] - p1[1];
+    return Math.sqrt((horiz * horiz) + (vert * vert));
+}
+
+function slope(xIdx, yIdx, p1, p2){
+  return (p2[yIdx]-p1[yIdx]) / (p2[xIdx]-p1[xIdx]);
+}
+
+function arm2Info(PoI, leftright){
+    let keyInfo = {};
+    let patRatio = 0;
+    let foldRatio = 0;
+    let turnRatio = 0;
+    keyInfo["pat"] = patRatio;
+    keyInfo["fold"] = foldRatio;
+    keyInfo["turn"] = turnRatio;
+    return keyInfo;
+}
 
 let hModel = null;
 function loadHolistic(onResults, cb){
@@ -49,4 +90,10 @@ function checkHModel(){
     }else{
         return false;
     }
+}
+
+function mergePoints(PoI, tPoI){
+    Object.keys(tPoI).forEach(function(key){
+        PoI[key] = tPoI[key];
+    });
 }
