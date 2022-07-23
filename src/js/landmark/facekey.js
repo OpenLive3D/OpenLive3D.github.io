@@ -1,15 +1,6 @@
 // Face Point of Interests
 // left right top down center
 
-const MARKCOLOR = {
-    "head" : "#f00", // red
-    "righteye" : "#7ff", // cyan
-    "lefteye" : "#7ff", // cyan
-    "mouth" : "#ff7", // yellow
-    "rightbrow": "#f7f", // purple
-    "leftbrow": "#f7f" // purple
-};
-
 const FPoI = {
     "head": [127, 356, 10, 152, 168],
     "righteye": [33, 133, 159, 145, 468],
@@ -160,27 +151,15 @@ function face2Info(face){
 }
 
 // reduce vertices to the desired set, and compress data as well
-function packFace(_face){
-    let fsm = _face.scaledMesh;
-    let ret = {};
-    Object.keys(FPoI).forEach(function (key) {
-        ret[key] = [];
-        for (let i = 0; i < FPoI[key].length; i++){
-            ret[key][i] = fsm[FPoI[key][i]];
-        }
-    });
-    return ret;
-}
-
 function packFaceHolistic(_face){
     let wh = getCameraWH();
     function pointUnpack(p){
         return [p.x * wh[0], p.y * wh[1], p.z * wh[1]];
     }
     let ret = {};
-    Object.keys(FPoI).forEach(function (key) {
+    Object.keys(FPoI).forEach(function(key){
         ret[key] = [];
-        for (let i = 0; i < FPoI[key].length; i++){
+        for(let i = 0; i < FPoI[key].length; i++){
             ret[key][i] = pointUnpack(_face[FPoI[key][i]]);
         }
     });

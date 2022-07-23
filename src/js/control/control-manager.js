@@ -232,6 +232,45 @@ function setMood(newmood){
     }[newmood];
 }
 
+// face landmark resolver
+function onFaceLandmarkResult(keyPoints, faceInfo){
+    if(faceInfo){
+        if(getCMV('DEBUG_LANDMARK')){
+            drawLandmark(keyPoints);
+        }
+        Object.keys(faceInfo).forEach(function(key){
+            let sr = getSR(getKeyType(key));
+            tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
+        });
+        updateMouthEyes(tmpInfo);
+    }
+}
+
+// pose landmark resolver
+function onPoseLandmarkResult(keyPoints, poseInfo){
+    if(poseInfo){
+        if(getCMV('DEBUG_LANDMARK')){
+            drawLandmark(keyPoints);
+        }
+    }
+}
+
+// hand landmark resolver
+function onLeftHandLandmarkResult(keyPoints, handInfo){
+    if(handInfo){
+        if(getCMV('DEBUG_LANDMARK')){
+            drawLandmark(keyPoints);
+        }
+    }
+}
+function onRightHandLandmarkResult(keyPoints, handInfo){
+    if(handInfo){
+        if(getCMV('DEBUG_LANDMARK')){
+            drawLandmark(keyPoints);
+        }
+    }
+}
+
 // obtain Holistic Result
 var firstTime = true;
 async function onHolisticResults(results){
@@ -243,7 +282,10 @@ async function onHolisticResults(results){
         console.log(results);
     }
 
-    removeLandmarks(results);
+    clearDebugCvs();
+    if(getCMV('DEBUG_IMAGE')){
+        drawImage(getCameraFrame());
+    }
 
     if(results.faceLandmarks){
         let keyPoints = packFaceHolistic(results.faceLandmarks);
@@ -252,65 +294,44 @@ async function onHolisticResults(results){
     }
 
     if(results.poseLandmarks){
-        for(i in POSE_CONNECTIONS){
-            let ll = POSE_CONNECTIONS[i];
-            let p1 = results.poseLandmarks[ll[0]];
-            let p2 = results.poseLandmarks[ll[1]];
-        }
-    }
-    if(results.rightHandLandmarks){
-        for(i in HAND_CONNECTIONS){
-            let ll = HAND_CONNECTIONS[i];
-            let p1 = results.rightHandLandmarks[ll[0]];
-            let p2 = results.rightHandLandmarks[ll[1]];
-        }
+        let keyPoints = packPoseHolistic(results.poseLandmarks);
+        let poseInfo = pose2Info(keyPoints);
+        onPoseLandmarkResult(keyPoints, poseInfo);
     }
     if(results.leftHandLandmarks){
-        for(i in HAND_CONNECTIONS){
-            let ll = HAND_CONNECTIONS[i];
-            let p1 = results.leftHandLandmarks[ll[0]];
-            let p2 = results.leftHandLandmarks[ll[1]];
-        }
+        let keyPoints = packHandHolistic(results.leftHandLandmarks);
+        let handInfo = hand2Info(keyPoints);
+        onLeftHandLandmarkResult(keyPoints, handInfo);
+    }
+    if(results.rightHandLandmarks){
+        let keyPoints = packHandHolistic(results.rightHandLandmarks);
+        let handInfo = hand2Info(keyPoints);
+        onRightHandLandmarkResult(keyPoints, handInfo);
     }
 
     if(results.poseLandmarks){
-        if(results.rightHandLandmarks){
-            let p1 = results.poseLandmarks[POSE_LANDMARKS.RIGHT_ELBOW];
-            let p2 = results.rightHandLandmarks[0];
-        }
         if(results.leftHandLandmarks){
-            let p1 = results.poseLandmarks[POSE_LANDMARKS.LEFT_ELBOW];
+            let p1 = results.poseLandmarks[13];
             let p2 = results.leftHandLandmarks[0];
         }
+        if(results.rightHandLandmarks){
+            let p1 = results.poseLandmarks[14];
+            let p2 = results.rightHandLandmarks[0];
+        }
+    }
+
+    printLog(tmpInfo);
+    if(results.faceLandmarks){
+        if(tween){
+            tween.stop();
+        }
+        tween = new TWEEN.Tween(info).to(tmpInfo, deltaTime + 20).easing(TWEEN.Easing.Linear.None)
+            .onUpdate(() => updateTweenInfo());
+        tween.start();
     }
     setTimeout(function(){
         mlLoop();
     }, 100);
-}
-
-// face landmark resolver
-function onFaceLandmarkResult(keyPoints, faceInfo){
-    clearDebugCvs();
-    if(faceInfo){
-        if(getCMV('DEBUG_IMAGE')){
-            drawImage(getCameraFrame());
-        }
-        if(getCMV('DEBUG_LANDMARK')){
-            drawLandmark(keyPoints);
-        }
-        Object.keys(tmpInfo).forEach(function(key){
-            let sr = getSR(getKeyType(key));
-            tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
-        });
-        printLog(tmpInfo);
-        updateMouthEyes(tmpInfo);
-        if(tween){
-            tween.stop();
-        }
-        tween = new TWEEN.Tween(info).to(tmpInfo, deltaTime).easing(TWEEN.Easing.Linear.None)
-            .onUpdate(() => updateTweenInfo());
-        tween.start();
-    }
 }
 
 // the main ML loop
@@ -406,16 +427,16 @@ function initLoop(){
 }
 
 // validate counter
-let FPSCheckDuration = 30;
+let FPSCheckDuration = 10;
 let deltaTime = 100;
 function prettyNumber(n){
     return Math.floor(n * 1000) / 1000;
 }
 function checkFPS(){
     if(mlLoopCounter > FPSCheckDuration){
-        deltaTime = Math.min(300, Math.min(80,
+        deltaTime = Math.floor(Math.min(300, Math.max(80,
             deltaTime * 0.5 + 500 / mlLoopCounter * FPSCheckDuration
-        ));
+        )));
     }
     console.log("FPS: ",
         prettyNumber(viLoopCounter / FPSCheckDuration),
