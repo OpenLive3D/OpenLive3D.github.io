@@ -104,12 +104,15 @@ function getBrowsRatio(face){
     let hmid = face["head"][4];
     let letop = face["lefteye"][2];
     let retop = face["righteye"][2];
-    let d = distance3d(face["rightbrow"][0], htop) +
+    let d1 = distance3d(face["rightbrow"][0], htop) +
         distance3d(face["rightbrow"][1], htop) +
         distance3d(face["leftbrow"][0], htop) +
         distance3d(face["leftbrow"][1], htop);
-    let base = distance3d(htop, letop) + distance3d(htop, retop);
-    return d / distance3d(htop, hmid);
+    let d2 = distance3d(face["rightbrow"][0], hmid) +
+        distance3d(face["rightbrow"][1], hmid) +
+        distance3d(face["leftbrow"][0], hmid) +
+        distance3d(face["leftbrow"][1], hmid);
+    return d2 / (d1 + d2);
 }
 
 function getDefaultInfo(){

@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-19";
-const VERSION = "Alpha.0.4.5";
+const DEV_DATE = "2022-07-23";
+const VERSION = "Alpha.0.5.1";
 
 let configManager = {};
 
@@ -65,19 +65,19 @@ function initCM(){
         configManager['MOUTH_OPEN_OFFSET'] = 0.015;
         configManager['MOUTH_RATIO'] = 7;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
-        configManager['BROWS_OFFSET'] = 3.9;
-        configManager['BROWS_RATIO'] = 0.5;
+        configManager['BROWS_OFFSET'] = 0.49;
+        configManager['BROWS_RATIO'] = 10;
         configManager['BROWS_STABLIZE_RATIO'] = 0.01;
         configManager['EYE_SYNC'] = true;
         configManager['EYE_LINK_THRESHOLD'] = 0.05;
         configManager['EYE_STABLIZE_RATIO'] = 0.2;
         configManager['IRIS_POS_OFFSET'] = 0.0;
-        configManager['IRIS_POS_RATIO'] = 5.0;
-        configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.27;
-        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.32;
+        configManager['IRIS_POS_RATIO'] = 1.0;
+        configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.20;
+        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.27;
         configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.27;
-        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.32;
+        configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.20;
+        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.27;
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
         configManager['POSITION_X_RATIO'] = 0.12;
         configManager['POSITION_Y_RATIO'] = 0.12;

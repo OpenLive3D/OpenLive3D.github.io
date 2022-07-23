@@ -33,7 +33,5 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.4.X:
- - Position
- - Emotion Detection
- - Brows up
+Alpha-0.5.X:
+ - Move to Holistic Model with Hand tracking

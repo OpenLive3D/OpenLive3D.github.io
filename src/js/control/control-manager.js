@@ -60,11 +60,6 @@ function initialize(){
         console.log("holistic model connected");
     });
 
-    // // load ml libraries
-    // loadLandmarkModel(function(){
-    //     console.log("landmark model connected");
-    // });
-
     // load vrm model
     loadVRM(getCMV('MODEL'));
 
@@ -113,7 +108,7 @@ function updateMouthEyes(keys){
         }
         // irises
         let irispos = keys['irispos'];
-        let irisY = -(irispos - getCMV('IRIS_POS_OFFSET')) * getCMV('IRIS_POS_RATIO');
+        let irisY = (irispos - getCMV('IRIS_POS_OFFSET')) * getCMV('IRIS_POS_RATIO');
         let riris = Ch.getBoneNode(Tvrmshbn.RightEye).rotation;
         let liris = Ch.getBoneNode(Tvrmshbn.LeftEye).rotation;
         riris.y = irisY;
@@ -325,10 +320,6 @@ let tween = null;
 let mlLoopCounter = 0;
 async function mlLoop(){
     mlLoopCounter += 1;
-    // getFaceInfo(getCameraFrame(),
-    //     getCMV('MAX_FACES'),
-    //     getCMV('PREDICT_IRISES'),
-    //     onFaceLandmarkResult);
     let hModel = getHolisticModel();
     await hModel.send({image: getCameraFrame()});
 }
@@ -383,15 +374,6 @@ function checkVRMMood(mood){
 async function checkIntegrate(){
     drawLoading("⟳ Integration Validating...");
     let image = getCameraFrame();
-    // getFaceInfo(image,
-    //     getCMV('MAX_FACES'),
-    //     getCMV('PREDICT_IRISES'),
-    //     function(keyPoints, faceInfo){
-    //         drawLoading("⟳ Final Validating...");
-    //         requestAnimationFrame(mlLoop);
-    //         requestAnimationFrame(viLoop);
-    //         console.log("ml & visual loops initialized");
-    //     });
     let hModel = getHolisticModel();
     await hModel.send({image: getCameraFrame()});
     requestAnimationFrame(viLoop);
