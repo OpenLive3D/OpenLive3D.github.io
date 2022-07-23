@@ -2,13 +2,17 @@ let capture = document.createElement("video");
 capture.playsinline = "playsinline";
 capture.autoplay = "autoplay";
 
+const defaultWidth = 640, defaultHeight = 480;
+capture.width = defaultWidth;
+capture.height = defaultHeight;
+
 // read video from webcam
 function startCamera(cb){
     navigator.mediaDevices.getUserMedia({
         audio:false, video:{
             facingMode: 'user',
-            width: undefined,
-            height: undefined,
+            width: defaultWidth,
+            height: defaultHeight,
         }
     }).then(function(stream){
         console.log("video initialized");

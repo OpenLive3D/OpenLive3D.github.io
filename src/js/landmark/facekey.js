@@ -79,7 +79,7 @@ function getHeadXYZ(head){
     return [x, y, z];
 }
 
-function getMoodAuto(mouth){
+function getMoodAutoDraft(mouth){
     let mbalance = average3d(mouth[0], mouth[1]);
     let mmove = average3d(mouth[2], mouth[3]);
     let absauto = Math.min(1, distance2d(mbalance, mmove) / distance3d(mouth[0], mouth[1]));
@@ -87,6 +87,15 @@ function getMoodAuto(mouth){
         return -absauto;
     }else{
         return absauto;
+    }
+}
+
+function getMoodAuto(autoDraft, headRotate){
+    let absYaw = Math.abs(headRotate[2]);
+    if(autoDraft > 0){
+        return Math.max(0, autoDraft - absYaw / 1.5);
+    }else{
+        return Math.min(0, autoDraft + absYaw / 1.5);
     }
 }
 
@@ -131,6 +140,7 @@ function face2Info(face){
     let keyInfo = {};
     let headRotate = getHeadRotation(face["head"]);
     let headXYZ = getHeadXYZ(face["head"]);
+    let autoDraft = getMoodAutoDraft(face["mouth"]);
     keyInfo["roll"] = headRotate[0];
     keyInfo["pitch"] = headRotate[1];
     keyInfo["yaw"] = headRotate[2];
@@ -142,7 +152,7 @@ function face2Info(face){
     keyInfo["x"] = headXYZ[0];
     keyInfo["y"] = headXYZ[1];
     keyInfo["z"] = headXYZ[2];
-    keyInfo["auto"] = getMoodAuto(face["mouth"]);
+    keyInfo["auto"] = getMoodAuto(autoDraft, headRotate);
     return keyInfo;
 }
 

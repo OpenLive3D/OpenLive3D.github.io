@@ -232,43 +232,50 @@ function setMood(newmood){
     }[newmood];
 }
 
+// face landmark resolver
+function onFaceLandmarkResult(keyPoints, faceInfo){
+    clearDebugCvs();
+    if(faceInfo){
+        if(getCMV('DEBUG_IMAGE')){
+            drawImage(getCameraFrame());
+        }
+        if(getCMV('DEBUG_LANDMARK')){
+            drawLandmark(keyPoints);
+        }
+        Object.keys(tmpInfo).forEach(function(key){
+            let sr = getSR(getKeyType(key));
+            tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
+        });
+        printLog(tmpInfo);
+        updateMouthEyes(tmpInfo);
+        if(tween){
+            tween.stop();
+        }
+        tween = new TWEEN.Tween(info).to(tmpInfo, deltaTime).easing(TWEEN.Easing.Linear.None)
+            .onUpdate(() => updateTweenInfo());
+        tween.start();
+    }
+    requestAnimationFrame(mlLoop);
+}
+
 // the main ML loop
 let info = getDefaultInfo();
 let tmpInfo = getDefaultInfo();
 let tween = null;
+let mlLoopCounter = 0;
 function mlLoop(){
+    mlLoopCounter += 1;
     let image = getCameraFrame();
     getFaceInfo(image,
         getCMV('MAX_FACES'),
         getCMV('PREDICT_IRISES'),
-        function(keyPoints, faceInfo){
-            clearDebugCvs();
-            if(faceInfo){
-                if(getCMV('DEBUG_IMAGE')){
-                    drawImage(image);
-                }
-                if(getCMV('DEBUG_LANDMARK')){
-                    drawLandmark(keyPoints);
-                }
-                Object.keys(tmpInfo).forEach(function(key){
-                    let sr = getSR(getKeyType(key));
-                    tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
-                });
-                printLog(tmpInfo);
-                updateMouthEyes(tmpInfo);
-                if(tween){
-                    tween.stop();
-                }
-                tween = new TWEEN.Tween(info).to(tmpInfo, 100).easing(TWEEN.Easing.Linear.None)
-                    .onUpdate(() => updateTweenInfo());
-                tween.start();
-            }
-        });
-    requestAnimationFrame(mlLoop);
+        onFaceLandmarkResult);
 }
 
 // the main visualization loop
+let viLoopCounter = 0;
 function viLoop(){
+    viLoopCounter += 1;
     if(currentVrm){
         currentVrm.update(clock.getDelta());
         TWEEN.update();
@@ -318,6 +325,7 @@ function checkIntegrate(){
         getCMV('MAX_FACES'),
         getCMV('PREDICT_IRISES'),
         function(keyPoints, faceInfo){
+            setInterval(checkFPS, 1000 * FPSCheckDuration);
             requestAnimationFrame(mlLoop);
             requestAnimationFrame(viLoop);
             console.log("ml & visual loops initialized");
@@ -347,4 +355,24 @@ function initLoop(){
             requestAnimationFrame(initLoop);
         }
     }
+}
+
+// validate counter
+let FPSCheckDuration = 30;
+let deltaTime = 100;
+function prettyNumber(n){
+    return Math.floor(n * 1000) / 1000;
+}
+function checkFPS(){
+    if(mlLoopCounter > FPSCheckDuration){
+        deltaTime = Math.min(300, Math.min(80,
+            deltaTime * 0.5 + 500 / mlLoopCounter * FPSCheckDuration
+        ));
+    }
+    console.log("FPS: ",
+        prettyNumber(viLoopCounter / FPSCheckDuration),
+        prettyNumber(mlLoopCounter / FPSCheckDuration),
+        " Delta: ", prettyNumber(deltaTime));
+    viLoopCounter = 0;
+    mlLoopCounter = 0;
 }
