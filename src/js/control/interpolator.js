@@ -10,22 +10,31 @@ let delayTime = 250; // milliseconds
 function weightedAvg(o1, o2, w1, w2){
     let obj = {};
     Object.keys(o1).forEach(function(key){
-        obj[key] = o1[key] + (o2[key] - o1[key]) * w1 / (w1 + w2);
+        if(key in o2){
+            obj[key] = o1[key] + (o2[key] - o1[key]) * w1 / (w1 + w2);
+        }else{
+            console.log("o2 missing: ", key);
+            obj[key] = o1[key];
+        }
     });
     return obj;
 }
 
 function pushInfo(newinfo){
-    if(arrTimeInfo.length >= 2){
-        arrTimeInfo = [arrTimeInfo[1], {
-            "time": new Date().getTime(),
-            "info": newinfo
-        }];
+    if(newinfo){
+        if(arrTimeInfo.length >= 2){
+            arrTimeInfo = [arrTimeInfo[1], {
+                "time": new Date().getTime(),
+                "info": newinfo
+            }];
+        }else{
+            arrTimeInfo.push({
+                "time": new Date().getTime(),
+                "info": newinfo
+            })
+        }
     }else{
-        arrTimeInfo.push({
-            "time": new Date().getTime(),
-            "info": newinfo
-        })
+        console.log("empty info alert!");
     }
 }
 
