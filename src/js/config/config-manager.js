@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-23";
-const VERSION = "Alpha.0.5.2";
+const DEV_DATE = "2022-07-25";
+const VERSION = "Alpha.0.5.3";
 
 let configManager = {};
 
@@ -61,7 +61,7 @@ function initCM(){
         configManager['MOOD_AUTO_OFFSET'] = 0.04;
         configManager['NECK_RATIO'] = 0.55;
         configManager['CHEST_RATIO'] = 0.45;
-        configManager['BODY_STABLIZE_RATIO'] = 0.7;
+        configManager['BODY_STABLIZE_RATIO'] = 0.1;
         configManager['MOUTH_OPEN_OFFSET'] = 0.015;
         configManager['MOUTH_RATIO'] = 5;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.01;

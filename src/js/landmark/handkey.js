@@ -43,6 +43,17 @@ function hand2Info(hand, leftright){
     return keyInfo;
 }
 
+function arm2Info(PoI, leftright){
+    let keyInfo = {};
+    let patRatio = 0;
+    let foldRatio = 0;
+    let turnRatio = 0;
+    keyInfo["pat"] = patRatio;
+    keyInfo["fold"] = foldRatio;
+    keyInfo["turn"] = turnRatio;
+    return keyInfo;
+}
+
 function packHandHolistic(_hand, leftright){
     let wh = getCameraWH();
     let prefix = ["left", "right"][leftright];

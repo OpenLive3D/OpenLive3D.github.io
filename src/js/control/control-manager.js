@@ -205,7 +205,7 @@ function updateMood(){
     }
 }
 
-function updateTweenInfo(){
+function updateFaceInfo(){
     updateHead(info);
     updateBody(info);
     updateBreath();
@@ -268,8 +268,8 @@ function onRightArmResult(keyPoints, armInfo){
 // obtain Holistic Result
 let firstTime = true;
 let tween = null;
-let info = getDefaultInfo();
-let tmpInfo = getDefaultInfo();
+let info = getDefaultFaceInfo();
+let tmpInfo = getDefaultFaceInfo();
 async function onHolisticResults(results){
     if(firstTime){
         hideLoadbox();
@@ -344,12 +344,7 @@ async function onHolisticResults(results){
         drawLandmark(PoI);
     }
     if(results.faceLandmarks){
-        if(tween){
-            tween.stop();
-        }
-        tween = new TWEEN.Tween(info).to(tmpInfo, deltaTime * 2).easing(TWEEN.Easing.Linear.None)
-            .onUpdate(() => updateTweenInfo());
-        tween.start();
+        pushInfo(tmpInfo);
     }
     firstTime = false;
     setTimeout(function(){
@@ -367,11 +362,12 @@ async function mlLoop(){
 
 // the main visualization loop
 let viLoopCounter = 0;
-function viLoop(){
+async function viLoop(){
     viLoopCounter += 1;
     if(currentVrm){
         currentVrm.update(clock.getDelta());
-        TWEEN.update();
+        info = getInfo();
+        updateFaceInfo();
         drawScene(scene);
     }
     requestAnimationFrame(viLoop);

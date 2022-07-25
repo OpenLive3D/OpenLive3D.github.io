@@ -45,17 +45,6 @@ function slope(xIdx, yIdx, p1, p2){
   return (p2[yIdx]-p1[yIdx]) / (p2[xIdx]-p1[xIdx]);
 }
 
-function arm2Info(PoI, leftright){
-    let keyInfo = {};
-    let patRatio = 0;
-    let foldRatio = 0;
-    let turnRatio = 0;
-    keyInfo["pat"] = patRatio;
-    keyInfo["fold"] = foldRatio;
-    keyInfo["turn"] = turnRatio;
-    return keyInfo;
-}
-
 let hModel = null;
 function loadHolistic(onResults, cb){
     hModel = new Holistic({locateFile: (file) => {

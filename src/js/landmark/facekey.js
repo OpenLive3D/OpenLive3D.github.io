@@ -84,7 +84,7 @@ function getBrowsRatio(face){
     return d2 / (d1 + d2);
 }
 
-function getDefaultInfo(){
+function getDefaultFaceInfo(){
     return {
         "roll": 0, "pitch": 0, "yaw": 0,
         "lefteyeopen": 0, "righteyeopen": 0,

@@ -35,3 +35,4 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 Alpha-0.5.X:
  - Move to Holistic Model with Hand tracking
+ - Replace TWEEN with Customized Interpolator

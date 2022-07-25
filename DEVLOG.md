@@ -61,3 +61,6 @@
    - More emotions and Brows
  - 2022-07-19: Alpha-0.4.5
    - More tricks with Brows
+ - 2022-07-25: Alpha-0.5.3
+   - Move to Holistic Model with Hand tracking
+   - Replace TWEEN with Customized Interpolator
