@@ -31,26 +31,76 @@ function getIMRPRatio(hand, prefix){
     return res;
 }
 
+function getHandRotation(hand, leftright){
+    let prefix = ["left", "right"][leftright];
+    let lrRatio = 1 - leftright * 2;
+    let i0 = prefix + "ring";
+    let i1 = prefix + "index";
+    let i2 = prefix + "middle";
+    let i3 = prefix + "paw";
+    let rollSlope = slope(0, 1, hand[i1][0], hand[i0][0]);
+    let roll = Math.atan(rollSlope);
+    let yawSlope = slope(0, 2, hand[i1][0], hand[i0][0]);
+    let yaw = Math.atan(yawSlope);
+    if((hand[i1][0][0] > hand[i0][0][0]) != (prefix == "right")){
+        roll *= -1;
+        yaw -= Math.PI * lrRatio;
+    }
+    let pitchSlope = slope(2, 1, hand[i2][0], hand[i3][0]);
+    let pitch = Math.atan(pitchSlope) + Math.PI / 2;
+    if(pitch > Math.PI / 2){
+        pitch -= Math.PI;
+    }
+    if(hand[i2][0][1] > hand[i3][0][1]){
+        pitch -= Math.PI;
+    }
+    return [roll, pitch, yaw];
+}
+
+function getDefaultHandInto(leftright){
+    let prefix = ["left", "right"][leftright];
+    let lrRatio = 1 - leftright * 2;
+    let keyInfo = {};
+    keyInfo[prefix + "Thumb"] = 1;
+    keyInfo[prefix + "Index"] = 1;
+    keyInfo[prefix + "Middle"] = 1;
+    keyInfo[prefix + "Ring"] = 1;
+    keyInfo[prefix + "Little"] = 1;
+    keyInfo[prefix + "Roll"] = 0;
+    keyInfo[prefix + "Pitch"] = Math.PI;
+    keyInfo[prefix + "Yaw"] = 0;
+    return keyInfo;
+}
+
 function hand2Info(hand, leftright){
     let keyInfo = {};
     let prefix = ["left", "right"][leftright];
     let imrp = getIMRPRatio(hand, prefix);
-    keyInfo[prefix + "thumb"] = getThumbRatio(hand, prefix);
-    keyInfo[prefix + "index"] = imrp[0];
-    keyInfo[prefix + "middle"] = imrp[1];
-    keyInfo[prefix + "ring"] = imrp[2];
-    keyInfo[prefix + "pinky"] = imrp[3];
+    let handRotate = getHandRotation(hand, leftright);
+    keyInfo[prefix + "Thumb"] = getThumbRatio(hand, prefix);
+    keyInfo[prefix + "Index"] = imrp[0];
+    keyInfo[prefix + "Middle"] = imrp[1];
+    keyInfo[prefix + "Ring"] = imrp[2];
+    keyInfo[prefix + "Little"] = imrp[3];
+    keyInfo[prefix + "Roll"] = handRotate[0];
+    keyInfo[prefix + "Pitch"] = handRotate[1];
+    keyInfo[prefix + "Yaw"] = handRotate[2];
     return keyInfo;
 }
 
 function arm2Info(PoI, leftright){
     let keyInfo = {};
-    let patRatio = 0;
-    let foldRatio = 0;
+    let prefix = ["left", "right"][leftright];
+    let paw = PoI[prefix + "paw"];
+    let elbow = PoI["elbow"][leftright];
+    let abvec = diff3d(paw[0], paw[1]);
+    let acvec = diff3d(paw[0], paw[2]);
+    let norvec = normalize3d(cross3d(abvec, acvec));
+    let lowerarmvec = normalize3d(diff3d(elbow, paw[0]));
+    let patRatio = Math.acos(dot3d(norvec, lowerarmvec));
     let turnRatio = 0;
-    keyInfo["pat"] = patRatio;
-    keyInfo["fold"] = foldRatio;
-    keyInfo["turn"] = turnRatio;
+    keyInfo[prefix + "Pat"] = patRatio;
+    keyInfo[prefix + "Turn"] = turnRatio;
     return keyInfo;
 }
 

@@ -12,23 +12,23 @@ const FPoI = {
 };
 
 function getOpenRatio(obj){
-    const width = distance3d(obj[0], obj[1]);
-    const height = distance3d(obj[2], obj[3]);
+    let width = distance3d(obj[0], obj[1]);
+    let height = distance3d(obj[2], obj[3]);
     return height / width;
 }
 
 function getPosRatio(obj){
-    const dleft = distance3d(obj[0], obj[4]);
-    const dright = distance3d(obj[1], obj[4]);
+    let dleft = distance3d(obj[0], obj[4]);
+    let dright = distance3d(obj[1], obj[4]);
     return dleft / (dleft + dright);
 }
 
 function getHeadRotation(head){
-    const rollSlope = slope(0, 1, head[1], head[0]);
-    const roll = Math.atan(rollSlope);
-    const yawSlope = slope(0, 2, head[1], head[0]);
-    const yaw = Math.atan(yawSlope);
-    const pitchSlope = slope(2, 1, head[2], head[3]);
+    let rollSlope = slope(0, 1, head[1], head[0]);
+    let roll = Math.atan(rollSlope);
+    let yawSlope = slope(0, 2, head[1], head[0]);
+    let yaw = Math.atan(yawSlope);
+    let pitchSlope = slope(2, 1, head[2], head[3]);
     let pitch = Math.atan(pitchSlope);
     if(pitch > 0){
         pitch -= Math.PI;
@@ -84,22 +84,10 @@ function getBrowsRatio(face){
     return d2 / (d1 + d2);
 }
 
-function getDefaultFaceInfo(){
-    return {
-        "roll": 0, "pitch": 0, "yaw": 0,
-        "lefteyeopen": 0, "righteyeopen": 0,
-        "irispos": 0,
-        "mouth": 0,
-        "brows": 0,
-        "x": 0, "y": 0, "z": 0, // -1 < x,y,z < 1
-        "auto": 0
-    };
-}
-
 function getKeyType(key){
     if(["roll", "pitch", "yaw"].includes(key)){
-        return "body";
-    }else if(["lefteyeopen", "righteyeopen", "irispos"].includes(key)){
+        return "head";
+    }else if(["leftEyeOpen", "rightEyeOpen", "irisPos"].includes(key)){
         return "eye";
     }else if(["mouth"].includes(key)){
         return "mouth";
@@ -116,9 +104,9 @@ function face2Info(face){
     keyInfo["roll"] = headRotate[0];
     keyInfo["pitch"] = headRotate[1];
     keyInfo["yaw"] = headRotate[2];
-    keyInfo["lefteyeopen"] = getOpenRatio(face["lefteye"]);
-    keyInfo["righteyeopen"] = getOpenRatio(face["righteye"]);
-    keyInfo["irispos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
+    keyInfo["leftEyeOpen"] = getOpenRatio(face["lefteye"]);
+    keyInfo["rightEyeOpen"] = getOpenRatio(face["righteye"]);
+    keyInfo["irisPos"] = getPosRatio(face["lefteye"]) + getPosRatio(face["righteye"]) - 1;
     keyInfo["mouth"] = Math.max(0, getOpenRatio(face["mouth"]) - Math.abs(headRotate[1] / 10));
     keyInfo["brows"] = getBrowsRatio(face);
     keyInfo["x"] = headXYZ[0];

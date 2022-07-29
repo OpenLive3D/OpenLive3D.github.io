@@ -67,7 +67,7 @@ function initialize(){
 }
 
 function radLimit(rad){
-    let limit = Math.PI / 3;
+    let limit = Math.PI / 2;
     return Math.max(-limit, Math.min(limit, rad));
 }
 
@@ -83,12 +83,12 @@ function updateMouthEyes(keys){
         let mouthRatio = ratioLimit((keys['mouth'] - getCMV("MOUTH_OPEN_OFFSET")) * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
         // eyes
-        let reo = keys['righteyeopen'];
-        let leo = keys['lefteyeopen'];
+        let leo = keys['leftEyeOpen'];
+        let reo = keys['rightEyeOpen'];
         if(getCMV("EYE_SYNC") || Math.abs(reo - leo) < getCMV('EYE_LINK_THRESHOLD')){
             let avgEye = (reo + leo) / 2;
-            reo = avgEye;
             leo = avgEye;
+            reo = avgEye;
         }
         if(reo < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
             Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
@@ -107,7 +107,7 @@ function updateMouthEyes(keys){
             Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
         }
         // irises
-        let irispos = keys['irispos'];
+        let irispos = keys['irisPos'];
         let irisY = (irispos - getCMV('IRIS_POS_OFFSET')) * getCMV('IRIS_POS_RATIO');
         let riris = Ch.getBoneNode(Tvrmshbn.RightEye).rotation;
         let liris = Ch.getBoneNode(Tvrmshbn.LeftEye).rotation;
@@ -147,22 +147,63 @@ function updateMouthEyes(keys){
     }
 }
 
-function updateHead(keys){
+function updateBody(keys){
+    let updateTime = new Date().getTime();
     if(currentVrm){
         let Ch = currentVrm.humanoid;
+        let tiltRatio = Math.min(0.2, Math.max(-0.2, keys['tilt']));
+        let leanRatio = Math.min(1, Math.max(-1, keys['lean'])) * 0.6;
         // head
+        let head = Ch.getBoneNode(Tvrmshbn.Head).rotation;
+        head.set(radLimit(keys['pitch'] * getCMV('HEAD_RATIO')),
+            radLimit(keys['yaw'] * getCMV('HEAD_RATIO') - leanRatio * 0.3),
+            radLimit(keys['roll'] * getCMV('HEAD_RATIO') - tiltRatio * 0.3));
+        // neck
         let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
-        neck.set(radLimit(keys['pitch']) * getCMV('NECK_RATIO'),
-            radLimit(keys['yaw']) * getCMV('NECK_RATIO'),
-            radLimit(keys['roll']) * getCMV('NECK_RATIO'));
+        neck.set(radLimit(keys['pitch'] * getCMV('NECK_RATIO')),
+            radLimit(keys['yaw'] * getCMV('NECK_RATIO') - leanRatio * 0.7),
+            radLimit(keys['roll'] * getCMV('NECK_RATIO') - tiltRatio * 0.7));
+        // chest
         let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
-        chest.set(radLimit(keys['pitch']) * getCMV('CHEST_RATIO'),
-            radLimit(keys['yaw']) * getCMV('CHEST_RATIO'),
-            radLimit(keys['roll']) * getCMV('CHEST_RATIO'));
+        chest.set(radLimit(keys['pitch'] * getCMV('CHEST_RATIO')),
+            radLimit(keys['yaw'] * getCMV('CHEST_RATIO') + leanRatio),
+            radLimit(keys['roll'] * getCMV('CHEST_RATIO') + tiltRatio));
+        // left right arm
+        if(getCMV('HAND_TRACKING')){
+            for(let i = 0; i < 2; i ++){
+                if(updateTime - handTrackers[i] < 1000 * getCMV('HAND_CHECK')){
+                    let prefix = ["left", "right"][i];
+                    let lrRatio = 1 - i * 2;
+                    // upperArm, lowerArm
+                    let wx = keys[prefix + "WristX"];
+                    let wy = keys[prefix + "WristY"];
+                    let wz = keys[prefix + "WristZ"];
+                    let armRotate = armMagic(wx, wy, wz, i);
+                    let nq = new THREE.Quaternion();
+                    Object.keys(armRotate).forEach(function(armkey){
+                        let armobj = Ch.getBoneNode(prefix + armkey).rotation;
+                        nq.multiply(new THREE.Quaternion().setFromEuler(armobj));
+                        armobj.set(...armRotate[armkey]);
+                    });
+                    nq.invert();
+                    let de = new THREE.Euler(0, -Math.PI/2*lrRatio, -Math.PI/2*lrRatio);
+                    nq.multiply(new THREE.Quaternion().setFromEuler(de));
+                    let he = new THREE.Euler(-keys[prefix + 'Yaw']*lrRatio, keys[prefix + 'Roll'], -keys[prefix + 'Pitch']*lrRatio);
+                    nq.multiply(new THREE.Quaternion().setFromEuler(he));
+                    let ne = new THREE.Euler().setFromQuaternion(nq);
+                    let handobj = Ch.getBoneNode(prefix + "Hand").rotation;
+                    handobj.copy(ne);
+                }else{
+                    setDefaultHand(currentVrm, i);
+                }
+            }
+        }else{
+            setDefaultPose(currentVrm);
+        }
     }
 }
 
-function updateBody(keys){
+function updatePosition(keys){
     if(currentVrm && defaultXYZ){
         let Ch = currentVrm.humanoid;
         let hips = Ch.getBoneNode(Tvrmshbn.Hips).position;
@@ -205,9 +246,10 @@ function updateMood(){
     }
 }
 
-function updateFaceInfo(){
-    updateHead(info);
+function updateInfo(){
+    let info = getInfo();
     updateBody(info);
+    updatePosition(info);
     updateBreath();
     updateMood();
 }
@@ -246,34 +288,79 @@ function onFaceLandmarkResult(keyPoints, faceInfo){
 // pose landmark resolver
 function onPoseLandmarkResult(keyPoints, poseInfo){
     if(poseInfo){
+        Object.keys(poseInfo).forEach(function(key){
+            let sr = getSR(getKeyType(key));
+            tmpInfo[key] = (1-sr) * poseInfo[key] + sr * tmpInfo[key];
+        });
     }
 }
 
 // hand landmark resolver
-function onLeftHandLandmarkResult(keyPoints, handInfo){
+let fingerRates = {"Thumb": 0.8, "Index": 0.7, "Middle": 0.7, "Ring": 0.7, "Little": 0.6};
+let fingerSegs = ["Distal", "Intermediate", "Proximal"];
+let thumbRatios = [40, 60, 20];
+let thumbSwing = 20;
+let handTrackers = [new Date().getTime(), new Date().getTime()];
+function onHandLandmarkResult(keyPoints, handInfo, leftright){
+    let prefix = ["left", "right"][leftright];
+    let preRate = 1 - leftright * 2;
     if(handInfo){
+        handTrackers[leftright] = new Date().getTime();
+        Object.keys(handInfo).forEach(function(key){
+            let sr = getSR(getKeyType(key));
+            if(key in tmpInfo){
+                tmpInfo[key] = (1-sr) * handInfo[key] + sr * tmpInfo[key];
+            }
+        });
+        let Ch = currentVrm.humanoid;
+        Object.keys(fingerRates).forEach(function(finger){
+            let fingerRate = fingerRates[finger];
+            let _ratio = 1 - Math.max(0, Math.min(fingerRate, handInfo[prefix + finger])) / fingerRate;
+            if(finger == "Thumb"){
+                for(let i = 0; i < fingerSegs.length; i ++){
+                    let seg = fingerSegs[i];
+                    let ratio = preRate * _ratio * thumbRatios[i] / 180 * Math.PI;
+                    let swing = preRate * (0.5 - Math.abs(0.5 - _ratio)) * thumbSwing / 180 * Math.PI;
+                    let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
+                    frotate.set(0, ratio, swing);
+                }
+            }else{
+                let ratio = preRate * _ratio * 70 / 180 * Math.PI;
+                for(seg of fingerSegs){
+                    let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
+                    frotate.set(0, 0, ratio);
+                }
+            }
+        });
     }
 }
-function onRightHandLandmarkResult(keyPoints, handInfo){
-    if(handInfo){
-    }
-}
-
-// arm connection resolver
-function onLeftArmResult(keyPoints, armInfo){
-}
-function onRightArmResult(keyPoints, armInfo){
+function noHandLandmarkResult(leftright){
+    let prefix = ["left", "right"][leftright];
+    let tmpHandInfo = getDefaultHandInto(leftright);
+    Object.keys(tmpHandInfo).forEach(function(key){
+        let sr = getSR(getKeyType(key));
+        if(key in tmpInfo){
+            tmpInfo[key] = (1-sr) * tmpHandInfo[key] + sr * tmpInfo[key];
+        }
+    });
+    let Ch = currentVrm.humanoid;
+    Object.keys(fingerRates).forEach(function(finger){
+        for(seg of fingerSegs){
+            let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
+            frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
+        }
+    });
 }
 
 // obtain Holistic Result
 let firstTime = true;
 let tween = null;
-let info = getDefaultFaceInfo();
-let tmpInfo = getDefaultFaceInfo();
+let tmpInfo = getDefaultInfo();
 async function onHolisticResults(results){
+    let updateTime = new Date().getTime();
     if(firstTime){
         hideLoadbox();
-        setInterval(checkFPS, 1000 * FPSCheckDuration);
+        setInterval(checkFPS, 1000 * getCMV("FPS_RATE"));
         console.log("ml & visual loops validated");
         console.log("1st Result: ", results);
     }
@@ -290,9 +377,6 @@ async function onHolisticResults(results){
         mergePoints(PoI, keyPoints);
         let faceInfo = face2Info(keyPoints);
         allInfo["face"] = faceInfo;
-        if(firstTime){
-            console.log("1st Face: ", faceInfo);
-        }
         onFaceLandmarkResult(keyPoints, faceInfo);
     }
     if(results.poseLandmarks){
@@ -300,9 +384,6 @@ async function onHolisticResults(results){
         mergePoints(PoI, keyPoints);
         let poseInfo = pose2Info(keyPoints);
         allInfo["pose"] = poseInfo;
-        if(firstTime){
-            console.log("1st Pose: ", poseInfo);
-        }
         onPoseLandmarkResult(keyPoints, poseInfo);
     }
     if(results.leftHandLandmarks){
@@ -310,33 +391,18 @@ async function onHolisticResults(results){
         mergePoints(PoI, keyPoints);
         let handInfo = hand2Info(keyPoints, 0);
         allInfo["left_hand"] = handInfo;
-        if(firstTime){
-            console.log("1st Left-Hand: ", handInfo);
-        }
-        onLeftHandLandmarkResult(keyPoints, handInfo);
+        onHandLandmarkResult(keyPoints, handInfo, 0);
+    }else if(updateTime - handTrackers[0] > 1000 * getCMV('HAND_CHECK')){
+        noHandLandmarkResult(0);
     }
     if(results.rightHandLandmarks){
         let keyPoints = packHandHolistic(results.rightHandLandmarks, 1);
         mergePoints(PoI, keyPoints);
         let handInfo = hand2Info(keyPoints, 1);
         allInfo["right_hand"] = handInfo;
-        if(firstTime){
-            console.log("1st Right-Hand: ", handInfo);
-        }
-        onRightHandLandmarkResult(keyPoints, handInfo);
-    }
-
-    if(results.poseLandmarks){
-        if(results.leftHandLandmarks){
-            let armInfo = arm2Info(PoI, 0);
-            mergePoints(allInfo["left_hand"], armInfo);
-            onLeftArmResult(PoI, armInfo);
-        }
-        if(results.rightHandLandmarks){
-            let armInfo = arm2Info(PoI, 1);
-            mergePoints(allInfo["right_hand"], armInfo);
-            onRightArmResult(PoI, armInfo);
-        }
+        onHandLandmarkResult(keyPoints, handInfo, 1);
+    }else if(updateTime - handTrackers[1] > 1000 * getCMV('HAND_CHECK')){
+        noHandLandmarkResult(1);
     }
 
     printLog(allInfo);
@@ -366,8 +432,7 @@ async function viLoop(){
     viLoopCounter += 1;
     if(currentVrm){
         currentVrm.update(clock.getDelta());
-        info = getInfo();
-        updateFaceInfo();
+        updateInfo();
         drawScene(scene);
     }
     requestAnimationFrame(viLoop);
@@ -443,21 +508,13 @@ function initLoop(){
 }
 
 // validate counter
-let FPSCheckDuration = 10;
-let deltaTime = 100;
 function prettyNumber(n){
     return Math.floor(n * 1000) / 1000;
 }
 function checkFPS(){
-    if(mlLoopCounter > FPSCheckDuration){
-        deltaTime = Math.floor(Math.min(100, Math.max(50,
-            deltaTime * 0.5 + 500 / mlLoopCounter * FPSCheckDuration
-        )));
-    }
     console.log("FPS: ",
-        prettyNumber(viLoopCounter / FPSCheckDuration),
-        prettyNumber(mlLoopCounter / FPSCheckDuration),
-        " Delta: ", prettyNumber(deltaTime));
+        prettyNumber(viLoopCounter / getCMV("FPS_RATE")),
+        prettyNumber(mlLoopCounter / getCMV("FPS_RATE")));
     viLoopCounter = 0;
     mlLoopCounter = 0;
 }

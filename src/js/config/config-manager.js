@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-25";
-const VERSION = "Alpha.0.5.4";
+const DEV_DATE = "2022-07-29";
+const VERSION = "Alpha.0.5.5";
 
 let configManager = {};
 
@@ -55,13 +55,16 @@ function initCM(){
         console.log("Initial Config");
         configManager['BG_COLOR'] = "#0C0";
         configManager['CAMERA_FLIP'] = true;
+        configManager['HAND_TRACKING'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
         configManager['BREATH_STRENGTH'] = 1;
         configManager['MOOD_AUTO_RATIO'] = 4;
         configManager['MOOD_AUTO_OFFSET'] = 0.04;
-        configManager['NECK_RATIO'] = 0.55;
-        configManager['CHEST_RATIO'] = 0.45;
-        configManager['BODY_STABLIZE_RATIO'] = 0.1;
+        configManager['HEAD_RATIO'] = 0.50;
+        configManager['NECK_RATIO'] = 0.40;
+        configManager['CHEST_RATIO'] = 0.1;
+        configManager['HEAD_STABLIZE_RATIO'] = 0.3;
+        configManager['BODY_STABLIZE_RATIO'] = 0.7;
         configManager['MOUTH_OPEN_OFFSET'] = 0.015;
         configManager['MOUTH_RATIO'] = 5;
         configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
@@ -91,6 +94,8 @@ function initCM(){
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
     configManager['TIME'] = new Date();
+    configManager['FPS_RATE'] = 60;
+    configManager['HAND_CHECK'] = 5;
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
     configManager['NUM_IRIS_KEYPOINTS'] = 5;
@@ -123,8 +128,8 @@ function getAllMoods(){
 }
 
 function getSR(key){
-    if(key == "body"){
-        return configManager['BODY_STABLIZE_RATIO'];
+    if(key == "head"){
+        return configManager['HEAD_STABLIZE_RATIO'];
     }else if(key == "eye"){
         return configManager['EYE_STABLIZE_RATIO'];
     }else if(key == "mouth"){
@@ -150,7 +155,7 @@ function setCMV(key, value){
 }
 
 function getBinaryCM(){
-    return ["CAMERA_FLIP", "EYE_SYNC",
+    return ["CAMERA_FLIP", 'HAND_TRACKING', "EYE_SYNC",
         'MOOD_ANGRY', 'MOOD_SORROW',
         'MOOD_FUN', 'MOOD_JOY',
         'MOOD_NEUTRAL', 'MOOD_AUTO'];
@@ -169,7 +174,12 @@ function getConfigModifiers(){
         }, {
             'key': 'CAMERA_FLIP',
             'title': 'Camera Flip',
-            'describe': 'Flip the camera horizontally. Accept "true|false" value',
+            'describe': 'Flip the camera horizontally.',
+            'valid': [true, false]
+        }, {
+            'key': 'HAND_TRACKING',
+            'title': 'Hand Tracking',
+            'describe': 'Hand tracking is enabled or not.',
             'valid': [true, false]
         }, {
             'key': 'BREATH_FREQUENCY',
@@ -193,6 +203,11 @@ function getConfigModifiers(){
             'range': [0, 1]
         }],
         'BODY': [{
+            'key': 'HEAD_RATIO',
+            'title': 'Head Rotate Ratio',
+            'describe': 'The multiplication parameter to rotate the head as the head rotation. Range(-2, 2)',
+            'range': [-2, 2]
+        }, {
             'key': 'NECK_RATIO',
             'title': 'Neck Rotate Ratio',
             'describe': 'The multiplication parameter to rotate the neck as the head rotation. Range(-2, 2)',
@@ -202,6 +217,11 @@ function getConfigModifiers(){
             'title': 'Chest Rotate Ratio',
             'describe': 'The multiplication parameter to rotate the chest as the head rotation. Range(-2, 2)',
             'range': [-2, 2]
+        }, {
+            'key': 'HEAD_STABLIZE_RATIO',
+            'title': 'Head Stablize Ratio',
+            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'range': [0, 0.95]
         }, {
             'key': 'BODY_STABLIZE_RATIO',
             'title': 'Body Stablize Ratio',
