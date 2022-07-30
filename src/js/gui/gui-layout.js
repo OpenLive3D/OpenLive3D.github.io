@@ -43,8 +43,17 @@ function resetCameraPos(pos){
     controls.target.set(pos.x, pos.y, pos.z);
 }
 
+function setBackGround(){
+    if(getCMV('BG_UPLOAD')){
+        renderer.setClearColor('#000', 0);
+        document.getElementById('bgimg').style.backgroundImage = getCMV('BG_UPLOAD');
+    }else{
+        renderer.setClearColor(getCMV('BG_COLOR'), 1);
+    }
+}
+
 function createLayout(){
-    renderer.setClearColor(getCMV('BG_COLOR'), 1);
+    setBackGround();
 
     // document link
     let docbtn = document.getElementById('docbtn');
@@ -124,6 +133,31 @@ function createLayout(){
                 item.onclick = function myFunction(){
                     setCMV(configitem['key'], item.checked);
                 };
+            }else if(configitem['key'] == "BG_UPLOAD"){
+                item.setAttribute("type", "file");
+                item.setAttribute("accept", "image/*");
+                item.onchange = function myFunction(){
+                    let file = item.files[0];
+                    if(file){
+                        let reader = new FileReader();
+                        reader.onloadend = function(){
+                            setCMV(configitem['key'], "url(" + reader.result + ")");
+                            setBackGround();
+                        }
+                        reader.readAsDataURL(file);
+                    }else{
+                        setCMV("BG_UPLOAD", "");
+                        setBackGround();
+                    }
+                };
+            }else if(configitem['key'] == "BG_COLOR"){
+                item.setAttribute("type", "color");
+                item.setAttribute("value", getCMV("BG_COLOR"));
+                item.onchange = function myFunction(){
+                    setCMV("BG_UPLOAD", "");
+                    setCMV("BG_COLOR", item.value);
+                    setBackGround();
+                };
             }else{
                 item.style.textAlign = "right";
                 item.style.width = "100px";
@@ -145,8 +179,8 @@ function createLayout(){
                         }
                     }
                     setCMV(configitem['key'], item.value);
-                    if(configitem['key'] == "BG_COLOR"){
-                        renderer.setClearColor(item.value, 1);
+                    if(["BG_COLOR", "BG_UPLOAD"].includes(configitem['key'])){
+                        setBackGround();
                     }
                 };
             }
@@ -163,6 +197,17 @@ function createLayout(){
             confgroup.appendChild(info);
             confgroup.appendChild(document.createElement("br"));
             confgroup.appendChild(item);
+            if(configitem['key'] == "BG_UPLOAD"){
+                let cancelitem = document.createElement("input");
+                cancelitem.setAttribute("type", "button");
+                cancelitem.setAttribute("value", "Remove Image");
+                cancelitem.onclick = function(){
+                    item.value = "";
+                    setCMV("BG_UPLOAD", "");
+                    setBackGround();
+                }
+                confgroup.appendChild(cancelitem);
+            }
             confgroup.appendChild(document.createElement("br"));
         }
     });
@@ -177,9 +222,6 @@ function createLayout(){
         logkey.innerHTML = "ᐅ " + key;
         let loggroup = document.createElement('div');
         loggroup.className = "w3-margin w3-hide";
-        if(key == "face"){
-            loggroup.className = "w3-margin";
-        }
         loggroup.id = "logbox_" + key;
         loggroup.style.color = "white";
         logkey.onclick = function(){

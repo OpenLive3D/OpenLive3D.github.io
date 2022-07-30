@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-29";
-const VERSION = "Alpha.0.5.5";
+const DEV_DATE = "2022-07-30";
+const VERSION = "Alpha.0.5.6";
 
 let configManager = {};
 
@@ -53,7 +53,7 @@ function initCM(){
     }else{
         // Modifiable Parameters
         console.log("Initial Config");
-        configManager['BG_COLOR'] = "#0C0";
+        configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['HAND_TRACKING'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
@@ -93,9 +93,10 @@ function initCM(){
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
+    configManager['BG_UPLOAD'] = "";
     configManager['TIME'] = new Date();
     configManager['FPS_RATE'] = 60;
-    configManager['HAND_CHECK'] = 5;
+    configManager['HAND_CHECK'] = 3;
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
     configManager['NUM_IRIS_KEYPOINTS'] = 5;
@@ -168,10 +169,6 @@ function getLogItems(){
 function getConfigModifiers(){
     return {
         'GENERAL': [{
-            'key': 'BG_COLOR',
-            'title': 'Background Color',
-            'describe': 'Accept Color Code with "#" or "rgba", "hsla"'
-        }, {
             'key': 'CAMERA_FLIP',
             'title': 'Camera Flip',
             'describe': 'Flip the camera horizontally.',
@@ -201,6 +198,15 @@ function getConfigModifiers(){
             'title': 'MOOD_AUTO Offset',
             'describe': 'Auto-mood works when the value is larger than the offset, default as 0.1. Range(0, 1)',
             'range': [0, 1]
+        }],
+        'BACKGROUND': [{
+            'key': 'BG_COLOR',
+            'title': 'Background Color',
+            'describe': 'Accept Color Code with "#" or "rgba", "hsla"'
+        }, {
+            'key': 'BG_UPLOAD',
+            'title': 'Upload Image',
+            'describe': 'Upload an image as your background'
         }],
         'BODY': [{
             'key': 'HEAD_RATIO',
@@ -246,13 +252,13 @@ function getConfigModifiers(){
         }],
         'BROWS': [{
             'key': 'BROWS_OFFSET',
-            'title': 'Mouth Open Offset',
-            'describe': 'Mouth will only open after the openness value is larger than the offset. Range(0, 1)',
+            'title': 'Brows Open Offset',
+            'describe': 'Brows will only open after the openness value is larger than the offset. Range(0, 1)',
             'range': [0, 1]
         }, {
             'key': 'BROWS_RATIO',
-            'title': 'Mouth Open Ratio',
-            'describe': 'The multiplication parameter for mouth openness. Range(0, 20)',
+            'title': 'Brows Open Ratio',
+            'describe': 'The multiplication parameter for brows openness. Range(0, 20)',
             'range': [0, 20]
         }, {
             'key': 'BROWS_STABLIZE_RATIO',

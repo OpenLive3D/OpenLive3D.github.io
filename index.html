@@ -27,6 +27,7 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
     </script>
     <!-- layout -->
     <canvas class="vrm" id="canvas"></canvas>
+    <div class="bgimg" id="bgimg"></div>
     <div class="w3-sidebar w3-animate-left" style="width:270px;background-color:#0006;display:none" id="thesidebar">
         <div class="w3-bar-item" style="height:60px;color:#0000"> . </div>
         <br/>
@@ -46,11 +47,11 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
         <button onclick="hideObj('confbox')" class="w3-button w3-block w3-left-align w3-text-white"> Setting </button>
         <div class="w3-bar-item w3-hide" id="confbox"></div>
         <button onclick="hideObj('logbox')" class="w3-button w3-block w3-left-align w3-text-white"> Parameters </button>
-        <div class="w3-bar-item" id="logbox"></div>
+        <div class="w3-bar-item w3-hide" id="logbox"></div>
         <button onclick="document.getElementById('docbtn').click();" class="w3-button w3-block w3-left-align w3-text-white"> Document </button>
         <a target="_blank" rel="noopener noreferrer" id="docbtn" style="display:none;"></a>
         <button onclick="hideObj('about')" class="w3-button w3-block w3-left-align w3-text-white"> About </button>
-        <div class="w3-bar-item w3-margin w3-hide" id="about"></div>
+        <div class="w3-bar-item w3-margin" id="about"></div>
     </div>
     <div class="w3-sidebar w3-animate-left" style="width:54px;background-color:#00000002;display:block" id="themoodbar">
     </div>
