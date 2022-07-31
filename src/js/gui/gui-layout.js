@@ -190,6 +190,7 @@ function createLayout(){
                 item.onchange = function(){
                     let newvalue = item.value / 1000 * setrange + configitem['range'][0];
                     itemval.value = newvalue;
+                    itemval.onchange();
                 }
                 let itemval = document.createElement("input");
                 itemval.style.textAlign = "right";
