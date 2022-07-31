@@ -36,11 +36,13 @@ function getDefaultInfo(){
         "auto": 0,
         "tilt": 0,
         "lean": 0,
-        // "leftElbowUp": 0, "leftElbowFront": 0,
-        // "rightElbowUp": 0, "rightElbowFront": 0,
         "leftWristX": 0, "rightWristX": 0, // -1 < x < 1
         "leftWristY": 0, "rightWristY": 0, //  0 < y < 1
-        // "leftWristZ": 0, "rightWristZ": 0,  //  z (0 | 1)
+        "leftThumb": 0, "rightThumb": 0,
+        "leftIndex": 0, "rightIndex": 0,
+        "leftMiddle": 0, "rightMiddle": 0,
+        "leftRing": 0, "rightRing": 0,
+        "leftLittle": 0, "rightLittle": 0,
         "leftRoll": 0, "rightRoll": 0,
         "leftPitch": 0, "rightPitch": 0,
         "leftYaw": 0, "rightYaw": 0,

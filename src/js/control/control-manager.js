@@ -278,7 +278,7 @@ function setMood(newmood){
 function onFaceLandmarkResult(keyPoints, faceInfo){
     if(faceInfo){
         Object.keys(faceInfo).forEach(function(key){
-            let sr = getSR(getKeyType(key));
+            let sr = getSR(getKeyType(key)) / getCMV("SENSITIVITY_SCALE");
             tmpInfo[key] = (1-sr) * faceInfo[key] + sr * tmpInfo[key];
         });
         updateMouthEyes(tmpInfo);
@@ -289,7 +289,7 @@ function onFaceLandmarkResult(keyPoints, faceInfo){
 function onPoseLandmarkResult(keyPoints, poseInfo){
     if(poseInfo){
         Object.keys(poseInfo).forEach(function(key){
-            let sr = getSR(getKeyType(key));
+            let sr = getSR(getKeyType(key)) / getCMV("SENSITIVITY_SCALE");
             tmpInfo[key] = (1-sr) * poseInfo[key] + sr * tmpInfo[key];
         });
     }
@@ -307,7 +307,7 @@ function onHandLandmarkResult(keyPoints, handInfo, leftright){
     if(handInfo){
         handTrackers[leftright] = new Date().getTime();
         Object.keys(handInfo).forEach(function(key){
-            let sr = getSR(getKeyType(key));
+            let sr = getSR('hand') / getCMV("SENSITIVITY_SCALE");
             if(key in tmpInfo){
                 tmpInfo[key] = (1-sr) * handInfo[key] + sr * tmpInfo[key];
             }
@@ -315,7 +315,7 @@ function onHandLandmarkResult(keyPoints, handInfo, leftright){
         let Ch = currentVrm.humanoid;
         Object.keys(fingerRates).forEach(function(finger){
             let fingerRate = fingerRates[finger];
-            let _ratio = 1 - Math.max(0, Math.min(fingerRate, handInfo[prefix + finger])) / fingerRate;
+            let _ratio = 1 - Math.max(0, Math.min(fingerRate, tmpInfo[prefix + finger])) / fingerRate;
             if(finger == "Thumb"){
                 for(let i = 0; i < fingerSegs.length; i ++){
                     let seg = fingerSegs[i];

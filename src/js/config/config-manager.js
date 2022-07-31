@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-07-30";
-const VERSION = "Alpha.0.5.6";
+const DEV_DATE = "2022-08-01";
+const VERSION = "Alpha.0.5.7";
 
 let configManager = {};
 
@@ -55,7 +55,7 @@ function initCM(){
         console.log("Initial Config");
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
-        configManager['HAND_TRACKING'] = true;
+        configManager['SENSITIVITY_SCALE'] = 1;
         configManager['BREATH_FREQUENCY'] = 0.3;
         configManager['BREATH_STRENGTH'] = 1;
         configManager['MOOD_AUTO_RATIO'] = 4;
@@ -82,6 +82,8 @@ function initCM(){
         configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.20;
         configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.27;
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
+        configManager['HAND_STABLIZE_RATIO'] = 0.05;
+        configManager['HAND_TRACKING'] = true;
         configManager['POSITION_X_RATIO'] = 0.12;
         configManager['POSITION_Y_RATIO'] = 0.12;
         configManager['POSITION_Z_RATIO'] = 0.12;
@@ -137,6 +139,8 @@ function getSR(key){
         return configManager['MOUTH_STABLIZE_RATIO'];
     }else if(key == "brows"){
         return configManager['BROWS_STABLIZE_RATIO'];
+    }else if(key == "hand"){
+        return configManager['HAND_STABLIZE_RATIO'];
     }else{
         return configManager['BODY_STABLIZE_RATIO'];
     }
@@ -174,10 +178,10 @@ function getConfigModifiers(){
             'describe': 'Flip the camera horizontally.',
             'valid': [true, false]
         }, {
-            'key': 'HAND_TRACKING',
-            'title': 'Hand Tracking',
-            'describe': 'Hand tracking is enabled or not.',
-            'valid': [true, false]
+            'key': 'SENSITIVITY_SCALE',
+            'title': 'Sensitivity Scale',
+            'describe': 'The higher this value is, the more overall sensitive it is to human movement, default as 1. Range(0.1, 3).',
+            'range': [0.1, 3]
         }, {
             'key': 'BREATH_FREQUENCY',
             'title': 'Breath Frequency',
@@ -226,12 +230,12 @@ function getConfigModifiers(){
         }, {
             'key': 'HEAD_STABLIZE_RATIO',
             'title': 'Head Stablize Ratio',
-            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }, {
             'key': 'BODY_STABLIZE_RATIO',
             'title': 'Body Stablize Ratio',
-            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }],
         'MOUTH': [{
@@ -247,7 +251,7 @@ function getConfigModifiers(){
         }, {
             'key': 'MOUTH_STABLIZE_RATIO',
             'title': 'Mouth Stablize Ratio',
-            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }],
         'BROWS': [{
@@ -263,7 +267,7 @@ function getConfigModifiers(){
         }, {
             'key': 'BROWS_STABLIZE_RATIO',
             'title': 'Brows Stablize Ratio',
-            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }],
         'EYE_GENERAL': [{
@@ -279,7 +283,7 @@ function getConfigModifiers(){
         }, {
             'key': 'EYE_STABLIZE_RATIO',
             'title': 'Eye Stablize Ratio',
-            'describe': 'Motion become more stable with larger value, but small guesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
         }, {
             'key': 'IRIS_POS_OFFSET',
@@ -323,6 +327,17 @@ function getConfigModifiers(){
             'title': 'Left Eye Squint',
             'describe': 'The ratio of half-open eye between fully open and close. Range(0, 1)',
             'range': [0, 1]
+        }],
+        'HAND': [{
+            'key': 'HAND_TRACKING',
+            'title': 'Hand Tracking',
+            'describe': 'Hand tracking is enabled or not.',
+            'valid': [true, false]
+        }, {
+            'key': 'HAND_STABLIZE_RATIO',
+            'title': 'Hand Stablize Ratio',
+            'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
+            'range': [0, 0.95]
         }],
         'POSITION': [{
             'key': 'POSITION_X_RATIO',

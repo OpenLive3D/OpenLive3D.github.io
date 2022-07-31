@@ -122,11 +122,24 @@ function createLayout(){
         confbox.appendChild(confgroup);
         for(let i = 0; i < confmodifier.length; i ++){
             let configitem = confmodifier[i];
+            let info = document.createElement('text');
+            info.className = "w3-tooltip";
+            info.style.color = "#fff9";
+            info.innerHTML = " [ℹ] ";
+            confgroup.appendChild(info);
+            let span = document.createElement('span');
+            span.className = "w3-text w3-tag";
+            span.innerHTML = configitem['describe'];
+            info.appendChild(span);
             let name = document.createElement('text');
+            name.className = "w3-tooltip";
             name.style.color = "#fff";
             name.innerHTML = configitem['title'];
+            confgroup.appendChild(name);
+            confgroup.appendChild(document.createElement("br"));
             let item = document.createElement('input');
             item.id = configitem['key'] + "_box";
+            confgroup.appendChild(item);
             if(getBinaryCM().includes(configitem['key'])){
                 item.setAttribute("type", "checkbox");
                 item.checked = getCMV(configitem['key']);
@@ -150,54 +163,6 @@ function createLayout(){
                         setBackGround();
                     }
                 };
-            }else if(configitem['key'] == "BG_COLOR"){
-                item.setAttribute("type", "color");
-                item.setAttribute("value", getCMV("BG_COLOR"));
-                item.onchange = function myFunction(){
-                    setCMV("BG_UPLOAD", "");
-                    setCMV("BG_COLOR", item.value);
-                    setBackGround();
-                };
-            }else{
-                item.style.textAlign = "right";
-                item.style.width = "100px";
-                item.value = getCMV(configitem['key']);
-                item.onchange = function(){
-                    console.log(configitem['key'], item.value);
-                    if('range' in configitem){
-                        if(item.value < configitem['range'][0]){
-                            item.value = configitem['range'][0];
-                        }else if(item.value < configitem['range'][1]){
-                        }else{
-                            item.value = configitem['range'][1];
-                        }
-                    }else if('valid' in configitem){
-                        if(getBinaryCM().includes(configitem['key'])){
-                            item.value = item.value != "false";
-                        }else if(!configitem['valid'].includes(item.value)){
-                            item.value = configitem['valid'][0];
-                        }
-                    }
-                    setCMV(configitem['key'], item.value);
-                    if(["BG_COLOR", "BG_UPLOAD"].includes(configitem['key'])){
-                        setBackGround();
-                    }
-                };
-            }
-            let info = document.createElement('text');
-            info.className = "w3-tooltip";
-            info.style.color = "#fff9";
-            info.innerHTML = " [<i>info</i>] ";
-            let span = document.createElement('span');
-            span.setAttribute('style', "position:absolute;width:200px;left:-100px");
-            span.className = "w3-text w3-tag";
-            span.innerHTML = configitem['describe'];
-            info.appendChild(span);
-            confgroup.appendChild(name);
-            confgroup.appendChild(info);
-            confgroup.appendChild(document.createElement("br"));
-            confgroup.appendChild(item);
-            if(configitem['key'] == "BG_UPLOAD"){
                 let cancelitem = document.createElement("input");
                 cancelitem.setAttribute("type", "button");
                 cancelitem.setAttribute("value", "Remove Image");
@@ -207,6 +172,42 @@ function createLayout(){
                     setBackGround();
                 }
                 confgroup.appendChild(cancelitem);
+            }else if(configitem['key'] == "BG_COLOR"){
+                item.setAttribute("type", "color");
+                item.setAttribute("value", getCMV("BG_COLOR"));
+                item.onchange = function myFunction(){
+                    setCMV("BG_UPLOAD", "");
+                    setCMV("BG_COLOR", item.value);
+                    setBackGround();
+                };
+            }else{
+                item.setAttribute("type", "range");
+                item.setAttribute("min", 0);
+                item.setAttribute("max", 1000);
+                let setrange = configitem['range'][1] - configitem['range'][0];
+                let setvalue = (getCMV(configitem['key']) - configitem['range'][0]) * 1000 / setrange;
+                item.setAttribute("value", setvalue);
+                item.onchange = function(){
+                    let newvalue = item.value / 1000 * setrange + configitem['range'][0];
+                    itemval.value = newvalue;
+                }
+                let itemval = document.createElement("input");
+                itemval.style.textAlign = "right";
+                itemval.style.width = "100px";
+                itemval.value = getCMV(configitem['key']);
+                itemval.onchange = function(){
+                    console.log(configitem['key'], itemval.value);
+                    if(itemval.value < configitem['range'][0]){
+                        itemval.value = configitem['range'][0];
+                    }else if(itemval.value < configitem['range'][1]){
+                    }else{
+                        itemval.value = configitem['range'][1];
+                    }
+                    let newvalue = (itemval.value - configitem['range'][0]) * 1000 / setrange;
+                    item.setAttribute("value", newvalue);
+                    setCMV(configitem['key'], itemval.value);
+                };
+                confgroup.appendChild(itemval);
             }
             confgroup.appendChild(document.createElement("br"));
         }

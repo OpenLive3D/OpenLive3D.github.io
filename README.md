@@ -37,3 +37,4 @@ Alpha-0.5.X:
  - Move to Holistic Model with Hand tracking
  - Replace TWEEN with Customized Interpolator
  - Background Color and Image Selection
+ - Range scale input
