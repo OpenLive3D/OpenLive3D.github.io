@@ -255,23 +255,41 @@ function updateInfo(){
 }
 
 // Mood
+let defaultMoodList = ['angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral', 'auto'];
+let moodMap = {
+    "angry": Tvrmsbspn.Angry,
+    "sorrow": Tvrmsbspn.Sorrow,
+    "fun": Tvrmsbspn.Fun,
+    "joy": Tvrmsbspn.Joy,
+    "surprised": "Surprised",
+    "relaxed": "Relaxed",
+    "neutral": Tvrmsbspn.Neutral,
+    "auto": "AUTO_MOOD_DETECTION"
+};
 let mood = Tvrmsbspn.Neutral;
 let oldmood = Tvrmsbspn.Neutral;
+function getAllMoods(){
+    let validmoods = [];
+    Object.keys(moodMap).forEach(function(key){
+        if(defaultMoodList.includes(key)){
+            if(getCMV("MOOD_" + key.toUpperCase())){
+                validmoods.push(key);
+            }
+        }
+    });
+    Object.keys(moodMap).forEach(function(key){
+        if(!defaultMoodList.includes(key)){
+            validmoods.push(key);
+        }
+    });
+    return validmoods;
+}
 function getMood(){
     return mood;
 }
 function setMood(newmood){
     oldmood = mood;
-    mood = {
-        "angry": Tvrmsbspn.Angry,
-        "sorrow": Tvrmsbspn.Sorrow,
-        "fun": Tvrmsbspn.Fun,
-        "joy": Tvrmsbspn.Joy,
-        "neutral": Tvrmsbspn.Neutral,
-        "surprised": "Surprised",
-        "relaxed": "Relaxed",
-        "auto": "AUTO_MOOD_DETECTION"
-    }[newmood];
+    mood = moodMap[newmood];
 }
 
 // face landmark resolver
@@ -297,6 +315,7 @@ function onPoseLandmarkResult(keyPoints, poseInfo){
 
 // hand landmark resolver
 let fingerRates = {"Thumb": 0.8, "Index": 0.7, "Middle": 0.7, "Ring": 0.7, "Little": 0.6};
+let spreadRates = {"Index": -30, "Middle": -10, "Ring": 10, "Little": 30};
 let fingerSegs = ["Distal", "Intermediate", "Proximal"];
 let thumbRatios = [40, 60, 20];
 let thumbSwing = 20;
@@ -314,8 +333,15 @@ function onHandLandmarkResult(keyPoints, handInfo, leftright){
         });
         let Ch = currentVrm.humanoid;
         Object.keys(fingerRates).forEach(function(finger){
-            let fingerRate = fingerRates[finger];
-            let _ratio = 1 - Math.max(0, Math.min(fingerRate, tmpInfo[prefix + finger])) / fingerRate;
+            let fingerRate = fingerRates[finger] * getCMV("FINGER_GRIP_RATIO");
+            let spreadRate = spreadRates[finger] * getCMV("FINGER_SPREAD_RATIO");
+            let preRatio = tmpInfo[prefix + finger];
+            let _ratio = 1 - Math.max(0, Math.min(fingerRate, preRatio)) / fingerRate;
+            let preSpread = tmpInfo[prefix + "Spread"];
+            if(preRatio < 0){
+                preSpread = 0.1;
+            }
+            let _spread = Math.min(1, Math.max(-0.2, preSpread - 0.1)) * spreadRate;
             if(finger == "Thumb"){
                 for(let i = 0; i < fingerSegs.length; i ++){
                     let seg = fingerSegs[i];
@@ -326,9 +352,14 @@ function onHandLandmarkResult(keyPoints, handInfo, leftright){
                 }
             }else{
                 let ratio = preRate * _ratio * 70 / 180 * Math.PI;
+                let spread = preRate * _spread / 180 * Math.PI;
                 for(seg of fingerSegs){
                     let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
-                    frotate.set(0, 0, ratio);
+                    if(seg == "Proximal"){
+                        frotate.set(0, spread, ratio);
+                    }else{
+                        frotate.set(0, 0, ratio);
+                    }
                 }
             }
         });
@@ -442,6 +473,23 @@ async function viLoop(){
 let noMoods = [];
 function resetVRMMood(){
     noMoods = [];
+    Object.keys(moodMap).forEach(function(i){
+        if(!(defaultMoodList.includes(i))){
+            delete moodMap[i];
+        }
+    });
+    if(currentVrm){
+        let defaultMoodLength = defaultMoodList.length;
+        let unknownMood = currentVrm.blendShapeProxy._unknownGroupNames;
+        for(let newmood of unknownMood){
+            let newmoodid = Object.keys(moodMap).length - defaultMoodLength + 1;
+            if(!Object.values(moodMap).includes(newmood)){
+                if(newmoodid < getCMV("MOOD_EXTRA_LIMIT")){
+                    moodMap[newmoodid.toString()] = newmood;
+                }
+            }
+        }
+    }
 }
 function checkVRMMood(mood){
     if(mood == "auto"){
@@ -449,16 +497,7 @@ function checkVRMMood(mood){
     }else if(noMoods.includes(mood)){
         return false;
     }else if(currentVrm){
-        let tmood = {
-            "angry": Tvrmsbspn.Angry,
-            "sorrow": Tvrmsbspn.Sorrow,
-            "fun": Tvrmsbspn.Fun,
-            "joy": Tvrmsbspn.Joy,
-            "neutral": Tvrmsbspn.Neutral,
-            "surprised": "Surprised",
-            "relaxed": "Relaxed",
-            "auto": "AUTO_MOOD_DETECTION"
-        }[mood];
+        let tmood = moodMap[mood];
         if(currentVrm.blendShapeProxy.getBlendShapeTrackName(tmood)){
             return true;
         }else if(currentVrm.blendShapeProxy.getBlendShapeTrackName(mood)){

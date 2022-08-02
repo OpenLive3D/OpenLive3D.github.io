@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-08-01";
-const VERSION = "Alpha.0.5.7";
+const DEV_DATE = "2022-08-02";
+const VERSION = "Alpha.0.5.8";
 
 let configManager = {};
 
@@ -82,8 +82,10 @@ function initCM(){
         configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.20;
         configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.27;
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['HAND_STABLIZE_RATIO'] = 0.05;
         configManager['HAND_TRACKING'] = true;
+        configManager['HAND_STABLIZE_RATIO'] = 0.05;
+        configManager['FINGER_GRIP_RATIO'] = 1.0;
+        configManager['FINGER_SPREAD_RATIO'] = 1.5;
         configManager['POSITION_X_RATIO'] = 0.12;
         configManager['POSITION_Y_RATIO'] = 0.12;
         configManager['POSITION_Z_RATIO'] = 0.12;
@@ -116,18 +118,7 @@ function initCM(){
     configManager['MOOD_NEUTRAL'] = true;
     configManager['MOOD_AUTO'] = true;
     configManager['DEFAULT_MOOD'] = "auto";
-}
-
-function getAllMoods(){
-    let moods = ['angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral', 'auto'];
-    let validmoods = [];
-    for(let i = 0; i < moods.length; i ++){
-        let mood = moods[i];
-        if(getCMV("MOOD_" + mood.toUpperCase())){
-            validmoods.push(mood);
-        }
-    }
-    return validmoods;
+    configManager['MOOD_EXTRA_LIMIT'] = 5;
 }
 
 function getSR(key){
@@ -338,6 +329,16 @@ function getConfigModifiers(){
             'title': 'Hand Stablize Ratio',
             'describe': 'Motion become more stable with larger value, but small gesture become harder to track. Avatar stop moving when the value is 1. Range(0, 0.95)',
             'range': [0, 0.95]
+        }, {
+            'key': 'FINGER_GRIP_RATIO',
+            'title': 'Finger Grip Ratio',
+            'describe': 'Control the grip ratio of fingers. Default to 1. Range(0, 5)',
+            'range': [0, 5]
+        }, {
+            'key': 'FINGER_SPREAD_RATIO',
+            'title': 'Finger Spread Ratio',
+            'describe': 'Control the spread ratio of fingers. Default to 1. Range(0, 5)',
+            'range': [0, 5]
         }],
         'POSITION': [{
             'key': 'POSITION_X_RATIO',

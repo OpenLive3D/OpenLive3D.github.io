@@ -46,6 +46,7 @@ function getDefaultInfo(){
         "leftRoll": 0, "rightRoll": 0,
         "leftPitch": 0, "rightPitch": 0,
         "leftYaw": 0, "rightYaw": 0,
+        "leftSpread": 0, "rightSpread": 0,
     };
 }
 

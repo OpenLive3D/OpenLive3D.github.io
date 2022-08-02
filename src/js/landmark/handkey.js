@@ -2,7 +2,6 @@
 // left right
 // https://google.github.io/mediapipe/solutions/hands.html
 
-const HAND_CONNECTIONS = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[0,17],[17,18],[18,19],[19,20]];
 const HPoI = {
     "paw": [0, 5, 17],
     "thumb": [1, 2, 4],
@@ -16,6 +15,14 @@ function getThumbRatio(hand, prefix){
     let base = hand[prefix + "paw"][2];
     let d1 = distance3d(hand[prefix + "paw"][1], base);
     let d2 = distance3d(hand[prefix + "thumb"][2], base);
+    return (d2 - d1) / d1;
+}
+
+function getHandSpread(hand, prefix){
+    let indexFinger = hand[prefix + "index"];
+    let pinkyFinger = hand[prefix + "pinky"];
+    let d1 = distance3d(indexFinger[0], pinkyFinger[0]);
+    let d2 = distance3d(indexFinger[1], pinkyFinger[1]);
     return (d2 - d1) / d1;
 }
 
@@ -69,6 +76,7 @@ function getDefaultHandInto(leftright){
     keyInfo[prefix + "Roll"] = 0;
     keyInfo[prefix + "Pitch"] = Math.PI;
     keyInfo[prefix + "Yaw"] = 0;
+    keyInfo[prefix + "Spread"] = 0;
     return keyInfo;
 }
 
@@ -85,22 +93,7 @@ function hand2Info(hand, leftright){
     keyInfo[prefix + "Roll"] = handRotate[0];
     keyInfo[prefix + "Pitch"] = handRotate[1];
     keyInfo[prefix + "Yaw"] = handRotate[2];
-    return keyInfo;
-}
-
-function arm2Info(PoI, leftright){
-    let keyInfo = {};
-    let prefix = ["left", "right"][leftright];
-    let paw = PoI[prefix + "paw"];
-    let elbow = PoI["elbow"][leftright];
-    let abvec = diff3d(paw[0], paw[1]);
-    let acvec = diff3d(paw[0], paw[2]);
-    let norvec = normalize3d(cross3d(abvec, acvec));
-    let lowerarmvec = normalize3d(diff3d(elbow, paw[0]));
-    let patRatio = Math.acos(dot3d(norvec, lowerarmvec));
-    let turnRatio = 0;
-    keyInfo[prefix + "Pat"] = patRatio;
-    keyInfo[prefix + "Turn"] = turnRatio;
+    keyInfo[prefix + "Spread"] = getHandSpread(hand, prefix);
     return keyInfo;
 }
 

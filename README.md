@@ -38,3 +38,5 @@ Alpha-0.5.X:
  - Replace TWEEN with Customized Interpolator
  - Background Color and Image Selection
  - Range scale input
+ - Hand spread
+ - Custom BlendShape
