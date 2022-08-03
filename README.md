@@ -40,3 +40,4 @@ Alpha-0.5.X:
  - Range scale input
  - Hand spread
  - Custom BlendShape
+ - Camera Selection

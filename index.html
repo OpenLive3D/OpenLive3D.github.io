@@ -33,8 +33,9 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
         <br/>
         <button onclick="document.getElementById('vrmbtn').click();" class="w3-button w3-block w3-left-align w3-text-white"> Upload Model </button>
         <input type="file" accept=".vrm" id="vrmbtn" style="display:none;" />
-        <button onclick="hideObj('dbgbox')" class="w3-button w3-block w3-left-align w3-text-white"> Debug Video </button>
+        <button onclick="hideObj('dbgbox')" class="w3-button w3-block w3-left-align w3-text-white"> Video Control </button>
         <div class="w3-bar-item w3-hide" style="background-color:#000a" id="dbgbox">
+            <select id="videoselect"></select>
             <div class="w3-margin-left">
                 <input type="checkbox" id="dbgimcheck">
                 <label style="color:#fff"> Image </label>

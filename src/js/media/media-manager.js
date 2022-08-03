@@ -6,10 +6,31 @@ const defaultWidth = 640, defaultHeight = 480;
 capture.width = defaultWidth;
 capture.height = defaultHeight;
 
+// list cameras
+function listCameras(cb){
+    let carr = [];
+    let count = 1;
+    navigator.mediaDevices.enumerateDevices().then(darr => {
+        darr.forEach(mediaDevice => {
+            if(mediaDevice.kind === 'videoinput'){
+                let id = mediaDevice.deviceId;
+                let name = mediaDevice.label || `Camera ${count++}`;
+                carr.push({"id": id, "name": name});
+            }
+        })
+        cb(carr);
+    });
+}
+
+// get current video device id
+function getCurrentVideoId(){
+    return capture.srcObject.getTracks()[0].getSettings()['deviceId'];
+}
+
 // read video from webcam
 function startCamera(cb){
     navigator.mediaDevices.getUserMedia({
-        audio:false, video:{
+        audio: false, video: {
             facingMode: 'user',
             width: defaultWidth,
             height: defaultHeight,
@@ -22,6 +43,25 @@ function startCamera(cb){
     // signal when capture is ready
     capture.onloadeddata = cb;
     return capture;
+}
+
+// change current video to a new source
+function setVideoStream(deviceId){
+    // stop current video
+    capture.srcObject.getTracks().forEach(track => {
+        track.stop();
+    });
+    navigator.mediaDevices.getUserMedia({
+        audio: false, video: {
+            deviceId: deviceId,
+            width: defaultWidth,
+            height: defaultHeight,
+        }
+    }).then(function(stream){
+        console.log("video initialized");
+        window.stream = stream;
+        capture.srcObject = stream;
+    });
 }
 
 // set canvas context size with the camera

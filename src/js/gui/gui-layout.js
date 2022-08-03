@@ -60,6 +60,11 @@ function createLayout(){
     docbtn.href = getCMV("DOC_URL");
 
     // html canvas for drawing debug view
+    let videoselect = document.getElementById("videoselect");
+    videoselect.onchange = function(){
+        console.log("set camera: ", videoselect.value);
+        setVideoStream(videoselect.value);
+    }
     let dbg = document.getElementById("dbg");
     dbg.style.width = "100%";
     let dbgimcheck = document.getElementById("dbgimcheck");
@@ -257,6 +262,22 @@ function createLayout(){
     }
 
     console.log("gui layout initialized");
+}
+
+function createCameraLayout(){
+    let videoselect = document.getElementById("videoselect");
+    videoselect.innerHTML = "";
+    listCameras(carr => {
+        for(let cobj of carr){
+            let option = document.createElement('option');
+            option.value = cobj['id'];
+            option.innerHTML = cobj['name'];
+            videoselect.appendChild(option);
+            if(cobj['id'] == getCurrentVideoId()){
+                videoselect.value = cobj['id'];
+            }
+        }
+    });
 }
 
 function createMoodLayout(){

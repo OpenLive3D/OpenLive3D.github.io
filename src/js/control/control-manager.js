@@ -52,6 +52,7 @@ function initialize(){
         linkCamera2Context(
             document.getElementById('dbg'),
             getCMV('CANVAS_RATIO'));
+        createCameraLayout();
         console.log("video connected");
     });
 
@@ -454,7 +455,13 @@ let mlLoopCounter = 0;
 async function mlLoop(){
     mlLoopCounter += 1;
     let hModel = getHolisticModel();
-    await hModel.send({image: getCameraFrame()});
+    if(checkImage()){
+        await hModel.send({image: getCameraFrame()});
+    }else{
+        setTimeout(function(){
+            mlLoop();
+        }, 500);
+    }
 }
 
 // the main visualization loop
