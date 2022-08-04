@@ -34,10 +34,10 @@ The project aims to connect the half-body movement with facial landmarks to the 
 ## Project Status
 
 Alpha-0.5.X:
- - Move to Holistic Model with Hand tracking
+ - Move to Holistic Model with Hand Tracking and Finger Spreading
  - Replace TWEEN with Customized Interpolator
  - Background Color and Image Selection
- - Range scale input
- - Hand spread
+ - Range Scale Input
  - Custom BlendShape
  - Camera Selection
+ - Renderer Resize
