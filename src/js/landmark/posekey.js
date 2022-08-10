@@ -42,22 +42,14 @@ function getTiltLean(shoulder){
 function pose2Info(pose){
     let keyInfo = {};
     let tl = getTiltLean(pose["shoulder"]);
-    // let lelbow = getElbowUpFront(pose, 0);
-    // let relbow = getElbowUpFront(pose, 1);
     let lwrist = getWristXYZ(pose, 0);
     let rwrist = getWristXYZ(pose, 1);
     keyInfo["tilt"] = tl[0];
     keyInfo["lean"] = tl[1];
-    // keyInfo["leftElbowUp"] = lelbow[0];
-    // keyInfo["leftElbowFront"] = lelbow[1];
-    // keyInfo["rightElbowUp"] = relbow[0];
-    // keyInfo["rightElbowFront"] = relbow[1];
     keyInfo["leftWristX"] = lwrist[0];
     keyInfo["leftWristY"] = lwrist[1];
-    // keyInfo["leftWristZ"] = lwrist[2];
     keyInfo["rightWristX"] = rwrist[0];
     keyInfo["rightWristY"] = rwrist[1];
-    // keyInfo["rightWristZ"] = rwrist[2];
     return keyInfo;
 }
 

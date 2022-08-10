@@ -46,22 +46,30 @@ function startCamera(cb){
 }
 
 // change current video to a new source
+let resetting = false;
 function setVideoStream(deviceId){
     // stop current video
+    resetting = true;
     capture.srcObject.getTracks().forEach(track => {
+        track.stop();
+    });
+    window.stream.getTracks().forEach(track => {
         track.stop();
     });
     navigator.mediaDevices.getUserMedia({
         audio: false, video: {
-            deviceId: deviceId,
+            deviceId: deviceId ? {exact: deviceId} : undefined,
             width: defaultWidth,
             height: defaultHeight,
         }
     }).then(function(stream){
-        console.log("video initialized");
+        console.log("video stream set: ", deviceId);
         window.stream = stream;
         capture.srcObject = stream;
     });
+    capture.onloadeddata = function(){
+        resetting = false;
+    }
 }
 
 // set canvas context size with the camera
@@ -84,7 +92,7 @@ function getCameraFrame(){
 
 // validate image readiness
 function checkImage(){
-    if(capture.readyState === 4){
+    if((capture.readyState === 4) && (!resetting)){
         return true;
     }else{
         return false;

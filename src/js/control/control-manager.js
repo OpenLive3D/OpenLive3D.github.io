@@ -174,26 +174,17 @@ function updateBody(keys){
             for(let i = 0; i < 2; i ++){
                 if(updateTime - handTrackers[i] < 1000 * getCMV('HAND_CHECK')){
                     let prefix = ["left", "right"][i];
-                    let lrRatio = 1 - i * 2;
                     // upperArm, lowerArm
                     let wx = keys[prefix + "WristX"];
                     let wy = keys[prefix + "WristY"];
-                    let wz = keys[prefix + "WristZ"];
-                    let armRotate = armMagic(wx, wy, wz, i);
-                    let nq = new THREE.Quaternion();
-                    Object.keys(armRotate).forEach(function(armkey){
+                    let hy = keys[prefix + 'Yaw'];
+                    let hr = keys[prefix + 'Roll'];
+                    let hp = keys[prefix + 'Pitch'];
+                    let armEuler = armMagicEuler(wx, wy, hy, hr, hp, i);
+                    Object.keys(armEuler).forEach(function(armkey){
                         let armobj = Ch.getBoneNode(prefix + armkey).rotation;
-                        nq.multiply(new THREE.Quaternion().setFromEuler(armobj));
-                        armobj.set(...armRotate[armkey]);
+                        armobj.copy(armEuler[armkey]);
                     });
-                    nq.invert();
-                    let de = new THREE.Euler(0, -Math.PI/2*lrRatio, -Math.PI/2*lrRatio);
-                    nq.multiply(new THREE.Quaternion().setFromEuler(de));
-                    let he = new THREE.Euler(-keys[prefix + 'Yaw']*lrRatio, keys[prefix + 'Roll'], -keys[prefix + 'Pitch']*lrRatio);
-                    nq.multiply(new THREE.Quaternion().setFromEuler(he));
-                    let ne = new THREE.Euler().setFromQuaternion(nq);
-                    let handobj = Ch.getBoneNode(prefix + "Hand").rotation;
-                    handobj.copy(ne);
                 }else{
                     setDefaultHand(currentVrm, i);
                 }
@@ -453,9 +444,9 @@ async function onHolisticResults(results){
 // the main ML loop
 let mlLoopCounter = 0;
 async function mlLoop(){
-    mlLoopCounter += 1;
     let hModel = getHolisticModel();
     if(checkImage()){
+        mlLoopCounter += 1;
         await hModel.send({image: getCameraFrame()});
     }else{
         setTimeout(function(){
@@ -467,13 +458,17 @@ async function mlLoop(){
 // the main visualization loop
 let viLoopCounter = 0;
 async function viLoop(){
-    viLoopCounter += 1;
-    if(currentVrm){
+    if(currentVrm && checkImage()){
+        viLoopCounter += 1;
         currentVrm.update(clock.getDelta());
         updateInfo();
         drawScene(scene);
+        requestAnimationFrame(viLoop);
+    }else{
+        setTimeout(function(){
+            requestAnimationFrame(viLoop);
+        }, 500);
     }
-    requestAnimationFrame(viLoop);
 }
 
 // mood check

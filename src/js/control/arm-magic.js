@@ -72,3 +72,24 @@ function armMagic(x, y, z, leftright){
     });
     return armRotate;
 }
+
+function armMagicEuler(wx, wy, hy, hr, hp, leftright){
+    let lrRatio = 1 - leftright * 2;
+    let nq = new THREE.Quaternion();
+    let armRotate = armMagic(wx, wy, 0, leftright);
+    let armEuler = {};
+    Object.keys(armRotate).forEach(function(armkey){
+        let ae = new THREE.Euler(...armRotate[armkey]);
+        let aq = new THREE.Quaternion().setFromEuler(ae);
+        armEuler[armkey] = ae;
+        nq.multiply(aq);
+    });
+    nq.invert();
+    let de = new THREE.Euler(0, -Math.PI/2*lrRatio, -Math.PI/2*lrRatio);
+    nq.multiply(new THREE.Quaternion().setFromEuler(de));
+    let he = new THREE.Euler(-hy*lrRatio, hr, -hp*lrRatio);
+    nq.multiply(new THREE.Quaternion().setFromEuler(he));
+    let ne = new THREE.Euler().setFromQuaternion(nq);
+    armEuler["Hand"] = ne;
+    return armEuler;
+}
