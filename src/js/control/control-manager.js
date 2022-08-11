@@ -48,13 +48,7 @@ function initialize(){
     createLayout();
 
     // start video
-    startCamera(function(){
-        linkCamera2Context(
-            document.getElementById('dbg'),
-            getCMV('CANVAS_RATIO'));
-        createCameraLayout();
-        console.log("video connected");
-    });
+    startCamera(setCameraCallBack);
 
     // load holistic
     loadHolistic(onHolisticResults, function(){

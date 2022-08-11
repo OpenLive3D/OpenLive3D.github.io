@@ -59,6 +59,13 @@ function setBackGround(){
     }
 }
 
+function setCameraCallBack(){
+    let dbg = document.getElementById("dbg");
+    linkCamera2Context(dbg, getCMV('CANVAS_RATIO'));
+    createCameraLayout();
+    reSettingDone();
+}
+
 function createLayout(){
     setBackGround();
 
@@ -70,7 +77,7 @@ function createLayout(){
     let videoselect = document.getElementById("videoselect");
     videoselect.onchange = function(){
         console.log("set camera: ", videoselect.value);
-        setVideoStream(videoselect.value);
+        setVideoStream(videoselect.value, setCameraCallBack);
     }
     let dbg = document.getElementById("dbg");
     dbg.style.width = "100%";
@@ -348,7 +355,7 @@ function drawImage(image){
         // get debug camera canvas
         let dbg = document.getElementById("dbg").getContext('2d');
         dbg.save();
-        if (getCMV('CAMERA_FLIP')){
+        if(getCMV('CAMERA_FLIP')){
             dbg.translate(dbg.canvas.width, 0);
             dbg.scale(-getCMV('CANVAS_RATIO'), getCMV('CANVAS_RATIO'));
         }else{

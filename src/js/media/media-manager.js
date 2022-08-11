@@ -3,6 +3,8 @@ capture.playsinline = "playsinline";
 capture.autoplay = "autoplay";
 
 const defaultWidth = 640, defaultHeight = 480;
+const scaleWidth = {min: 640, max: 1280};
+const scaleHeight = {min: 480, max: 720};
 capture.width = defaultWidth;
 capture.height = defaultHeight;
 
@@ -32,8 +34,8 @@ function startCamera(cb){
     navigator.mediaDevices.getUserMedia({
         audio: false, video: {
             facingMode: 'user',
-            width: defaultWidth,
-            height: defaultHeight,
+            width: scaleWidth,
+            height: scaleHeight,
         }
     }).then(function(stream){
         console.log("video initialized");
@@ -47,7 +49,7 @@ function startCamera(cb){
 
 // change current video to a new source
 let resetting = false;
-function setVideoStream(deviceId){
+function setVideoStream(deviceId, cb){
     // stop current video
     resetting = true;
     capture.srcObject.getTracks().forEach(track => {
@@ -59,21 +61,25 @@ function setVideoStream(deviceId){
     navigator.mediaDevices.getUserMedia({
         audio: false, video: {
             deviceId: deviceId ? {exact: deviceId} : undefined,
-            width: defaultWidth,
-            height: defaultHeight,
+            width: scaleWidth,
+            height: scaleHeight,
         }
     }).then(function(stream){
         console.log("video stream set: ", deviceId);
         window.stream = stream;
         capture.srcObject = stream;
     });
-    capture.onloadeddata = function(){
-        resetting = false;
-    }
+    capture.onloadeddata = cb;
+}
+
+function reSettingDone(){
+    resetting = false;
 }
 
 // set canvas context size with the camera
 function linkCamera2Context(canvas, cr){
+    capture.width = capture.videoWidth;
+    capture.height = capture.videoHeight;
     canvas.width = Math.floor(
         capture.videoWidth * cr);
     canvas.height = Math.floor(
