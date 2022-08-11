@@ -3,8 +3,8 @@ capture.playsinline = "playsinline";
 capture.autoplay = "autoplay";
 
 const defaultWidth = 640, defaultHeight = 480;
-const scaleWidth = {min: 640, max: 1280};
-const scaleHeight = {min: 480, max: 720};
+const scaleWidth = {min: defaultWidth};
+const scaleHeight = {min: defaultHeight};
 capture.width = defaultWidth;
 capture.height = defaultHeight;
 

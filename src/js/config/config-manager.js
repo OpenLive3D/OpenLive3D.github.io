@@ -1,5 +1,5 @@
 // version configuration
-const DEV_DATE = "2022-08-011";
+const DEV_DATE = "2022-08-12";
 const VERSION = "Alpha.0.5.11";
 
 let configManager = {};
