@@ -73,6 +73,10 @@ function armMagic(x, y, z, leftright){
     return armRotate;
 }
 
+let armTuneRatios = {
+    "UpperArm": 0.1,
+    "LowerArm": 0.6,
+}
 function armMagicEuler(wx, wy, hy, hr, hp, leftright){
     let lrRatio = 1 - leftright * 2;
     let nq = new THREE.Quaternion();
@@ -81,12 +85,11 @@ function armMagicEuler(wx, wy, hy, hr, hp, leftright){
     Object.keys(armRotate).forEach(function(armkey){
         let ae = new THREE.Euler(...armRotate[armkey]);
         let aq = new THREE.Quaternion().setFromEuler(ae);
-        if(armkey == "LowerArm"){
-            let ee = new THREE.Euler(-hy*lrRatio * 0.6, 0, 0);
-            let eq = new THREE.Quaternion().setFromEuler(ee);
-            aq.multiply(eq);
-            ae = new THREE.Euler().setFromQuaternion(aq);
-        }
+        let armTR = armTuneRatios[armkey];
+        let ee = new THREE.Euler(-hy*lrRatio * armTR, 0, 0);
+        let eq = new THREE.Quaternion().setFromEuler(ee);
+        aq.multiply(eq);
+        ae = new THREE.Euler().setFromQuaternion(aq);
         nq.multiply(aq);
         armEuler[armkey] = ae;
     });

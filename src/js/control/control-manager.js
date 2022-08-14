@@ -452,16 +452,20 @@ async function mlLoop(){
 // the main visualization loop
 let viLoopCounter = 0;
 async function viLoop(){
+    let minVIDura = getCMV("MIN_VI_DURATION");
+    let maxVIDura = getCMV("MAX_VI_DURATION");
     if(currentVrm && checkImage()){
         viLoopCounter += 1;
         currentVrm.update(clock.getDelta());
         updateInfo();
         drawScene(scene);
-        requestAnimationFrame(viLoop);
+        setTimeout(function(){
+            requestAnimationFrame(viLoop);
+        }, minVIDura);
     }else{
         setTimeout(function(){
             requestAnimationFrame(viLoop);
-        }, 500);
+        }, maxVIDura);
     }
 }
 
@@ -514,7 +518,7 @@ async function checkIntegrate(){
     let hModel = getHolisticModel();
     await hModel.send({image: getCameraFrame()});
     requestAnimationFrame(viLoop);
-    requestAnimationFrame(mlLoop);
+    mlLoop();
     console.log("ml & visual loops initialized");
 }
 

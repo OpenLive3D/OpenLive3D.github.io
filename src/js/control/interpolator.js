@@ -6,7 +6,6 @@ let curTimeInfo = {
     "info": getDefaultInfo()
 };
 let delayTime = 250; // milliseconds
-let momentumFactor = 5;
 let lasInfoDiff = getDefaultInfo();
 let lasTimeDiff = 30;
 
@@ -41,10 +40,25 @@ function sumInfoDiff(o1, o2){
 }
 
 function pushInfo(newinfo){
+    let motionBlurFactor = getCMV("MOTION_BLUR_RATIO");
     if(newinfo){
         if(arrTimeInfo.length >= 2){
-            arrTimeInfo = [arrTimeInfo[1], {
-                "time": new Date().getTime(),
+            let t0 = arrTimeInfo[0]["time"];
+            let t1 = arrTimeInfo[1]["time"];
+            let t2 = new Date().getTime();
+            let t0diff = t1 - t0;
+            let t1diff = t2 - t1;
+            let smoothInfo = weightedAvg(
+                arrTimeInfo[1]["info"],
+                weightedAvg(
+                    arrTimeInfo[0]["info"],
+                    newinfo, t0diff, t1diff
+                ), 1, motionBlurFactor);
+            arrTimeInfo = [{
+                "time": t1,
+                "info": smoothInfo
+            }, {
+                "time": t2,
                 "info": newinfo
             }];
         }else{
@@ -58,71 +72,56 @@ function pushInfo(newinfo){
     }
 }
 
+let interCheck = {};
+function addIC(t){
+    if(t in interCheck){
+        interCheck[t] += 1;
+    }else{
+        interCheck[t] = 1;
+    }
+}
 function getInfo(){
+    let momentumFactor = getCMV("MOMENTUM_RATIO");
     let lasTime = curTimeInfo["time"];
     let lasInfo = curTimeInfo["info"];
     let curTime = new Date().getTime();
     let difTime = curTime - lasTime;
     if(arrTimeInfo.length == 1){
         curTimeInfo = arrTimeInfo[0];
-    }else if(arrTimeInfo.length == 2){
+        addIC("l1");
+    }else if(arrTimeInfo.length >= 2){
         let time0 = arrTimeInfo[0]["time"] + delayTime;
         let info0 = arrTimeInfo[0]["info"];
         let time1 = arrTimeInfo[1]["time"] + delayTime;
         let info1 = arrTimeInfo[1]["info"];
         if(time0 > lasTime){
             let cnt0 = (time0 - lasTime) / difTime;
-            let cnt1 = (time1 - time0) / difTime;
-            if(cnt0 > 3){
-                curTimeInfo = {
-                    "time": curTime,
-                    "info": weightedAvg(lasInfo, info0, 1, cnt0 - 1)
-                }
-            }else{
-                let parr = [];
-                while(parr.length < 3 && cnt0 > 1){
-                    let p = weightedAvg(lasInfo, info0, parr.length + 1, cnt0 - 1);
-                    cnt0 -= 1;
-                    parr.push(p);
-                }
-                while(parr.length < 3 && cnt1 > 0){
-                    let p = weightedAvg(info0, info1, cnt0, cnt1 - cnt0);
-                    cnt0 += 1;
-                    parr.push(p);
-                }
-                if(parr.length == 3){
-                    parr[1] = weightedAvg(parr[0], parr[1], 1, 1);
-                    parr[0] = weightedAvg(parr[1], parr[2], 2, 1);
-                }
-                if(parr.length > 0){
-                    curTimeInfo = {
-                        "time": curTime,
-                        "info": weightedAvg(lasInfo, parr[0], 1, 1)
-                    }
-                }else{
-                    curTimeInfo = {
-                        "time": curTime,
-                        "info": info1
-                    }
-                }
+            curTimeInfo = {
+                "time": curTime,
+                "info": weightedAvg(lasInfo, info0, 1, cnt0 - 1)
             }
+            addIC("l2 t0");
         }else if(time1 > lasTime){
             let cnt1 = (time1 - lasTime) / difTime;
             curTimeInfo = {
                 "time": curTime,
                 "info": weightedAvg(lasInfo, info1, 1, cnt1 - 1)
             }
+            addIC("l2 t1");
         }else{
             curTimeInfo = {
                 "time": curTime,
-                "info": info1
+                "info": arrTimeInfo[1]["info"]
             }
+            addIC("l2 t?");
         }
     }
     let curInfoDiff = calInfoDiff(lasInfo, curTimeInfo["info"]);
     calScaleDiff(lasInfoDiff, difTime / lasTimeDiff);
     lasInfoDiff = weightedAvg(lasInfoDiff, curInfoDiff, momentumFactor, 1);
-    lasTimeDiff = Math.min(300, Math.max(10, difTime));
+    let minVIDura = getCMV("MIN_VI_DURATION");
+    let maxVIDura = getCMV("MAX_VI_DURATION");
+    lasTimeDiff = Math.min(maxVIDura, Math.max(minVIDura, difTime));
     curTimeInfo["info"] = sumInfoDiff(curTimeInfo["info"], lasInfoDiff);
     return curTimeInfo["info"];
 }

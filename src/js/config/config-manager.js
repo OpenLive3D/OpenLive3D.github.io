@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-08-12";
-const VERSION = "Alpha.0.5.12";
+const DEV_DATE = "2022-08-14";
+const VERSION = "Alpha.0.6.1";
 
 let configManager = {};
 
@@ -55,11 +55,13 @@ function initCM(){
         console.log("Initial Config");
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
-        configManager['SENSITIVITY_SCALE'] = 1;
         configManager['BREATH_FREQUENCY'] = 0.3;
         configManager['BREATH_STRENGTH'] = 1;
         configManager['MOOD_AUTO_RATIO'] = 4;
         configManager['MOOD_AUTO_OFFSET'] = 0.04;
+        configManager['SENSITIVITY_SCALE'] = 1;
+        configManager['MOTION_BLUR_RATIO'] = 1.5;
+        configManager['MOMENTUM_RATIO'] = 1.5;
         configManager['HEAD_RATIO'] = 0.50;
         configManager['NECK_RATIO'] = 0.40;
         configManager['CHEST_RATIO'] = 0.1;
@@ -100,6 +102,8 @@ function initCM(){
     configManager['BG_UPLOAD'] = "";
     configManager['TIME'] = new Date();
     configManager['FPS_RATE'] = 60;
+    configManager['MIN_VI_DURATION'] = 3;
+    configManager['MAX_VI_DURATION'] = 300;
     configManager['HAND_CHECK'] = 3;
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
@@ -169,11 +173,6 @@ function getConfigModifiers(){
             'describe': 'Flip the camera horizontally.',
             'valid': [true, false]
         }, {
-            'key': 'SENSITIVITY_SCALE',
-            'title': 'Sensitivity Scale',
-            'describe': 'The higher this value is, the more overall sensitive it is to human movement, default as 1. Range(0.1, 3).',
-            'range': [0.1, 3]
-        }, {
             'key': 'BREATH_FREQUENCY',
             'title': 'Breath Frequency',
             'describe': 'Breath count per second, default as 0.3. Range(0, 4)',
@@ -202,6 +201,22 @@ function getConfigModifiers(){
             'key': 'BG_UPLOAD',
             'title': 'Upload Image',
             'describe': 'Upload an image as your background'
+        }],
+        'SMOOTH': [{
+            'key': 'SENSITIVITY_SCALE',
+            'title': 'Sensitivity Scale',
+            'describe': 'The higher this value is, the more overall sensitive it is to human movement, default as 1. Range(0.1, 3).',
+            'range': [0.1, 3]
+        }, {
+            'key': 'MOTION_BLUR_RATIO',
+            'title': 'Motion Blur Ratio',
+            'describe': 'The higher this value is, the smoother the body motion is, default as 1.5. Range(0, 10).',
+            'range': [0, 10]
+        }, {
+            'key': 'MOMENTUM_RATIO',
+            'title': 'Momentum Ratio',
+            'describe': 'The higher this value is, the smoother the body motion is, default as 1.5. Range(0, 10).',
+            'range': [0, 10]
         }],
         'BODY': [{
             'key': 'HEAD_RATIO',
