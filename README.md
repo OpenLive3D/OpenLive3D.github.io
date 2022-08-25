@@ -8,7 +8,8 @@ The open source project for Live3D Virtual Avatar.
 ## TRY NOW!
 
  - Live Website: https://openlive3d.com/
- - Organization: https://github.com/OpenLive3D
+ - GitHub Organization: https://github.com/OpenLive3D
+ - Discord: [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/pGPY5Jfhvz)
  - [Documents](https://github.com/OpenLive3D/OpenLive3D.document)
  - [Dev Log](DEVLOG.md)
 

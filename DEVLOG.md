@@ -23,44 +23,37 @@
    - Complete: Setting information
  - 2022-03-27: Iris Tracking
  - 2022-03-31: Rehost to https://openlive3d.com
- - 2022-04-18: Alpha-0.1.1
+ - 2022-04-18: Alpha-0.1.X
    - Separate ML and Visualization threads
    - Separate Body, Eye, Mouth Smoothness Factor
    - Fix hair glitching: three-vrm version problem
    - three.js:v0.137.4 three-vrm:v0.6.11 tf.js:v3.15.0
    - Update light direction
- - 2022-04-30: Alpha-0.1.2
    - Debug video checkbox for image and landmark
- - 2022-05-13: Alpha-0.1.3
    - Config separation
    - Document branch separation
- - 2022-05-28: Alpha-0.2.1
+ - 2022-05-28: Alpha-0.2.X
    - Tween for head movement
- - 2022-06-02: Alpha-0.2.2
    - Head movement range udpate
- - 2022-06-03: Alpha-0.2.3
    - Document repo separation
    - Default Color Change
    - Logo Gray-Scale
    - Config Save to Cookie
- - 2022-06-10: Alpha-0.2.4
    - Config Load Cookie Debug
  - 2022-06-14: Add breathing
    - Add dev log back to main repo
- - 2022-06-15: Alpha-0.3.1
+ - 2022-06-15: Alpha-0.3.X
    - Mood Selection
- - 2022-06-16: Alpha-0.3.2
    - Breathing debug
- - 2022-06-24: Alpha-0.3.3
    - Loading Screen
- - 2022-07-16: Alpha-0.4.1
+ - 2022-07-16: Alpha-0.4.X
    - Collect feedback from users
- - 2022-07-17: Alpha-0.4.2
    - Position
- - 2022-07-18: Alpha-0.4.4
    - More emotions and Brows
- - 2022-07-19: Alpha-0.4.5
    - More tricks with Brows
- - 2022-07-25: Alpha-0.5.3
+ - 2022-07-25: Alpha-0.5.X
    - Move to Holistic Model with Hand tracking
    - Replace TWEEN with Customized Interpolator
+ - 2022-08-14: Alpha-0.6.X
+   - Interpolation optimization
+   - Discord: https://discord.gg/pGPY5Jfhvz
