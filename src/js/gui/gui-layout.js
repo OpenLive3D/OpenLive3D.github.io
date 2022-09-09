@@ -69,9 +69,64 @@ function setCameraCallBack(){
 function createLayout(){
     setBackGround();
 
-    // document link
-    let docbtn = document.getElementById('docbtn');
-    docbtn.href = getCMV("DOC_URL");
+    // vrm loading button
+    let vrmbox = document.getElementById("vrmbox");
+    let vrmbtn = document.createElement('input');
+    vrmbtn.setAttribute("type", "file");
+    vrmbtn.setAttribute("accept", ".vrm");
+    vrmbtn.style.display = "none";
+    vrmbtn.onchange = function(){
+        let txt = "";
+        if('files' in vrmbtn && vrmbtn.files.length > 0){
+            let files = vrmbtn.files;
+            let file = files[0];
+            let blob = new Blob([file], {type: "application/octet-stream"});
+            let url = URL.createObjectURL(blob);
+            loadVRM(url);
+        }else{
+            console.log("No VRM Loaded");
+        }
+    }
+    vrmbox.appendChild(vrmbtn);
+    let vrmbtnkey = document.createElement('div');
+    vrmbtnkey.className = "confkey";
+    vrmbtnkey.id = "vrmbtnkey";
+    vrmbtnkey.innerHTML = "ᐅ Upload VRM Model";
+    vrmbtnkey.onclick = function(){
+        vrmbtn.click();
+    }
+    vrmbox.appendChild(vrmbtnkey);
+    let vrmurlkey = document.createElement('div');
+    vrmurlkey.className = "confkey";
+    vrmurlkey.id = "vrmurlkey";
+    vrmurlkey.innerHTML = "ᐅ Set VRM URL";
+    vrmbox.appendChild(vrmurlkey);
+    let vrmurlbox = document.createElement('div');
+    vrmurlbox.className = "w3-hide";
+    vrmurlbox.id = "vrmurlbox";
+    vrmurlbox.style.color = "white";
+    vrmurlkey.onclick = function(){
+        if(vrmurlbox.className == "w3-hide"){
+            vrmurlkey.innerHTML = "ᐁ Set VRM URL";
+            vrmurlbox.className = "";
+        }else{
+            vrmurlkey.innerHTML = "ᐅ Set VRM URL";
+            vrmurlbox.className = "w3-hide";
+        }
+    }
+    vrmbox.appendChild(vrmurlbox);
+    let vrmurlinput = document.createElement("input");
+    vrmurlinput.style.width = "190px";
+    vrmurlinput.value = "";
+    vrmurlbox.appendChild(vrmurlinput);
+    let vrmurlsubmit = document.createElement("input");
+    vrmurlsubmit.setAttribute("type", "button");
+    vrmurlsubmit.setAttribute("value", "Set URL");
+    vrmurlsubmit.onclick = function(){
+        setCMV("MODEL", vrmurlinput.value);
+        loadVRM(vrmurlinput.value);
+    }
+    vrmurlbox.appendChild(vrmurlsubmit);
 
     // html canvas for drawing debug view
     let videoselect = document.getElementById("videoselect");
@@ -94,22 +149,6 @@ function createLayout(){
     }
     dbglmcheck.onclick = function myFunction(){
         setCMV("DEBUG_LANDMARK", dbglmcheck.checked);
-    }
-
-    // vrm loading button
-    let vrmbtn = document.getElementById("vrmbtn");
-    vrmbtn.onchange = function(){
-        let txt = "";
-        if('files' in vrmbtn && vrmbtn.files.length > 0){
-            let files = vrmbtn.files;
-            let file = files[0];
-            let blob = new Blob([file], {type: "application/octet-stream"});
-            let url = URL.createObjectURL(blob);
-            setCMV("MODEL", url);
-            loadVRM(url);
-        }else{
-            console.log("No VRM Loaded");
-        }
     }
 
     // config modifier
@@ -262,8 +301,9 @@ function createLayout(){
     let about = document.getElementById("about");
     about.style.color = "white";
     let alinks = [
-        [getCMV("ORG_URL"), "OpenLive3D - " + getCMV("VERSION")],
-        [getCMV("REPO_URL"), "Dev Date - " + getCMV("DEV_DATE")]
+        [getCMV("ORG_URL"), "OpenLive3D"],
+        [getCMV("DOC_URL"), "Doc Repo - " + getCMV("VERSION")],
+        [getCMV("REPO_URL"), "Code Repo - " + getCMV("DEV_DATE")]
     ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");

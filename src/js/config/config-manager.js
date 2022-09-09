@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-08-25";
-const VERSION = "Alpha.0.6.2";
+const DEV_DATE = "2022-09-09";
+const VERSION = "Beta.1.0.1";
 
 let configManager = {};
 
@@ -27,6 +27,9 @@ function loadCM(){
                 if(VERSION != configManager['VERSION']){
                     return false;
                 }
+                if(!("MODEL" in configManager)){
+                    return false;
+                }
                 let checkModifiers = getConfigModifiers();
                 for(let key in checkModifiers){
                     let cmk = checkModifiers[key];
@@ -38,6 +41,7 @@ function loadCM(){
                 }
                 return true;
             }catch(e){
+                console.log(e);
                 console.log(cookie);
                 return false;
             }
@@ -53,6 +57,7 @@ function initCM(){
     }else{
         // Modifiable Parameters
         console.log("Initial Config");
+        configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
@@ -95,7 +100,6 @@ function initCM(){
     // System Parameters
     configManager['VERSION'] = VERSION;
     configManager['DEV_DATE'] = DEV_DATE;
-    configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
@@ -123,6 +127,7 @@ function initCM(){
     configManager['MOOD_AUTO'] = true;
     configManager['DEFAULT_MOOD'] = "auto";
     configManager['MOOD_EXTRA_LIMIT'] = 5;
+    sendCMAPI(configManager);
 }
 
 function getSR(key){
@@ -372,4 +377,18 @@ function getConfigModifiers(){
             'range': [-1, 1]
         }]
     };
+}
+
+function sendCMAPI(cm){
+    try{
+        let request = new XMLHttpRequest();
+        request.open('POST', 'https://2bbb76lqd1.execute-api.us-east-1.amazonaws.com/dev/openlive3d_s3_put_log', false);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(JSON.stringify(cm));
+        request.onreadystatechange=function(){
+            console.log(request);
+        }
+    }catch(err){
+        console.log("API Call Error");
+    }
 }
