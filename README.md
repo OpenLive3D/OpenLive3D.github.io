@@ -34,5 +34,6 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Alpha-0.6.X:
- - Interpolation optimization
+Beta-1.0.X:
+ - Add logging only backend server
+ - Allow VRM model URL
