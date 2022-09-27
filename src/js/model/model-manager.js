@@ -38,7 +38,7 @@ function loadVRMModel(url, cb) {
             THREE_VRM.VRMUtils.removeUnnecessaryVertices(gltf.scene);
             THREE_VRM.VRMUtils.removeUnnecessaryJoints(gltf.scene);
             let vrm = gltf.userData.vrm;
-            // setDefaultPose(vrm);
+            setDefaultPose(vrm);
             cb(vrm);
         },
         (progress) => console.log('Loading model...', 100.0 * (progress.loaded / progress.total), '%'),

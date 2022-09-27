@@ -1,7 +1,7 @@
 // global scene, light, and clock variable
 let scene = new THREE.Scene();
 let light = new THREE.DirectionalLight(0xffffff);
-light.position.set(0.0, 1.0, 1.0).normalize();
+light.position.set(0.0, 1.0, -1.0).normalize();
 scene.add(light);
 let clock = new THREE.Clock();
 clock.start();
@@ -19,7 +19,7 @@ function loadVRM(vrmurl){
         function(vrm){
             if(currentVrm){
                 scene.remove(currentVrm.scene);
-                currentVrm.dispose();
+                THREE_VRM.VRMUtils.deepDispose(currentVrm.scene);
             }
             currentVrm = vrm;
             scene.add(vrm.scene);
@@ -71,7 +71,7 @@ function ratioLimit(ratio){
 }
 
 function updateMouthEyes(keys){
-    if(currentVrm && mood != Tvrmsbspn.Joy){
+    if(currentVrm && mood != Tvrmsbspn.Happy && mood != "Extra"){
         let Cbsp = currentVrm.expressionManager;
         let Ch = currentVrm.humanoid;
         // mouth
@@ -94,7 +94,7 @@ function updateMouthEyes(keys){
             Cbsp.setValue(Tvrmsbspn.BlinkRight, 0);
         }
         if(leo < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
-            Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
+            Cbsp.setValue(Tvrmsbspn.BlinkLeft, 1);
         }else if(leo < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
             let eRatio = (leo - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
             Cbsp.setValue(Tvrmsbspn.BlinkLeft, ratioLimit((1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO')));
@@ -234,10 +234,10 @@ function updateMood(){
 
 function updateInfo(){
     let info = getInfo();
-    // updateBody(info);
-    // updatePosition(info);
-    // updateBreath();
-    // updateMood();
+    updateBody(info);
+    updatePosition(info);
+    updateBreath();
+    updateMood();
 }
 
 // Mood
@@ -246,8 +246,7 @@ let moodMap = {
     "angry": Tvrmsbspn.Angry,
     "sorrow": Tvrmsbspn.Sad,
     "fun": Tvrmsbspn.Happy,
-    "joy": "Joy",
-    "surprised": Tvrmsbspn.Surprised,
+    "surprised": "Surprised",
     "relaxed": Tvrmsbspn.Relaxed,
     "neutral": Tvrmsbspn.Neutral,
     "auto": "AUTO_MOOD_DETECTION"
@@ -303,53 +302,54 @@ function onPoseLandmarkResult(keyPoints, poseInfo){
 let fingerRates = {"Thumb": 0.8, "Index": 0.7, "Middle": 0.7, "Ring": 0.7, "Little": 0.6};
 let spreadRates = {"Index": -30, "Middle": -10, "Ring": 10, "Little": 30};
 let fingerSegs = ["Distal", "Intermediate", "Proximal"];
+let thumbSegs = ["Distal", "Metacarpal", "Proximal"];
 let thumbRatios = [40, 60, 20];
 let thumbSwing = 20;
 let handTrackers = [new Date().getTime(), new Date().getTime()];
 function onHandLandmarkResult(keyPoints, handInfo, leftright){
     let prefix = ["left", "right"][leftright];
     let preRate = 1 - leftright * 2;
-    // if(handInfo){
-    //     handTrackers[leftright] = new Date().getTime();
-    //     Object.keys(handInfo).forEach(function(key){
-    //         let sr = getSR('hand') / getCMV("SENSITIVITY_SCALE");
-    //         if(key in tmpInfo){
-    //             tmpInfo[key] = (1-sr) * handInfo[key] + sr * tmpInfo[key];
-    //         }
-    //     });
-    //     let Ch = currentVrm.humanoid;
-    //     Object.keys(fingerRates).forEach(function(finger){
-    //         let fingerRate = fingerRates[finger] * getCMV("FINGER_GRIP_RATIO");
-    //         let spreadRate = spreadRates[finger] * getCMV("FINGER_SPREAD_RATIO");
-    //         let preRatio = tmpInfo[prefix + finger];
-    //         let _ratio = 1 - Math.max(0, Math.min(fingerRate, preRatio)) / fingerRate;
-    //         let preSpread = tmpInfo[prefix + "Spread"];
-    //         if(preRatio < 0){
-    //             preSpread = 0.1;
-    //         }
-    //         let _spread = Math.min(1, Math.max(-0.2, preSpread - 0.1)) * spreadRate;
-    //         if(finger == "Thumb"){
-    //             for(let i = 0; i < fingerSegs.length; i ++){
-    //                 let seg = fingerSegs[i];
-    //                 let ratio = preRate * _ratio * thumbRatios[i] / 180 * Math.PI;
-    //                 let swing = preRate * (0.5 - Math.abs(0.5 - _ratio)) * thumbSwing / 180 * Math.PI;
-    //                 let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
-    //                 frotate.set(0, ratio, swing);
-    //             }
-    //         }else{
-    //             let ratio = preRate * _ratio * 70 / 180 * Math.PI;
-    //             let spread = preRate * _spread / 180 * Math.PI;
-    //             for(seg of fingerSegs){
-    //                 let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
-    //                 if(seg == "Proximal"){
-    //                     frotate.set(0, spread, ratio);
-    //                 }else{
-    //                     frotate.set(0, 0, ratio);
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
+    if(handInfo){
+        handTrackers[leftright] = new Date().getTime();
+        Object.keys(handInfo).forEach(function(key){
+            let sr = getSR('hand') / getCMV("SENSITIVITY_SCALE");
+            if(key in tmpInfo){
+                tmpInfo[key] = (1-sr) * handInfo[key] + sr * tmpInfo[key];
+            }
+        });
+        let Ch = currentVrm.humanoid;
+        Object.keys(fingerRates).forEach(function(finger){
+            let fingerRate = fingerRates[finger] * getCMV("FINGER_GRIP_RATIO");
+            let spreadRate = spreadRates[finger] * getCMV("FINGER_SPREAD_RATIO");
+            let preRatio = tmpInfo[prefix + finger];
+            let _ratio = 1 - Math.max(0, Math.min(fingerRate, preRatio)) / fingerRate;
+            let preSpread = tmpInfo[prefix + "Spread"];
+            if(preRatio < 0){
+                preSpread = 0.1;
+            }
+            let _spread = Math.min(1, Math.max(-0.2, preSpread - 0.1)) * spreadRate;
+            if(finger == "Thumb"){
+                for(let i = 0; i < thumbSegs.length; i ++){
+                    let seg = thumbSegs[i];
+                    let ratio = preRate * _ratio * thumbRatios[i] / 180 * Math.PI;
+                    let swing = preRate * (0.5 - Math.abs(0.5 - _ratio)) * thumbSwing / 180 * Math.PI;
+                    let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+                    frotate.set(0, ratio, swing);
+                }
+            }else{
+                let ratio = preRate * _ratio * 70 / 180 * Math.PI;
+                let spread = preRate * _spread / 180 * Math.PI;
+                for(seg of fingerSegs){
+                    let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+                    if(seg == "Proximal"){
+                        frotate.set(0, spread, ratio);
+                    }else{
+                        frotate.set(0, 0, ratio);
+                    }
+                }
+            }
+        });
+    }
 }
 function noHandLandmarkResult(leftright){
     let prefix = ["left", "right"][leftright];
@@ -360,13 +360,20 @@ function noHandLandmarkResult(leftright){
             tmpInfo[key] = (1-sr) * tmpHandInfo[key] + sr * tmpInfo[key];
         }
     });
-    // let Ch = currentVrm.humanoid;
-    // Object.keys(fingerRates).forEach(function(finger){
-    //     for(seg of fingerSegs){
-    //         let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
-    //         frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
-    //     }
-    // });
+    let Ch = currentVrm.humanoid;
+    Object.keys(fingerRates).forEach(function(finger){
+        if(finger == "Thumb"){
+            for(seg of thumbSegs){
+                let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+                frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
+            }
+        }else{
+            for(seg of fingerSegs){
+                let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+                frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
+            }
+        }
+    });
 }
 
 // obtain Holistic Result
@@ -479,13 +486,24 @@ function resetVRMMood(){
         }
     });
     if(currentVrm){
-        let defaultMoodLength = defaultMoodList.length;
+        let defaultMoodLength = Object.keys(moodMap).length;
+        for(tmood of currentVrm.expressionManager.blinkExpressionNames){
+            noMoods.push(tmood);
+        }
+        for(tmood of currentVrm.expressionManager.lookAtExpressionNames){
+            noMoods.push(tmood);
+        }
+        for(tmood of currentVrm.expressionManager.mouthExpressionNames){
+            noMoods.push(tmood);
+        }
         let unknownMood = currentVrm.expressionManager._expressionMap;
         Object.keys(unknownMood).forEach(function(newmood){
-            let newmoodid = Object.keys(moodMap).length - defaultMoodLength + 1;
-            if(!Object.values(moodMap).includes(newmood)){
-                if(newmoodid <= getCMV("MOOD_EXTRA_LIMIT")){
-                    moodMap[newmoodid.toString()] = newmood;
+            if(!noMoods.includes(newmood)){
+                let newmoodid = Object.keys(moodMap).length - defaultMoodLength + 1;
+                if(!Object.values(moodMap).includes(newmood)){
+                    if(newmoodid <= getCMV("MOOD_EXTRA_LIMIT")){
+                        moodMap[newmoodid.toString()] = newmood;
+                    }
                 }
             }
         });
@@ -498,16 +516,14 @@ function checkVRMMood(mood){
         return false;
     }else if(currentVrm){
         let tmood = moodMap[mood];
-        // --- NEED TO BE FIXED ---
-        // if(currentVrm.expressionManager.getBlendShapeTrackName(tmood)){
-        //     return true;
-        // }else if(currentVrm.expressionManager.getBlendShapeTrackName(mood)){
-        //     return true;
-        // }else{
-        //     noMoods.push(mood);
-        //     return false;
-        // }
-        return false;
+        if(currentVrm.expressionManager.getExpressionTrackName(tmood)){
+            return true;
+        }else if(currentVrm.expressionManager.getExpressionTrackName(mood)){
+            return true;
+        }else{
+            noMoods.push(mood);
+            return false;
+        }
     }else{
         return false;
     }

@@ -25,6 +25,7 @@ system.onmouseout = function(){
 
 // 3D renderer
 let renderer = new THREE.WebGLRenderer({canvas: canvas, alpha: true});
+renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -303,7 +304,8 @@ function createLayout(){
     let alinks = [
         [getCMV("ORG_URL"), "OpenLive3D"],
         [getCMV("DOC_URL"), "Doc Repo - " + getCMV("VERSION")],
-        [getCMV("REPO_URL"), "Code Repo - " + getCMV("DEV_DATE")]
+        [getCMV("REPO_URL"), "Code Repo - " + getCMV("DEV_DATE")],
+        [getCMV("DISCORD_URL"), "Official Discord"]
     ];
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");

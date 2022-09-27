@@ -57,3 +57,6 @@
  - 2022-08-14: Alpha-0.6.X
    - Interpolation optimization
    - Discord: https://discord.gg/pGPY5Jfhvz
+ - 2022-09-27: Beta-1.1.X
+   - Update three-vrm from 0.X to 1.0.2
+   - Add vrm artifact to asset

@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-09-09";
-const VERSION = "Beta.1.0.1";
+const DEV_DATE = "2022-09-27";
+const VERSION = "Beta.1.0.3";
 
 let configManager = {};
 
@@ -57,7 +57,7 @@ function initCM(){
     }else{
         // Modifiable Parameters
         console.log("Initial Config");
-        configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/VRM1_Constraint_Twist_Sample.vrm';
+        configManager['MODEL'] = 'asset/vrm/three-vrm-girl.vrm';
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
@@ -103,6 +103,7 @@ function initCM(){
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
+    configManager['DISCORD_URL'] = "https://discord.gg/pGPY5Jfhvz";
     configManager['BG_UPLOAD'] = "";
     configManager['TIME'] = new Date();
     configManager['FPS_RATE'] = 60;
