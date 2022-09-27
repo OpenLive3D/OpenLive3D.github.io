@@ -1,6 +1,6 @@
 // version configuration
 const DEV_DATE = "2022-09-09";
-const VERSION = "Beta.1.0.1";
+const VERSION = "Beta.1.0.2";
 
 let configManager = {};
 
@@ -57,7 +57,7 @@ function initCM(){
     }else{
         // Modifiable Parameters
         console.log("Initial Config");
-        configManager['MODEL'] = 'https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/three-vrm-girl.vrm';
+        configManager['MODEL'] = 'asset/vrm/three-vrm-girl.vrm';
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
