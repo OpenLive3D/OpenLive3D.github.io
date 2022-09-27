@@ -1,14 +1,14 @@
 // global scene, light, and clock variable
 let scene = new THREE.Scene();
 let light = new THREE.DirectionalLight(0xffffff);
-light.position.set(0.0, 1.0, -1.0).normalize();
+light.position.set(0.0, 1.0, 1.0).normalize();
 scene.add(light);
 let clock = new THREE.Clock();
 clock.start();
 
 // config
-let Tvrmsbspn = THREE.VRMSchema.BlendShapePresetName;
-let Tvrmshbn = THREE.VRMSchema.HumanoidBoneName;
+let Tvrmsbspn = THREE_VRM.VRMExpressionPresetName;
+let Tvrmshbn = THREE_VRM.VRMHumanBoneName;
 let cm = getCM(); // required for ConfigManager Setup
 let currentVrm = undefined;
 let defaultXYZ = undefined;
@@ -23,8 +23,8 @@ function loadVRM(vrmurl){
             }
             currentVrm = vrm;
             scene.add(vrm.scene);
-            let head = currentVrm.humanoid.getBoneNode(Tvrmshbn.Head);
-            let foot = currentVrm.humanoid.getBoneNode(Tvrmshbn.LeftFoot);
+            let head = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Head);
+            let foot = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.LeftFoot);
             let pos = {
                 "x": head.up.x + head.position.x,
                 "y": head.up.y + head.position.y - foot.position.y,
@@ -33,7 +33,7 @@ function loadVRM(vrmurl){
             resetCameraPos(pos);
             resetVRMMood();
             createMoodLayout();
-            let hips = currentVrm.humanoid.getBoneNode(Tvrmshbn.Hips).position;
+            let hips = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Hips).position;
             defaultXYZ = [hips.x, hips.y, hips.z];
             console.log("vrm model loaded");
             console.log(currentVrm);
@@ -72,11 +72,11 @@ function ratioLimit(ratio){
 
 function updateMouthEyes(keys){
     if(currentVrm && mood != Tvrmsbspn.Joy){
-        let Cbsp = currentVrm.blendShapeProxy;
+        let Cbsp = currentVrm.expressionManager;
         let Ch = currentVrm.humanoid;
         // mouth
         let mouthRatio = ratioLimit((keys['mouth'] - getCMV("MOUTH_OPEN_OFFSET")) * getCMV('MOUTH_RATIO'));
-        Cbsp.setValue(Tvrmsbspn.A, mouthRatio);
+        Cbsp.setValue(Tvrmsbspn.Aa, mouthRatio);
         // eyes
         let leo = keys['leftEyeOpen'];
         let reo = keys['rightEyeOpen'];
@@ -86,26 +86,26 @@ function updateMouthEyes(keys){
             reo = avgEye;
         }
         if(reo < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
-            Cbsp.setValue(Tvrmsbspn.BlinkR, 1);
+            Cbsp.setValue(Tvrmsbspn.BlinkRight, 1);
         }else if(reo < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
             let eRatio = (reo - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
-            Cbsp.setValue(Tvrmsbspn.BlinkR, ratioLimit((1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO')));
+            Cbsp.setValue(Tvrmsbspn.BlinkRight, ratioLimit((1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO')));
         }else{
-            Cbsp.setValue(Tvrmsbspn.BlinkR, 0);
+            Cbsp.setValue(Tvrmsbspn.BlinkRight, 0);
         }
         if(leo < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
             Cbsp.setValue(Tvrmsbspn.BlinkL, 1);
         }else if(leo < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
             let eRatio = (leo - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
-            Cbsp.setValue(Tvrmsbspn.BlinkL, ratioLimit((1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO')));
+            Cbsp.setValue(Tvrmsbspn.BlinkLeft, ratioLimit((1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO')));
         }else{
-            Cbsp.setValue(Tvrmsbspn.BlinkL, 0);
+            Cbsp.setValue(Tvrmsbspn.BlinkLeft, 0);
         }
         // irises
         let irispos = keys['irisPos'];
         let irisY = (irispos - getCMV('IRIS_POS_OFFSET')) * getCMV('IRIS_POS_RATIO');
-        let riris = Ch.getBoneNode(Tvrmshbn.RightEye).rotation;
-        let liris = Ch.getBoneNode(Tvrmshbn.LeftEye).rotation;
+        let riris = Ch.getNormalizedBoneNode(Tvrmshbn.RightEye).rotation;
+        let liris = Ch.getNormalizedBoneNode(Tvrmshbn.LeftEye).rotation;
         riris.y = irisY;
         liris.y = irisY;
         // eyebrows
@@ -129,14 +129,14 @@ function updateMouthEyes(keys){
             }
             if(autoV < 0){
                 Cbsp.setValue(Tvrmsbspn.Angry, balAng);
-                Cbsp.setValue(Tvrmsbspn.Sorrow, absauto + balSor);
-                Cbsp.setValue(Tvrmsbspn.Fun, balFun);
-                Cbsp.setValue(Tvrmsbspn.E, 0);
+                Cbsp.setValue(Tvrmsbspn.Sad, absauto + balSor);
+                Cbsp.setValue(Tvrmsbspn.Happy, balFun);
+                Cbsp.setValue(Tvrmsbspn.Ee, 0);
             }else{
                 Cbsp.setValue(Tvrmsbspn.Angry, balAng);
-                Cbsp.setValue(Tvrmsbspn.Sorrow, balSor);
-                Cbsp.setValue(Tvrmsbspn.Fun, absauto + balFun);
-                Cbsp.setValue(Tvrmsbspn.E, absauto);
+                Cbsp.setValue(Tvrmsbspn.Sad, balSor);
+                Cbsp.setValue(Tvrmsbspn.Happy, absauto + balFun);
+                Cbsp.setValue(Tvrmsbspn.Ee, absauto);
             }
         }
     }
@@ -149,17 +149,17 @@ function updateBody(keys){
         let tiltRatio = Math.min(0.2, Math.max(-0.2, keys['tilt']));
         let leanRatio = Math.min(1, Math.max(-1, keys['lean'])) * 0.6;
         // head
-        let head = Ch.getBoneNode(Tvrmshbn.Head).rotation;
+        let head = Ch.getNormalizedBoneNode(Tvrmshbn.Head).rotation;
         head.set(radLimit(keys['pitch'] * getCMV('HEAD_RATIO')),
             radLimit(keys['yaw'] * getCMV('HEAD_RATIO') - leanRatio * 0.3),
             radLimit(keys['roll'] * getCMV('HEAD_RATIO') - tiltRatio * 0.3));
         // neck
-        let neck = Ch.getBoneNode(Tvrmshbn.Neck).rotation;
+        let neck = Ch.getNormalizedBoneNode(Tvrmshbn.Neck).rotation;
         neck.set(radLimit(keys['pitch'] * getCMV('NECK_RATIO')),
             radLimit(keys['yaw'] * getCMV('NECK_RATIO') - leanRatio * 0.7),
             radLimit(keys['roll'] * getCMV('NECK_RATIO') - tiltRatio * 0.7));
         // chest
-        let chest = Ch.getBoneNode(Tvrmshbn.Spine).rotation;
+        let chest = Ch.getNormalizedBoneNode(Tvrmshbn.Spine).rotation;
         chest.set(radLimit(keys['pitch'] * getCMV('CHEST_RATIO')),
             radLimit(keys['yaw'] * getCMV('CHEST_RATIO') + leanRatio),
             radLimit(keys['roll'] * getCMV('CHEST_RATIO') + tiltRatio));
@@ -176,7 +176,7 @@ function updateBody(keys){
                     let hp = keys[prefix + 'Pitch'];
                     let armEuler = armMagicEuler(wx, wy, hy, hr, hp, i);
                     Object.keys(armEuler).forEach(function(armkey){
-                        let armobj = Ch.getBoneNode(prefix + armkey).rotation;
+                        let armobj = Ch.getNormalizedBoneNode(prefix + armkey).rotation;
                         armobj.copy(armEuler[armkey]);
                     });
                 }else{
@@ -192,7 +192,7 @@ function updateBody(keys){
 function updatePosition(keys){
     if(currentVrm && defaultXYZ){
         let Ch = currentVrm.humanoid;
-        let hips = Ch.getBoneNode(Tvrmshbn.Hips).position;
+        let hips = Ch.getNormalizedBoneNode(Tvrmshbn.Hips).position;
         hips.x = defaultXYZ[0] - keys['x'] * getCMV("POSITION_X_RATIO");
         hips.y = defaultXYZ[1] - keys['y'] * getCMV("POSITION_Y_RATIO");
         hips.z = defaultXYZ[2] + keys['z'] * getCMV("POSITION_Z_RATIO");
@@ -208,7 +208,7 @@ function updateBreath(){
             bos = 0.0;
         }
         // hips
-        let hips = Ch.getBoneNode(Tvrmshbn.Hips).position;
+        let hips = Ch.getNormalizedBoneNode(Tvrmshbn.Hips).position;
         hips.y += bos;
     }
 }
@@ -216,14 +216,14 @@ function updateBreath(){
 function updateMood(){
     if(mood != oldmood){
         console.log(mood, oldmood);
-        let Cbsp = currentVrm.blendShapeProxy;
+        let Cbsp = currentVrm.expressionManager;
         if(oldmood != "AUTO_MOOD_DETECTION"){
             Cbsp.setValue(oldmood, 0);
         }else{
             Cbsp.setValue(Tvrmsbspn.Angry, 0);
-            Cbsp.setValue(Tvrmsbspn.Sorrow, 0);
-            Cbsp.setValue(Tvrmsbspn.Fun, 0);
-            Cbsp.setValue(Tvrmsbspn.E, 0);
+            Cbsp.setValue(Tvrmsbspn.Sad, 0);
+            Cbsp.setValue(Tvrmsbspn.Happy, 0);
+            Cbsp.setValue(Tvrmsbspn.Ee, 0);
         }
         if(mood != "AUTO_MOOD_DETECTION"){
             Cbsp.setValue(mood, 1);
@@ -234,21 +234,21 @@ function updateMood(){
 
 function updateInfo(){
     let info = getInfo();
-    updateBody(info);
-    updatePosition(info);
-    updateBreath();
-    updateMood();
+    // updateBody(info);
+    // updatePosition(info);
+    // updateBreath();
+    // updateMood();
 }
 
 // Mood
 let defaultMoodList = ['angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral', 'auto'];
 let moodMap = {
     "angry": Tvrmsbspn.Angry,
-    "sorrow": Tvrmsbspn.Sorrow,
-    "fun": Tvrmsbspn.Fun,
-    "joy": Tvrmsbspn.Joy,
-    "surprised": "Surprised",
-    "relaxed": "Relaxed",
+    "sorrow": Tvrmsbspn.Sad,
+    "fun": Tvrmsbspn.Happy,
+    "joy": "Joy",
+    "surprised": Tvrmsbspn.Surprised,
+    "relaxed": Tvrmsbspn.Relaxed,
     "neutral": Tvrmsbspn.Neutral,
     "auto": "AUTO_MOOD_DETECTION"
 };
@@ -309,47 +309,47 @@ let handTrackers = [new Date().getTime(), new Date().getTime()];
 function onHandLandmarkResult(keyPoints, handInfo, leftright){
     let prefix = ["left", "right"][leftright];
     let preRate = 1 - leftright * 2;
-    if(handInfo){
-        handTrackers[leftright] = new Date().getTime();
-        Object.keys(handInfo).forEach(function(key){
-            let sr = getSR('hand') / getCMV("SENSITIVITY_SCALE");
-            if(key in tmpInfo){
-                tmpInfo[key] = (1-sr) * handInfo[key] + sr * tmpInfo[key];
-            }
-        });
-        let Ch = currentVrm.humanoid;
-        Object.keys(fingerRates).forEach(function(finger){
-            let fingerRate = fingerRates[finger] * getCMV("FINGER_GRIP_RATIO");
-            let spreadRate = spreadRates[finger] * getCMV("FINGER_SPREAD_RATIO");
-            let preRatio = tmpInfo[prefix + finger];
-            let _ratio = 1 - Math.max(0, Math.min(fingerRate, preRatio)) / fingerRate;
-            let preSpread = tmpInfo[prefix + "Spread"];
-            if(preRatio < 0){
-                preSpread = 0.1;
-            }
-            let _spread = Math.min(1, Math.max(-0.2, preSpread - 0.1)) * spreadRate;
-            if(finger == "Thumb"){
-                for(let i = 0; i < fingerSegs.length; i ++){
-                    let seg = fingerSegs[i];
-                    let ratio = preRate * _ratio * thumbRatios[i] / 180 * Math.PI;
-                    let swing = preRate * (0.5 - Math.abs(0.5 - _ratio)) * thumbSwing / 180 * Math.PI;
-                    let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
-                    frotate.set(0, ratio, swing);
-                }
-            }else{
-                let ratio = preRate * _ratio * 70 / 180 * Math.PI;
-                let spread = preRate * _spread / 180 * Math.PI;
-                for(seg of fingerSegs){
-                    let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
-                    if(seg == "Proximal"){
-                        frotate.set(0, spread, ratio);
-                    }else{
-                        frotate.set(0, 0, ratio);
-                    }
-                }
-            }
-        });
-    }
+    // if(handInfo){
+    //     handTrackers[leftright] = new Date().getTime();
+    //     Object.keys(handInfo).forEach(function(key){
+    //         let sr = getSR('hand') / getCMV("SENSITIVITY_SCALE");
+    //         if(key in tmpInfo){
+    //             tmpInfo[key] = (1-sr) * handInfo[key] + sr * tmpInfo[key];
+    //         }
+    //     });
+    //     let Ch = currentVrm.humanoid;
+    //     Object.keys(fingerRates).forEach(function(finger){
+    //         let fingerRate = fingerRates[finger] * getCMV("FINGER_GRIP_RATIO");
+    //         let spreadRate = spreadRates[finger] * getCMV("FINGER_SPREAD_RATIO");
+    //         let preRatio = tmpInfo[prefix + finger];
+    //         let _ratio = 1 - Math.max(0, Math.min(fingerRate, preRatio)) / fingerRate;
+    //         let preSpread = tmpInfo[prefix + "Spread"];
+    //         if(preRatio < 0){
+    //             preSpread = 0.1;
+    //         }
+    //         let _spread = Math.min(1, Math.max(-0.2, preSpread - 0.1)) * spreadRate;
+    //         if(finger == "Thumb"){
+    //             for(let i = 0; i < fingerSegs.length; i ++){
+    //                 let seg = fingerSegs[i];
+    //                 let ratio = preRate * _ratio * thumbRatios[i] / 180 * Math.PI;
+    //                 let swing = preRate * (0.5 - Math.abs(0.5 - _ratio)) * thumbSwing / 180 * Math.PI;
+    //                 let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+    //                 frotate.set(0, ratio, swing);
+    //             }
+    //         }else{
+    //             let ratio = preRate * _ratio * 70 / 180 * Math.PI;
+    //             let spread = preRate * _spread / 180 * Math.PI;
+    //             for(seg of fingerSegs){
+    //                 let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+    //                 if(seg == "Proximal"){
+    //                     frotate.set(0, spread, ratio);
+    //                 }else{
+    //                     frotate.set(0, 0, ratio);
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
 }
 function noHandLandmarkResult(leftright){
     let prefix = ["left", "right"][leftright];
@@ -360,13 +360,13 @@ function noHandLandmarkResult(leftright){
             tmpInfo[key] = (1-sr) * tmpHandInfo[key] + sr * tmpInfo[key];
         }
     });
-    let Ch = currentVrm.humanoid;
-    Object.keys(fingerRates).forEach(function(finger){
-        for(seg of fingerSegs){
-            let frotate = Ch.getBoneNode(prefix + finger + seg).rotation;
-            frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
-        }
-    });
+    // let Ch = currentVrm.humanoid;
+    // Object.keys(fingerRates).forEach(function(finger){
+    //     for(seg of fingerSegs){
+    //         let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
+    //         frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
+    //     }
+    // });
 }
 
 // obtain Holistic Result
@@ -480,15 +480,15 @@ function resetVRMMood(){
     });
     if(currentVrm){
         let defaultMoodLength = defaultMoodList.length;
-        let unknownMood = currentVrm.blendShapeProxy._unknownGroupNames;
-        for(let newmood of unknownMood){
+        let unknownMood = currentVrm.expressionManager._expressionMap;
+        Object.keys(unknownMood).forEach(function(newmood){
             let newmoodid = Object.keys(moodMap).length - defaultMoodLength + 1;
             if(!Object.values(moodMap).includes(newmood)){
                 if(newmoodid <= getCMV("MOOD_EXTRA_LIMIT")){
                     moodMap[newmoodid.toString()] = newmood;
                 }
             }
-        }
+        });
     }
 }
 function checkVRMMood(mood){
@@ -498,14 +498,16 @@ function checkVRMMood(mood){
         return false;
     }else if(currentVrm){
         let tmood = moodMap[mood];
-        if(currentVrm.blendShapeProxy.getBlendShapeTrackName(tmood)){
-            return true;
-        }else if(currentVrm.blendShapeProxy.getBlendShapeTrackName(mood)){
-            return true;
-        }else{
-            noMoods.push(mood);
-            return false;
-        }
+        // --- NEED TO BE FIXED ---
+        // if(currentVrm.expressionManager.getBlendShapeTrackName(tmood)){
+        //     return true;
+        // }else if(currentVrm.expressionManager.getBlendShapeTrackName(mood)){
+        //     return true;
+        // }else{
+        //     noMoods.push(mood);
+        //     return false;
+        // }
+        return false;
     }else{
         return false;
     }
