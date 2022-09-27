@@ -1,4 +1,4 @@
-const TVRMSHBN = THREE.VRMSchema.HumanoidBoneName;
+const TVRMSHBN = THREE_VRM.VRMHumanBoneName;
 
 let loader = new THREE.GLTFLoader();
 let defaultPose = [
@@ -14,7 +14,7 @@ function setDefaultPose(vrm){
     for(let i = 0; i < defaultPose.length; i ++){
         let pose = defaultPose[i];
         for(let j = 0; j < 3; j ++){
-            vrm.humanoid.getBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
+            vrm.humanoid.getRawBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
         }
     }
 }
@@ -23,21 +23,23 @@ function setDefaultHand(vrm, leftright){
     for(let i = leftright; i < defaultPose.length; i += 2){
         let pose = defaultPose[i];
         for(let j = 0; j < 3; j ++){
-            vrm.humanoid.getBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
+            vrm.humanoid.getRawBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
         }
     }
 }
 
 function loadVRMModel(url, cb) {
     loader.crossOrigin = 'anonymous';
+    loader.register((parser) => {
+        return new THREE_VRM.VRMLoaderPlugin(parser);
+    });
     loader.load(url,
         (gltf) => {
-            THREE.VRMUtils.removeUnnecessaryVertices(gltf.scene);
-            THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);
-            THREE.VRM.from(gltf).then((vrm) => {
-                setDefaultPose(vrm);
-                cb(vrm);
-            });
+            THREE_VRM.VRMUtils.removeUnnecessaryVertices(gltf.scene);
+            THREE_VRM.VRMUtils.removeUnnecessaryJoints(gltf.scene);
+            let vrm = gltf.userData.vrm;
+            setDefaultPose(vrm);
+            cb(vrm);
         },
         (progress) => console.log('Loading model...', 100.0 * (progress.loaded / progress.total), '%'),
         (error) => console.error(error)

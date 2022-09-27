@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-09-09";
-const VERSION = "Beta.1.0.2";
+const DEV_DATE = "2022-09-27";
+const VERSION = "Beta.1.0.3";
 
 let configManager = {};
 
@@ -103,6 +103,7 @@ function initCM(){
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
+    configManager['DISCORD_URL'] = "https://discord.gg/pGPY5Jfhvz";
     configManager['BG_UPLOAD'] = "";
     configManager['TIME'] = new Date();
     configManager['FPS_RATE'] = 60;
