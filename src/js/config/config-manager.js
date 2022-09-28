@@ -1,6 +1,6 @@
 // version configuration
 const DEV_DATE = "2022-09-27";
-const VERSION = "Beta.1.0.3";
+const VERSION = "Beta.1.0.4";
 
 let configManager = {};
 
@@ -57,7 +57,7 @@ function initCM(){
     }else{
         // Modifiable Parameters
         console.log("Initial Config");
-        configManager['MODEL'] = 'asset/vrm/three-vrm-girl.vrm';
+        configManager['MODEL'] = 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm';
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
