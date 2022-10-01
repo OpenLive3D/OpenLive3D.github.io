@@ -34,7 +34,5 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Beta-1.0.X:
- - Add logging only backend server
- - Allow VRM model URL
- - Three-VRM version udpate
+Beta-1.1.X:
+ - Holistic in web worker (another thread)

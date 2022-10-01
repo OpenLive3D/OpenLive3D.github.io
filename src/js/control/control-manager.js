@@ -50,8 +50,8 @@ function initialize(){
     // start video
     startCamera(setCameraCallBack);
 
-    // load holistic
-    loadHolistic(onHolisticResults, function(){
+    // // load holistic
+    loadHolistic(onWorkerResults, function(){
         console.log("holistic model connected");
     });
 
@@ -380,7 +380,15 @@ function noHandLandmarkResult(leftright){
 let firstTime = true;
 let tween = null;
 let tmpInfo = getDefaultInfo();
+async function onWorkerResults(e){
+    if(e.data){
+        onHolisticResults(e.data);
+    }
+    getHolisticModel().postMessage(getCaptureImage());
+}
+
 async function onHolisticResults(results){
+
     let updateTime = new Date().getTime();
     if(firstTime){
         hideLoadbox();
@@ -437,9 +445,6 @@ async function onHolisticResults(results){
         pushInfo(tmpInfo);
     }
     firstTime = false;
-    setTimeout(function(){
-        mlLoop();
-    }, 100);
 }
 
 // the main ML loop
@@ -455,6 +460,7 @@ async function mlLoop(){
         }, 500);
     }
 }
+
 
 // the main visualization loop
 let viLoopCounter = 0;
@@ -532,11 +538,8 @@ function checkVRMMood(mood){
 // integration check
 async function checkIntegrate(){
     drawLoading("⟳ Integration Validating...");
-    let image = getCameraFrame();
-    let hModel = getHolisticModel();
-    await hModel.send({image: getCameraFrame()});
+    getHolisticModel().postMessage(getCaptureImage());
     requestAnimationFrame(viLoop);
-    mlLoop();
     console.log("ml & visual loops initialized");
 }
 

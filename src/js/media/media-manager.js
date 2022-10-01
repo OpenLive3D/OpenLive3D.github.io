@@ -104,3 +104,12 @@ function checkImage(){
         return false;
     }
 }
+
+let capImage = document.createElement("canvas");
+let capCtx = capImage.getContext('2d');
+capImage.width  = defaultWidth;
+capImage.height = defaultHeight;
+function getCaptureImage(){
+    capCtx.drawImage(capture, 0, 0);
+    return capCtx.getImageData(0, 0, defaultWidth, defaultHeight);
+}
