@@ -378,17 +378,17 @@ function noHandLandmarkResult(leftright){
 
 // obtain Holistic Result
 let firstTime = true;
-let tween = null;
 let tmpInfo = getDefaultInfo();
+let mlLoopCounter = 0;
 async function onWorkerResults(e){
     if(e.data){
+        mlLoopCounter += 1;
         onHolisticResults(e.data);
     }
     getHolisticModel().postMessage(getCaptureImage());
 }
 
 async function onHolisticResults(results){
-
     let updateTime = new Date().getTime();
     if(firstTime){
         hideLoadbox();
@@ -446,21 +446,6 @@ async function onHolisticResults(results){
     }
     firstTime = false;
 }
-
-// the main ML loop
-let mlLoopCounter = 0;
-async function mlLoop(){
-    let hModel = getHolisticModel();
-    if(checkImage()){
-        mlLoopCounter += 1;
-        await hModel.send({image: getCameraFrame()});
-    }else{
-        setTimeout(function(){
-            mlLoop();
-        }, 500);
-    }
-}
-
 
 // the main visualization loop
 let viLoopCounter = 0;
