@@ -14,7 +14,7 @@ function setDefaultPose(vrm){
     for(let i = 0; i < defaultPose.length; i ++){
         let pose = defaultPose[i];
         for(let j = 0; j < 3; j ++){
-            vrm.humanoid.getRawBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
+            vrm.humanoid.getNormalizedBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
         }
     }
 }
@@ -23,7 +23,7 @@ function setDefaultHand(vrm, leftright){
     for(let i = leftright; i < defaultPose.length; i += 2){
         let pose = defaultPose[i];
         for(let j = 0; j < 3; j ++){
-            vrm.humanoid.getRawBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
+            vrm.humanoid.getNormalizedBoneNode(pose[0]).rotation["xyz"[j]] = pose[1][j] / 180 * Math.PI;
         }
     }
 }
