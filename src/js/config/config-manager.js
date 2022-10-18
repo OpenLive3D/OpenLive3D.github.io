@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-10-11";
-const VERSION = "Beta.1.1.4";
+const DEV_DATE = "2022-10-18";
+const VERSION = "Beta.1.1.5";
 
 let configManager = {};
 
@@ -58,6 +58,7 @@ function initCM(){
         // Modifiable Parameters
         console.log("Initial Config");
         configManager['MODEL'] = 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm';
+        configManager['CUSTOM_MODEL'] = false;
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
@@ -128,7 +129,6 @@ function initCM(){
     configManager['MOOD_AUTO'] = true;
     configManager['DEFAULT_MOOD'] = "auto";
     configManager['MOOD_EXTRA_LIMIT'] = 5;
-    sendCMAPI(configManager);
 }
 
 function getSR(key){
@@ -380,12 +380,12 @@ function getConfigModifiers(){
     };
 }
 
-function sendCMAPI(cm){
+function setLogAPI(data){
     try{
         let request = new XMLHttpRequest();
         request.open('POST', 'https://2bbb76lqd1.execute-api.us-east-1.amazonaws.com/dev/openlive3d_s3_put_log', false);
         request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify(cm));
+        request.send(JSON.stringify(data));
         request.onreadystatechange=function(){
             console.log(request);
         }
