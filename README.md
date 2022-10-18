@@ -1,4 +1,4 @@
-# OpenLive3D
+<h1><img align="center" src="asset/logo.png" width="5%"/> OpenLive3D </h1>
 
 The open source project for Live3D Virtual Avatar.
 
@@ -12,6 +12,7 @@ The open source project for Live3D Virtual Avatar.
  - Discord: [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/pGPY5Jfhvz)
  - [Documents](https://github.com/OpenLive3D/OpenLive3D.document)
  - [Dev Log](DEVLOG.md)
+ - [See It In Action!](https://youtu.be/IdEdN8dovAg)
 
 
 ## Project Features
@@ -37,3 +38,4 @@ The project aims to connect the half-body movement with facial landmarks to the 
 Beta-1.1.X:
  - Holistic in web worker (another thread)
  - Hand update debug
+ - Custom model indicator

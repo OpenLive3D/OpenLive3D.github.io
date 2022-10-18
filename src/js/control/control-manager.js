@@ -39,6 +39,7 @@ function loadVRM(vrmurl){
             console.log(currentVrm);
         });
     setMood(getCMV('DEFAULT_MOOD'));
+    setLogAPI(cm);
 }
 
 // initialize the control

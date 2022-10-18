@@ -83,6 +83,7 @@ function createLayout(){
             let file = files[0];
             let blob = new Blob([file], {type: "application/octet-stream"});
             let url = URL.createObjectURL(blob);
+            setCMV("CUSTOM_MODEL", true);
             loadVRM(url);
         }else{
             console.log("No VRM Loaded");
@@ -125,6 +126,7 @@ function createLayout(){
     vrmurlsubmit.setAttribute("value", "Set URL");
     vrmurlsubmit.onclick = function(){
         setCMV("MODEL", vrmurlinput.value);
+        setCMV("CUSTOM_MODEL", true);
         loadVRM(vrmurlinput.value);
     }
     vrmurlbox.appendChild(vrmurlsubmit);
