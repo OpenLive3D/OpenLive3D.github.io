@@ -1,8 +1,22 @@
 // version configuration
-const DEV_DATE = "2022-10-22";
-const VERSION = "Beta.1.1.6";
+const DEV_DATE = "2022-10-23";
+const VERSION = "Beta.1.1.7";
+const CONFIG_VERSION = "Beta.1.1.7";
 
 let configManager = {};
+
+function versionValidation(v){
+    if(VERSION == v){
+        return true;
+    }else if(v){
+        let vkey1 = CONFIG_VERSION.split(".")[0];
+        let vkey2 = v.split(".")[0];
+        if(vkey1 == vkey2 && CONFIG_VERSION <= v){
+            return true;
+        }
+    }
+    return false;
+}
 
 function getCM(){
     if(Object.keys(configManager).length === 0){
@@ -13,6 +27,7 @@ function getCM(){
 
 function saveCM(){
     document.cookie = JSON.stringify(configManager);
+    console.log("setting saved");
 }
 
 function loadCM(){
@@ -24,7 +39,7 @@ function loadCM(){
             let cookie = document.cookie.substring(cuti);
             try{
                 configManager = JSON.parse(cookie);
-                if(VERSION != configManager['VERSION']){
+                if(!versionValidation(configManager['VERSION'])){
                     return false;
                 }
                 if(!("MODEL" in configManager)){
@@ -59,6 +74,7 @@ function initCM(){
         console.log("Initial Config");
         configManager['MODEL'] = 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm';
         configManager['CUSTOM_MODEL'] = false;
+        configManager['SAVE_SETTING'] = false;
         configManager['BG_COLOR'] = "#00CC00";
         configManager['CAMERA_FLIP'] = true;
         configManager['BREATH_FREQUENCY'] = 0.3;
@@ -154,14 +170,17 @@ function getCMV(key){
 function setCMV(key, value){
     if(key in configManager){
         configManager[key] = value;
-        saveCM();
+        if(configManager['SAVE_SETTING']){
+            saveCM();
+        }
         return true;
     }
     return false;
 }
 
 function getBinaryCM(){
-    return ["CAMERA_FLIP", 'HAND_TRACKING', "EYE_SYNC",
+    return ['SAVE_SETTING', 'CAMERA_FLIP',
+        'HAND_TRACKING', "EYE_SYNC",
         'MOOD_ANGRY', 'MOOD_SORROW',
         'MOOD_FUN', 'MOOD_JOY',
         'MOOD_NEUTRAL', 'MOOD_AUTO'];
@@ -174,6 +193,11 @@ function getLogItems(){
 function getConfigModifiers(){
     return {
         'GENERAL': [{
+            'key': 'SAVE_SETTING',
+            'title': 'Save Setting',
+            'describe': 'Save your settings in your browser as the cookie.',
+            'valid': [true, false]
+        }, {
             'key': 'CAMERA_FLIP',
             'title': 'Camera Flip',
             'describe': 'Flip the camera horizontally.',
