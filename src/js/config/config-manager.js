@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-10-18";
-const VERSION = "Beta.1.1.5";
+const DEV_DATE = "2022-10-22";
+const VERSION = "Beta.1.1.6";
 
 let configManager = {};
 
@@ -128,7 +128,7 @@ function initCM(){
     configManager['MOOD_NEUTRAL'] = true;
     configManager['MOOD_AUTO'] = true;
     configManager['DEFAULT_MOOD'] = "auto";
-    configManager['MOOD_EXTRA_LIMIT'] = 5;
+    configManager['MOOD_EXTRA_LIMIT'] = 10;
 }
 
 function getSR(key){
