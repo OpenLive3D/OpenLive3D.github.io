@@ -491,9 +491,9 @@ function resetVRMMood(){
         let unknownMood = currentVrm.expressionManager._expressionMap;
         Object.keys(unknownMood).forEach(function(newmood){
             if(!noMoods.includes(newmood)){
-                let newmoodid = Object.keys(moodMap).length - defaultMoodLength + 1;
+                let newmoodid = Object.keys(moodMap).length - defaultMoodLength;
                 if(!Object.values(moodMap).includes(newmood)){
-                    if(newmoodid <= getCMV("MOOD_EXTRA_LIMIT")){
+                    if(newmoodid < getCMV("MOOD_EXTRA_LIMIT")){
                         moodMap[newmoodid.toString()] = newmood;
                     }
                 }
