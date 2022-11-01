@@ -23,7 +23,12 @@ async function init(){
         minTrackingConfidence: 0.55,
     });
     hModel.onResults(function(results){
-        postMessage(results);
+        try{
+            postMessage(results);
+        }
+        catch(err){
+            console.log(err);
+        }
     });
     console.log("holistic worker initialization!");
     hModelInit = true;

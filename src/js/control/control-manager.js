@@ -386,7 +386,16 @@ async function onWorkerResults(e){
         mlLoopCounter += 1;
         onHolisticResults(e.data);
     }
-    getHolisticModel().postMessage(getCaptureImage());
+
+    try{
+        getHolisticModel().postMessage(getCaptureImage());
+    }
+    catch(err){
+        console.log(err);
+        setTimeout(function(){
+            getHolisticModel().postMessage(getCaptureImage());
+        }, getCMV("MAX_VI_DURATION"));
+    }
 }
 
 async function onHolisticResults(results){
