@@ -3,6 +3,7 @@ self.importScripts("holistic.js");
 
 let hModel = null;
 let hModelInit = false;
+let metakey = 0;
 async function init(){
     hModel = new Holistic({locateFile: (file) => {
         if(file.endsWith(".tflite")){
@@ -24,7 +25,10 @@ async function init(){
     });
     hModel.onResults(function(results){
         try{
-            postMessage(results);
+            postMessage({
+                "metakey": metakey,
+                "results": results
+            });
         }
         catch(err){
             console.log(err);
@@ -36,7 +40,8 @@ async function init(){
 init();
 
 onmessage = async e => {
-    if(hModelInit && e.data){
-        await hModel.send({image: e.data});
+    if(hModelInit && e.data && e.data["metakey"] && e.data["image"]){
+        metakey = e.data["metakey"];
+        await hModel.send({image: e.data["image"]});
     }
 }
