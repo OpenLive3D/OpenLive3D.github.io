@@ -1,6 +1,6 @@
 // version configuration
 const DEV_DATE = "2022-11-01";
-const VERSION = "Beta.1.1.8";
+const VERSION = "Beta.1.1.9";
 const CONFIG_VERSION = "Beta.1.1.7";
 
 let configManager = {};
@@ -124,6 +124,8 @@ function initCM(){
     configManager['BG_UPLOAD'] = "";
     configManager['TIME'] = new Date();
     configManager['FPS_RATE'] = 60;
+    configManager['HEALTH_RATE'] = 1;
+    configManager['HEALTH_WAIT'] = 5;
     configManager['MIN_VI_DURATION'] = 3;
     configManager['MAX_VI_DURATION'] = 300;
     configManager['HAND_CHECK'] = 3;

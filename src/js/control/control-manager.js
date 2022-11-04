@@ -12,6 +12,7 @@ let Tvrmshbn = THREE_VRM.VRMHumanBoneName;
 let cm = getCM(); // required for ConfigManager Setup
 let currentVrm = undefined;
 let defaultXYZ = undefined;
+let metadata = {"key": 0, "time": 0};
 
 // initialize / reinitialize VRM
 function loadVRM(vrmurl){
@@ -377,32 +378,43 @@ function noHandLandmarkResult(leftright){
     });
 }
 
+async function postImage(){
+    getHolisticModel().postMessage({
+        "metakey": metadata["key"],
+        "image": getCaptureImage()
+    });
+}
+
 // obtain Holistic Result
 let firstTime = true;
 let tmpInfo = getDefaultInfo();
 let mlLoopCounter = 0;
 async function onWorkerResults(e){
-    if(e.data){
+    if(e.data && e.data['results']){
         mlLoopCounter += 1;
-        onHolisticResults(e.data);
+        onHolisticResults(e.data['results']);
     }
-
-    try{
-        getHolisticModel().postMessage(getCaptureImage());
-    }
-    catch(err){
-        console.log(err);
-        setTimeout(function(){
-            getHolisticModel().postMessage(getCaptureImage());
-        }, getCMV("MAX_VI_DURATION"));
+    if(e.data && e.data['metakey'] == metadata["key"]){
+        try{
+            correctMeta();
+            postImage();
+        }
+        catch(err){
+            console.log(err);
+            setTimeout(function(){
+                onWorkerResults({});
+            }, getCMV("MAX_VI_DURATION"));
+        }
     }
 }
 
 async function onHolisticResults(results){
     let updateTime = new Date().getTime();
     if(firstTime){
+        correctMeta();
         hideLoadbox();
         setInterval(checkFPS, 1000 * getCMV("FPS_RATE"));
+        setInterval(checkHealth, 1000 * getCMV("HEALTH_RATE"));
         console.log("ml & visual loops validated");
         console.log("1st Result: ", results);
     }
@@ -533,7 +545,8 @@ function checkVRMMood(mood){
 // integration check
 async function checkIntegrate(){
     drawLoading("⟳ Integration Validating...");
-    getHolisticModel().postMessage(getCaptureImage());
+    setNewMeta();
+    postImage();
     requestAnimationFrame(viLoop);
     console.log("ml & visual loops initialized");
 }
@@ -572,4 +585,20 @@ function checkFPS(){
         prettyNumber(mlLoopCounter / getCMV("FPS_RATE")));
     viLoopCounter = 0;
     mlLoopCounter = 0;
+}
+
+// healthcheck metadata
+function setNewMeta(){
+    metadata["key"] = Date.now();
+    metadata["time"] = metadata["key"];
+    console.log("set new metadata:", metadata);
+}
+function correctMeta(){
+    metadata["time"] = Date.now();
+}
+function checkHealth(){
+    if(Date.now() - metadata["time"] > 1000 * getCMV("HEALTH_WAIT")){
+        setNewMeta();
+        postImage();
+    }
 }
