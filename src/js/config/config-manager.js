@@ -1,6 +1,6 @@
 // version configuration
 const DEV_DATE = "2022-11-06";
-const VERSION = "Beta.1.1.10";
+const VERSION = "Beta.1.1.11";
 const CONFIG_VERSION = "Beta.1.1.7";
 
 let configManager = {};
@@ -9,9 +9,14 @@ function versionValidation(v){
     if(VERSION == v){
         return true;
     }else if(v){
-        let vkey1 = CONFIG_VERSION.split(".")[0];
-        let vkey2 = v.split(".")[0];
-        if(vkey1 == vkey2 && CONFIG_VERSION <= v){
+        let varr1 = CONFIG_VERSION.split(".");
+        let varr2 = v.split(".");
+        if(varr1[0] == varr2[0]){
+            for(let i = 1; i < varr1.length; i++){
+                if(parseInt(varr1[i]) > parseInt(varr2[i])){
+                    return false;
+                }
+            }
             return true;
         }
     }
