@@ -473,6 +473,7 @@ function hideLoadbox(){
 function drawMobile(){
     let loadbox = document.getElementById('loadinfo');
     loadbox.innerHTML = "MOBILE NOT SUPPORTED!!";
+    window.location.replace("mobile.html");
 }
 
 function drawLoading(loadStage){

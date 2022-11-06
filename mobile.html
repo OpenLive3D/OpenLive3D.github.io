@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="asset/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="asset/favicon/favicon-16x16.png">
+    <link rel="manifest" href="asset/favicon/site.webmanifest">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="src/css/openlive3d.css">
+</head>
+<body>
+    <script>
+if(window.location.host.indexOf('github.io') > -1 && window.location.protocol != "https:"){
+    window.location.protocol = "https";
+}
+    </script>
+    <!-- layout -->
+    <div class="w3-display-middle">
+        <div class="w3-container">
+            <img src="asset/logo.png" style="width:100%"/>
+            <text style="font-size:40px"> OpenLive3D </text>
+        </div>
+        <div class="w3-container" style="font-size:16px">
+            <br/>
+            <text> MOBILE NOT SUPPORTED!! </text>
+            <br/><br/>
+            <text> OpenLive3D is a open-source website to connect webcam with 3D model for VTubing </text>
+            <br/><br/>
+            <a id="mobilelink"> Link to GitHub!! </text>
+        </div>
+    </div>
+    <!-- local dependencies -->
+    <script src="src/js/config/config-manager.js"></script>
+    <script>
+let mobilelink = document.getElementById('mobilelink');
+initCM();
+mobilelink.href = getCMV("ORG_URL");
+    </script>
+</body>
+</html>
