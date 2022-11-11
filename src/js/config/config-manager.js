@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-11-06";
-const VERSION = "Beta.1.1.12";
+const DEV_DATE = "2022-11-11";
+const VERSION = "Beta.1.1.13";
 const CONFIG_VERSION = "Beta.1.1.7";
 
 let configManager = {};
@@ -106,10 +106,10 @@ function initCM(){
         configManager['IRIS_POS_OFFSET'] = 0.0;
         configManager['IRIS_POS_RATIO'] = 0.5;
         configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.20;
-        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.27;
+        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.25;
         configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
         configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.20;
-        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.27;
+        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.25;
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
         configManager['HAND_TRACKING'] = true;
         configManager['HAND_STABLIZE_RATIO'] = 0.05;
