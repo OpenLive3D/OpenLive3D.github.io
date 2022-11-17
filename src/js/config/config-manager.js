@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-11-11";
-const VERSION = "Beta.1.1.13";
+const DEV_DATE = "2022-11-17";
+const VERSION = "Beta.1.2.1";
 const CONFIG_VERSION = "Beta.1.1.7";
 
 let configManager = {};
@@ -15,6 +15,8 @@ function versionValidation(v){
             for(let i = 1; i < varr1.length; i++){
                 if(parseInt(varr1[i]) > parseInt(varr2[i])){
                     return false;
+                }else if(parseInt(varr1[i]) < parseInt(varr2[i])){
+                    return true;
                 }
             }
             return true;

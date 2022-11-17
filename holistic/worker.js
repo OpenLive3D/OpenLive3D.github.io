@@ -1,4 +1,3 @@
-let ttttt = new Date().getTime();
 self.importScripts("holistic.js");
 
 let hModel = null;

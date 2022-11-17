@@ -53,7 +53,7 @@ function initialize(){
     startCamera(setCameraCallBack);
 
     // // load holistic
-    loadHolistic(onWorkerResults, function(){
+    loadMLModels(onWorkerResults, function(){
         console.log("holistic model connected");
     });
 
@@ -379,7 +379,7 @@ function noHandLandmarkResult(leftright){
 }
 
 async function postImage(){
-    getHolisticModel().postMessage({
+    getMLModel(getCMV("HAND_TRACKING")).postMessage({
         "metakey": metadata["key"],
         "image": getCaptureImage()
     });
@@ -566,7 +566,7 @@ function initLoop(){
         drawMobile();
     }else{
         drawLoading("Initializing");
-        if(checkVRMModel() && checkHModel() && checkImage()){
+        if(checkVRMModel() && checkMLModel() && checkImage()){
             console.log("start integration validation");
             checkIntegrate();
         }else{

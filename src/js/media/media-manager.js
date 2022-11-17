@@ -106,7 +106,7 @@ function checkImage(){
 }
 
 let capImage = document.createElement("canvas");
-let capCtx = capImage.getContext('2d');
+let capCtx = capImage.getContext('2d', {willReadFrequently: true});
 capImage.width  = defaultWidth;
 capImage.height = defaultHeight;
 function getCaptureImage(){

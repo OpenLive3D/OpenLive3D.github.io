@@ -206,6 +206,9 @@ function createLayout(){
                 item.checked = getCMV(configitem['key']);
                 item.onclick = function myFunction(){
                     setCMV(configitem['key'], item.checked);
+                    if(configitem['key'] == "HAND_TRACKING"){
+                        showHand(getCMV("HAND_TRACKING"));
+                    }
                 };
             }else if(configitem['key'] == "BG_UPLOAD"){
                 item.setAttribute("type", "file");
@@ -338,15 +341,49 @@ function createCameraLayout(){
     });
 }
 
+let handobj = document.createElement('img');
+handobj.id = "handobj";
+handobj.style.width = "30px";
+handobj.style.cursor = "pointer";
+handobj.style.marginLeft = "12px";
+function showHand(handon){
+    if(handon){
+        handobj.src = "asset/hand/hand-on.png";
+    }else{
+        handobj.src = "asset/hand/hand-no.png";
+    }
+}
 function createMoodLayout(){
     // reset MoodLayout
     moodbar.innerHTML = "";
     let tmp = document.createElement("div");
     tmp.className = "w3-bar-item";
-    tmp.style.height = "65px";
+    tmp.style.height = "80px";
     tmp.style.color = "#0000";
     tmp.innerHTML = ".";
     moodbar.appendChild(tmp);
+
+    // hand-on hand-no
+    let handbox = document.getElementById("HAND_TRACKING_box");
+    handobj.onclick = function(){
+        if(getCMV("HAND_TRACKING")){
+            handbox.checked = false;
+        }else{
+            handbox.checked = true;
+        }
+        setCMV("HAND_TRACKING", handbox.checked);
+        showHand(getCMV("HAND_TRACKING"));
+    }
+    handobj.onmouseover = function(){
+        showHand(!getCMV("HAND_TRACKING"));
+    }
+    handobj.onmouseout = function(){
+        showHand(getCMV("HAND_TRACKING"));
+    }
+    showHand(getCMV("HAND_TRACKING"));
+    moodbar.appendChild(handobj);
+    moodbar.appendChild(document.createElement("br"));
+    moodbar.appendChild(document.createElement("br"));
     
     // mood
     let moods = getAllMoods();
@@ -479,7 +516,7 @@ function drawMobile(){
 function drawLoading(loadStage){
     let loadbox = document.getElementById('loadinfo');
     loadbox.innerHTML = "";
-    if(checkVRMModel() && checkHModel() && checkImage()){
+    if(checkVRMModel() && checkMLModel() && checkImage()){
         let checkintegrate = document.createElement('p');
         loadbox.appendChild(checkintegrate);
         checkintegrate.innerHTML = loadStage;
@@ -501,7 +538,7 @@ function drawLoading(loadStage){
         }
         let checklm = document.createElement('p');
         loadbox.appendChild(checklm);
-        if(checkHModel()){
+        if(checkMLModel()){
             checklm.innerHTML = "✅ FaceLandMark-Model Loading...";
         }else{
             checklm.innerHTML = "⟳ FaceLandMark-Model Loading...";

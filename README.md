@@ -35,7 +35,5 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Beta-1.1.X:
- - Holistic in web worker (another thread)
- - Hand update debug
- - Custom model indicator
+Beta-1.2.X:
+ - Ultra-Fast Mode with only Facial Landmark Model

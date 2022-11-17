@@ -112,19 +112,26 @@ function normalize3d(p1){
 }
 
 // holistic worker
-let worker = null;
-function loadHolistic(onResults, cb){
-    worker = new Worker("holistic/worker.js");
-    worker.onmessage = onResults;
+let hworker = null;
+let fworker = null;
+function loadMLModels(onResults, cb){
+    hworker = new Worker("holistic/worker.js");
+    fworker = new Worker("face_mesh/worker.js");
+    hworker.onmessage = onResults;
+    fworker.onmessage = onResults;
     cb();
 }
 
-function getHolisticModel(){
-    return worker;
+function getMLModel(handtrack){
+    if(handtrack){
+        return hworker;
+    }else{
+        return fworker;
+    }
 }
 
-function checkHModel(){
-    if(worker){
+function checkMLModel(){
+    if(hworker && fworker){
         return true;
     }else{
         return false;
