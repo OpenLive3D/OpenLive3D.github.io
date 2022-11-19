@@ -171,7 +171,7 @@ function updateBody(keys){
                 if(updateTime - handTrackers[i] < 1000 * getCMV('HAND_CHECK')){
                     let prefix = ["left", "right"][i];
                     // upperArm, lowerArm
-                    let wx = keys[prefix + "WristX"];
+                    let wx = keys[prefix + "WristX"] + keys["x"] * getCMV("HEAD_HAND_RATIO");
                     let wy = keys[prefix + "WristY"];
                     let hy = keys[prefix + 'Yaw'];
                     let hr = keys[prefix + 'Roll'];

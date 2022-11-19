@@ -61,4 +61,7 @@
    - Update three-vrm from 0.X to 1.0.2
    - Add vrm artifact to asset
  - 2022-10-01: Beta-1.1.X
-   - Holistic to web worker
+   - Holistic to web worker: https://youtu.be/6K2wN6WPALw
+   - Dev-Log October: https://youtu.be/CTLpmGhzrY8
+ - 2022-11-17: Beta-1.2.X
+   - Ultra-fast mode: https://youtu.be/9aYzVFt-mxw

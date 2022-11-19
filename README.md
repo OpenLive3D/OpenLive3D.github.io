@@ -12,7 +12,7 @@ The open source project for Live3D Virtual Avatar.
  - Discord: [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/pGPY5Jfhvz)
  - [Documents](https://github.com/OpenLive3D/OpenLive3D.document)
  - [Dev Log](DEVLOG.md)
- - [See It In Action!](https://youtu.be/IdEdN8dovAg)
+ - [See It In Action!](https://youtu.be/U5U6KYeYTEs)
 
 
 ## Project Features
