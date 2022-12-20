@@ -413,7 +413,6 @@ async function onHolisticResults(results){
     if(firstTime){
         correctMeta();
         hideLoadbox();
-        setInterval(checkFPS, 1000 * getCMV("FPS_RATE"));
         setInterval(checkHealth, 1000 * getCMV("HEALTH_RATE"));
         console.log("ml & visual loops validated");
         console.log("1st Result: ", results);
@@ -576,15 +575,12 @@ function initLoop(){
 }
 
 // validate counter
+let viFPSQueue = [];
+let mlFPSQueue = [];
+let viHealthQueue = [];
+let mlHealthQueue = [];
 function prettyNumber(n){
     return Math.floor(n * 1000) / 1000;
-}
-function checkFPS(){
-    console.log("FPS: ",
-        prettyNumber(viLoopCounter / getCMV("FPS_RATE")),
-        prettyNumber(mlLoopCounter / getCMV("FPS_RATE")));
-    viLoopCounter = 0;
-    mlLoopCounter = 0;
 }
 
 // healthcheck metadata
@@ -596,7 +592,88 @@ function setNewMeta(){
 function correctMeta(){
     metadata["time"] = Date.now();
 }
+function checkMLHealthQueue(state){
+    let healthCount = 0;
+    for(let i = 0; i < getCMV("FPS_WAIT"); i++){
+        if(mlHealthQueue[i] == state){
+            healthCount += 1;
+        }
+    }
+    if(healthCount == getCMV("FPS_WAIT")){
+        if(state == 1 && getCMV("HAND_TRACKING")){
+            console.log("ALERT: Ultra Fast");
+        }else if(state == 2){
+            console.log("ALERT: Hardware Acceleration");
+        }else if(state == 3){
+            console.log("ALERT: Error");
+        }
+    }
+}
+function checkVIHealthQueue(state){
+    let healthCount = 0;
+    for(let i = 0; i < getCMV("FPS_WAIT"); i++){
+        if(viHealthQueue[i] == state){
+            healthCount += 1;
+        }
+    }
+    if(healthCount == getCMV("FPS_WAIT")){
+        if(state == 1 && getCMV("HAND_TRACKING")){
+            console.log("ALERT: Slow");
+        }else if(state == 2){
+            console.log("ALERT: Blocking");
+        }else if(state == 3){
+            console.log("ALERT: Full Screen / Wrong Tab");
+        }
+    }
+}
 function checkHealth(){
+    let viFPS = viLoopCounter / getCMV("HEALTH_RATE");
+    let mlFPS = mlLoopCounter / getCMV("HEALTH_RATE");
+    viLoopCounter = 0;
+    mlLoopCounter = 0;
+    viFPSQueue.push(viFPS);
+    mlFPSQueue.push(mlFPS);
+    if(mlHealthQueue.length == getCMV("FPS_WAIT")){
+        mlHealthQueue.shift();
+    }
+    if(mlFPS > 15){
+        mlHealthQueue = [];
+    }else{
+        let state = 3;
+        if(mlFPS > 5){
+            state = 1;
+        }else if(mlFPS > 0){
+            state = 2;
+        }
+        mlHealthQueue.push(state);
+        if(mlHealthQueue.length == getCMV("FPS_WAIT")){
+            checkMLHealthQueue(state);
+        }
+    }
+    if(viHealthQueue.length == getCMV("FPS_WAIT")){
+        viHealthQueue.shift();
+    }
+    if(viFPS > 30){
+        viHealthQueue = [];
+    }else{
+        let state = 3;
+        if(viFPS > 15){
+            state = 1;
+        }else if(viFPS > 0){
+            state = 2;
+        }
+        viHealthQueue.push(state);
+        if(viHealthQueue.length == getCMV("FPS_WAIT")){
+            checkVIHealthQueue(state);
+        }
+    }
+    if(viFPSQueue.length == getCMV("FPS_RATE")){
+        let viFPSAvg = viFPSQueue.reduce((a, b) => a + b, 0) / getCMV("FPS_RATE");
+        let mlFPSAvg = mlFPSQueue.reduce((a, b) => a + b, 0) / getCMV("FPS_RATE");
+        console.log("FPS: ", prettyNumber(viFPSAvg), prettyNumber(mlFPSAvg));
+        viFPSQueue = [];
+        mlFPSQueue = [];
+    }
     if(Date.now() - metadata["time"] > 1000 * getCMV("HEALTH_WAIT")){
         setNewMeta();
         postImage();
