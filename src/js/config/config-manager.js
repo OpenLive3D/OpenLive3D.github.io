@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2022-12-20";
-const VERSION = "Beta.1.2.3";
+const DEV_DATE = "2022-12-25";
+const VERSION = "Beta.1.2.4";
 const CONFIG_VERSION = "Beta.1.1.7";
 
 let configManager = {};
@@ -197,8 +197,12 @@ function getBinaryCM(){
         'MOOD_NEUTRAL', 'MOOD_AUTO'];
 }
 
+function getSideBoxes(){
+    return ["vrmbox", "dbgbox", "confbox", "logbox"];
+}
+
 function getLogItems(){
-    return ["face", "pose", "left_hand", "right_hand"];
+    return ["general", "face", "pose", "left_hand", "right_hand"];
 }
 
 function getConfigModifiers(){

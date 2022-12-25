@@ -424,7 +424,13 @@ async function onHolisticResults(results){
     }
 
     let PoI = {};
-    let allInfo = {};
+    let allInfo = {"general": {"3D-FPS": 0, "ML-FPS": 0}};
+    if(viFPSQueue.length > 0){
+        allInfo["general"]["3D-FPS"] = viFPSQueue[viFPSQueue.length - 1];
+    }
+    if(mlFPSQueue.length > 0){
+        allInfo["general"]["ML-FPS"] = mlFPSQueue[mlFPSQueue.length - 1];
+    }
     if(results.faceLandmarks){
         let keyPoints = packFaceHolistic(results.faceLandmarks);
         mergePoints(PoI, keyPoints);
@@ -579,6 +585,8 @@ let viFPSQueue = [];
 let mlFPSQueue = [];
 let viHealthQueue = [];
 let mlHealthQueue = [];
+let viHealthState = 0;
+let mlHealthState = 0;
 function prettyNumber(n){
     return Math.floor(n * 1000) / 1000;
 }
@@ -607,6 +615,8 @@ function checkMLHealthQueue(state){
         }else if(state == 3){
             console.log("ALERT: Error");
         }
+        mlHealthState = state;
+        raiseAlert(viHealthState, mlHealthState);
     }
 }
 function checkVIHealthQueue(state){
@@ -617,13 +627,15 @@ function checkVIHealthQueue(state){
         }
     }
     if(healthCount == getCMV("FPS_WAIT")){
-        if(state == 1 && getCMV("HAND_TRACKING")){
+        if(state == 1){
             console.log("ALERT: Slow");
         }else if(state == 2){
-            console.log("ALERT: Blocking");
+            console.log("ALERT: Hardware Acceleration");
         }else if(state == 3){
             console.log("ALERT: Full Screen / Wrong Tab");
         }
+        viHealthState = state;
+        raiseAlert(viHealthState, mlHealthState);
     }
 }
 function checkHealth(){
@@ -637,7 +649,11 @@ function checkHealth(){
         mlHealthQueue.shift();
     }
     if(mlFPS > 15){
-        mlHealthQueue = [];
+        mlHealthQueue.shift();
+        if(mlHealthQueue.length == 0){
+            mlHealthState = 0;
+            clearAlert(viHealthState, mlHealthState);
+        }
     }else{
         let state = 3;
         if(mlFPS > 5){
@@ -653,11 +669,15 @@ function checkHealth(){
     if(viHealthQueue.length == getCMV("FPS_WAIT")){
         viHealthQueue.shift();
     }
-    if(viFPS > 30){
-        viHealthQueue = [];
+    if(viFPS > 24){
+        viHealthQueue.shift();
+        if(viHealthQueue.length == 0){
+            viHealthState = 0;
+            clearAlert(viHealthState, mlHealthState);
+        }
     }else{
         let state = 3;
-        if(viFPS > 15){
+        if(viFPS > 12){
             state = 1;
         }else if(viFPS > 0){
             state = 2;

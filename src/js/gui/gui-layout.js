@@ -1,9 +1,8 @@
 // layout
 let sidebar = document.getElementById("thesidebar");
 let moodbar = document.getElementById("themoodbar");
-let layout = document.getElementById("layout");
-let system = document.getElementById("system");
-system.onclick = function(){
+let systembox = document.getElementById("systembox");
+systembox.onclick = function(){
     console.log("click SYSTEM_IMG");
     if(sidebar.style.display == "none"){
         sidebar.style.display = "block";
@@ -14,10 +13,10 @@ system.onclick = function(){
     }
 };
 let systemtext = document.getElementById("systemtext");
-system.onmouseover = function(){
+systembox.onmouseover = function(){
     systemtext.style.color = "#FFFFFFFF";
 };
-system.onmouseout = function(){
+systembox.onmouseout = function(){
     if(sidebar.style.display == "none"){
         systemtext.style.color = "#FFFFFF00";
     }
@@ -493,12 +492,47 @@ function printLog(keys){
     }
 }
 
+function raiseAlert(vistate, mlstate){
+    if(vistate > 0 || mlstate > 0){
+        let alertbox = document.getElementById("alertbox");
+        alertbox.style.display = "block";
+        let alerttext = document.getElementById("alerttext");
+        if(vistate == 3){
+            alerttext.innerHTML = "ALERT: Full Screen / Wrong Tab<br/>Browser will stop rendering when other program enters full screen!";
+        } else if(mlstate == 3){
+            alerttext.innerHTML = "ALERT: Error<br/>ML loop stop running, might need to restart to validate.";
+        } else if(mlstate == 2 || vistate == 2){
+            alerttext.innerHTML = "ALERT: Hardware Acceleration<br/>ML loop is running extremely slow, check if hardware acceleration is opened.";
+        } else if(mlstate == 1 && getCMV("HAND_TRACKING")){
+            alerttext.innerHTML = "ALERT: Ultra Fast<br/>ML loop is running slowly, improve performance by using FACE-ONLY mode.";
+        } else if(vistate == 1){
+            alerttext.innerHTML = "ALERT: Slow<br/>Feel free to contact developer for more information.";
+        }
+    }
+}
+
+function clearAlert(vistate, mlstate){
+    if(vistate == 0 && mlstate == 0){
+        let alertbox = document.getElementById("alertbox");
+        alertbox.style.display = "none";
+    }
+}
+
 function drawScene(scene){
     if(getCMV('CAMERA_FLIP') != getCMV('SCENE_FLIP')){
         setCMV('SCENE_FLIP', getCMV('CAMERA_FLIP'));
         scene.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
     }
     renderer.render(scene, camera);
+}
+
+function hideSideboxes(){
+    for(let boxid of getSideBoxes()){
+        let obj = document.getElementById(boxid);
+        if(obj.className.indexOf("w3-hide") == -1){
+            obj.className += " w3-hide";
+        }
+    }
 }
 
 function hideLoadbox(){
@@ -565,5 +599,14 @@ function hideObj(target){
         obj.className += " w3-hide";
     }else{
         obj.className = obj.className.replace(" w3-hide", "");
+    }
+}
+
+function displayObj(target){
+    let obj = document.getElementById(target);
+    if(obj.style.display == "none"){
+        obj.style.display = "block";
+    }else{
+        obj.style.display = "none";
     }
 }
