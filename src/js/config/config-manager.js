@@ -1,7 +1,7 @@
 // version configuration
-const DEV_DATE = "2022-12-25";
-const VERSION = "Beta.1.2.4";
-const CONFIG_VERSION = "Beta.1.1.7";
+const DEV_DATE = "2023-02-09";
+const VERSION = "Beta.1.2.5";
+const CONFIG_VERSION = "Beta.1.2.5";
 
 let configManager = {};
 
@@ -113,7 +113,7 @@ function initCM(){
         configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.20;
         configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.25;
         configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['HAND_TRACKING'] = true;
+        configManager['HAND_TRACKING'] = false;
         configManager['HAND_STABLIZE_RATIO'] = 0.05;
         configManager['FINGER_GRIP_RATIO'] = 1.0;
         configManager['FINGER_SPREAD_RATIO'] = 1.5;
