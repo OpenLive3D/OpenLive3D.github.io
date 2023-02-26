@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2023-02-11";
-const VERSION = "Beta.1.2.6";
+const DEV_DATE = "2023-02-26";
+const VERSION = "Beta.1.2.7";
 const CONFIG_VERSION = "Beta.1.2.5";
 
 let configManager = {};
@@ -65,6 +65,7 @@ function loadCM(){
             }catch(e){
                 console.log(e);
                 console.log(cookie);
+                document.cookie = null;
                 return false;
             }
         }
