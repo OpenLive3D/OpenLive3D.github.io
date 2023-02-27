@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2023-02-26";
-const VERSION = "Beta.1.2.7";
+const DEV_DATE = "2023-02-27";
+const VERSION = "Beta.1.2.8";
 const CONFIG_VERSION = "Beta.1.2.5";
 
 let configManager = {};
@@ -35,6 +35,11 @@ function getCM(){
 function saveCM(){
     document.cookie = JSON.stringify(configManager);
     console.log("setting saved");
+}
+
+function clearCookie(){
+    document.cookie = null;
+    console.log("cookie cleared");
 }
 
 function loadCM(){
@@ -184,6 +189,8 @@ function setCMV(key, value){
         configManager[key] = value;
         if(configManager['SAVE_SETTING']){
             saveCM();
+        }else{
+            clearCookie();
         }
         return true;
     }
