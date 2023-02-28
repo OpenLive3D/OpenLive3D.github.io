@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2023-02-27";
-const VERSION = "Beta.1.2.8";
+const DEV_DATE = "2023-02-28";
+const VERSION = "Beta.1.2.10";
 const CONFIG_VERSION = "Beta.1.2.5";
 
 let configManager = {};
@@ -42,27 +42,34 @@ function clearCookie(){
     console.log("cookie cleared");
 }
 
+function loadCMFalse(){
+    clearCookie();
+    return false;
+}
+
 function loadCM(){
     if(document.cookie){
         let cuti = document.cookie.indexOf("{");
-        if(cuti == -1){
-            return false;
+        let cutl = document.cookie.indexOf("}");
+        if(cuti == -1 || cutl == -1){
+            return loadCMFalse();
         }else{
-            let cookie = document.cookie.substring(cuti);
+            let cookie = document.cookie.substring(cuti, cutl+1);
+            document.cookie = cookie;
             try{
                 configManager = JSON.parse(cookie);
                 if(!versionValidation(configManager['VERSION'])){
-                    return false;
+                    return loadCMFalse();
                 }
                 if(!("MODEL" in configManager)){
-                    return false;
+                    return loadCMFalse();
                 }
                 let checkModifiers = getConfigModifiers();
                 for(let key in checkModifiers){
                     let cmk = checkModifiers[key];
                     for(let i = 0; i < cmk.length; i ++){
                         if(!(cmk[i]['key'] in configManager)){
-                            return false;
+                            return loadCMFalse();
                         }
                     }
                 }
@@ -70,12 +77,11 @@ function loadCM(){
             }catch(e){
                 console.log(e);
                 console.log(cookie);
-                document.cookie = null;
-                return false;
+                return loadCMFalse();
             }
         }
     }else{
-        return false;
+        return loadCMFalse();
     }
 }
 
