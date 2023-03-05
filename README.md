@@ -37,3 +37,10 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 Beta-1.2.X:
  - Ultra-Fast Mode with only Facial Landmark Model
+
+
+## Sponsors
+
+Great Thanks to our Sponsors:
+
+ - [Gabrielle666x](https://github.com/Gabrielle666x)
