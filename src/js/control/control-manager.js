@@ -389,6 +389,7 @@ async function postImage(){
 let firstTime = true;
 let tmpInfo = getDefaultInfo();
 let mlLoopCounter = 0;
+let dynamicMLDura = getCMV("MIN_ML_DURATION");
 async function onWorkerResults(e){
     if(e.data && e.data['results']){
         mlLoopCounter += 1;
@@ -397,13 +398,12 @@ async function onWorkerResults(e){
     if(e.data && e.data['metakey'] == metadata["key"]){
         try{
             correctMeta();
-            postImage();
+            setTimeout(function(){
+                postImage();
+            }, dynamicMLDura);
         }
         catch(err){
             console.log(err);
-            setTimeout(function(){
-                onWorkerResults({});
-            }, getCMV("MAX_VI_DURATION"));
         }
     }
 }
@@ -476,9 +476,8 @@ async function onHolisticResults(results){
 
 // the main visualization loop
 let viLoopCounter = 0;
+let dynamicVIDura = getCMV("MIN_VI_DURATION");
 async function viLoop(){
-    let minVIDura = getCMV("MIN_VI_DURATION");
-    let maxVIDura = getCMV("MAX_VI_DURATION");
     if(currentVrm && checkImage()){
         viLoopCounter += 1;
         currentVrm.update(clock.getDelta());
@@ -486,11 +485,11 @@ async function viLoop(){
         drawScene(scene);
         setTimeout(function(){
             requestAnimationFrame(viLoop);
-        }, minVIDura);
+        }, dynamicVIDura);
     }else{
         setTimeout(function(){
             requestAnimationFrame(viLoop);
-        }, maxVIDura);
+        }, getCMV("MAX_VI_DURATION"));
     }
 }
 
@@ -581,6 +580,8 @@ function initLoop(){
 }
 
 // validate counter
+let viFPS = 0.0;
+let mlFPS = 0.0;
 let viFPSQueue = [];
 let mlFPSQueue = [];
 let viHealthQueue = [];
@@ -639,8 +640,14 @@ function checkVIHealthQueue(state){
     }
 }
 function checkHealth(){
-    let viFPS = viLoopCounter / getCMV("HEALTH_RATE");
-    let mlFPS = mlLoopCounter / getCMV("HEALTH_RATE");
+    viFPS = viLoopCounter / getCMV("HEALTH_RATE");
+    mlFPS = mlLoopCounter / getCMV("HEALTH_RATE");
+    dynamicMLDura *= (mlFPS / getCMV("ML_FPS_LIMIT"));
+    dynamicMLDura = Math.max(dynamicMLDura, getCMV("MIN_ML_DURATION"));
+    dynamicMLDura = Math.min(dynamicMLDura, getCMV("MAX_ML_DURATION"));
+    dynamicVIDura *= (viFPS / getCMV("3D_FPS_LIMIT"));
+    dynamicVIDura = Math.max(dynamicVIDura, getCMV("MIN_VI_DURATION"));
+    dynamicVIDura = Math.min(dynamicVIDura, getCMV("MAX_VI_DURATION"));
     viLoopCounter = 0;
     mlLoopCounter = 0;
     viFPSQueue.push(viFPS);
@@ -691,6 +698,7 @@ function checkHealth(){
         let viFPSAvg = viFPSQueue.reduce((a, b) => a + b, 0) / getCMV("FPS_RATE");
         let mlFPSAvg = mlFPSQueue.reduce((a, b) => a + b, 0) / getCMV("FPS_RATE");
         console.log("FPS: ", prettyNumber(viFPSAvg), prettyNumber(mlFPSAvg));
+        console.log("DEBUG INFO: ", dynamicVIDura, dynamicMLDura);
         viFPSQueue = [];
         mlFPSQueue = [];
     }

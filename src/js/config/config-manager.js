@@ -1,7 +1,7 @@
 // version configuration
-const DEV_DATE = "2023-02-28";
-const VERSION = "Beta.1.2.10";
-const CONFIG_VERSION = "Beta.1.2.5";
+const DEV_DATE = "2023-03-11";
+const VERSION = "Beta.1.2.11";
+const CONFIG_VERSION = "Beta.1.2.11";
 
 let configManager = {};
 
@@ -100,6 +100,8 @@ function initCM(){
         configManager['BREATH_STRENGTH'] = 1;
         configManager['MOOD_AUTO_RATIO'] = 4;
         configManager['MOOD_AUTO_OFFSET'] = 0.04;
+        configManager['3D_FPS_LIMIT'] = 120;
+        configManager['ML_FPS_LIMIT'] = 120;
         configManager['SENSITIVITY_SCALE'] = 1;
         configManager['MOTION_BLUR_RATIO'] = 1.5;
         configManager['MOMENTUM_RATIO'] = 1.5;
@@ -149,6 +151,8 @@ function initCM(){
     configManager['HEALTH_WAIT'] = 5;
     configManager['MIN_VI_DURATION'] = 3;
     configManager['MAX_VI_DURATION'] = 300;
+    configManager['MIN_ML_DURATION'] = 3;
+    configManager['MAX_ML_DURATION'] = 300;
     configManager['HAND_CHECK'] = 3;
     configManager['MAX_FACES'] = 1;
     configManager['NUM_KEYPOINTS'] = 468;
@@ -251,6 +255,16 @@ function getConfigModifiers(){
             'title': 'MOOD_AUTO Offset',
             'describe': 'Auto-mood works when the value is larger than the offset, default as 0.1. Range(0, 1)',
             'range': [0, 1]
+        }, {
+            'key': '3D_FPS_LIMIT',
+            'title': '3D_FPS Limit',
+            'describe': 'The FPS limit for 3D rendering visualization, default as 120. Range(1, 120)',
+            'range': [1, 120]
+        }, {
+            'key': 'ML_FPS_LIMIT',
+            'title': 'ML_FPS Limit',
+            'describe': 'The FPS limit for ML computation, default as 120. Range(1, 120)',
+            'range': [1, 120]
         }],
         'BACKGROUND': [{
             'key': 'BG_COLOR',
