@@ -28,7 +28,7 @@ function setDefaultHand(vrm, leftright){
     }
 }
 
-function loadVRMModel(url, cb) {
+function loadVRMModel(url, cb, ecb) {
     loader.crossOrigin = 'anonymous';
     loader.register((parser) => {
         return new THREE_VRM.VRMLoaderPlugin(parser);
@@ -42,6 +42,9 @@ function loadVRMModel(url, cb) {
             cb(vrm);
         },
         (progress) => console.log('Loading model...', 100.0 * (progress.loaded / progress.total), '%'),
-        (error) => console.error(error)
+        (error) => {
+            ecb();
+            console.error(error);
+        }
     );
 }

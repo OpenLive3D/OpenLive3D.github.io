@@ -1,7 +1,7 @@
 // version configuration
-const DEV_DATE = "2023-03-11";
-const VERSION = "Beta.1.2.11";
-const CONFIG_VERSION = "Beta.1.2.11";
+const DEV_DATE = "2023-03-12";
+const VERSION = "Beta.1.2.12";
+const CONFIG_VERSION = "Beta.1.2.12";
 
 let configManager = {};
 
@@ -138,6 +138,7 @@ function initCM(){
     // System Parameters
     configManager['VERSION'] = VERSION;
     configManager['DEV_DATE'] = DEV_DATE;
+    configManager['DEFAULT_MODEL'] = 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm';
     configManager['ORG_URL'] = "https://github.com/OpenLive3D";
     configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
     configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";

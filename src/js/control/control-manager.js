@@ -38,6 +38,13 @@ function loadVRM(vrmurl){
             defaultXYZ = [hips.x, hips.y, hips.z];
             console.log("vrm model loaded");
             console.log(currentVrm);
+        }, function(){
+            if(vrmurl != getCMV('MODEL')){
+                loadVRM(getCMV('MODEL'));
+            }else if(vrmurl != getCMV('DEFAULT_MODEL')){
+                setCMV('MODEL', getCMV('DEFAULT_MODEL'));
+                loadVRM(getCMV('DEFAULT_MODEL'));
+            }
         });
     setMood(getCMV('DEFAULT_MOOD'));
     setLogAPI(cm);
