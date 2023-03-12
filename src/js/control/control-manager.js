@@ -575,6 +575,8 @@ function checkVRMModel(){
 function initLoop(){
     if(window.mobileCheck()){
         drawMobile();
+    }else if(window.browserCheck() == "Safari"){
+        drawSafari();
     }else{
         drawLoading("Initializing");
         if(checkVRMModel() && checkMLModel() && checkImage()){

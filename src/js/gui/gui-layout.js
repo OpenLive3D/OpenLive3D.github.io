@@ -543,8 +543,23 @@ function hideLoadbox(){
 
 function drawMobile(){
     let loadbox = document.getElementById('loadinfo');
+    loadbox.style.color = 'red';
     loadbox.innerHTML = "MOBILE NOT SUPPORTED!!";
     window.location.replace("mobile.html");
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
+function drawSafari(){
+    let loadbox = document.getElementById('loadinfo');
+    loadbox.innerHTML = "";
+    let tmp1 = document.createElement('p');
+    tmp1.style.color = 'red';
+    tmp1.innerHTML = "SAFARI NOT SUPPORTED!!";
+    loadbox.appendChild(tmp1);
+    let tmp2 = document.createElement('p');
+    tmp2.innerHTML = "Safari has no stable support for image processing in web-worker today (2023-03-12)";
+    tmp2.innerHTML += " Please use other browsers for now.";
+    loadbox.appendChild(tmp2);
 }
 
 function drawLoading(loadStage){
