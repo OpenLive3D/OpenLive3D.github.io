@@ -1,7 +1,108 @@
 // version configuration
-const DEV_DATE = "2023-03-12";
-const VERSION = "Beta.1.2.13";
+const DEV_DATE = "2023-03-25";
+const VERSION = "Beta.1.2.14";
 const CONFIG_VERSION = "Beta.1.2.12";
+
+let defaultConfig = {
+    // modifiable parameters
+    'MODEL': 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm',
+    'CUSTOM_MODEL': false,
+    'SAVE_SETTING': false,
+    'BG_COLOR': "#00CC00",
+    'CAMERA_FLIP': true,
+    'BREATH_FREQUENCY': 0.3,
+    'BREATH_STRENGTH': 1,
+    'MOOD_AUTO_RATIO': 4,
+    'MOOD_AUTO_OFFSET': 0.04,
+    '3D_FPS_LIMIT': 120,
+    'ML_FPS_LIMIT': 120,
+    'SENSITIVITY_SCALE': 1,
+    'MOTION_BLUR_RATIO': 1.5,
+    'MOMENTUM_RATIO': 1.5,
+    'HEAD_RATIO': 0.50,
+    'NECK_RATIO': 0.40,
+    'CHEST_RATIO': 0.1,
+    'HEAD_STABLIZE_RATIO': 0.3,
+    'BODY_STABLIZE_RATIO': 0.7,
+    'MOUTH_OPEN_OFFSET': 0.015,
+    'MOUTH_RATIO': 5,
+    'MOUTH_STABLIZE_RATIO': 0.01,
+    'BROWS_OFFSET': 0.49,
+    'BROWS_RATIO': 10,
+    'BROWS_STABLIZE_RATIO': 0.01,
+    'EYE_SYNC': true,
+    'EYE_LINK_THRESHOLD': 0.05,
+    'EYE_STABLIZE_RATIO': 0.2,
+    'IRIS_POS_OFFSET': 0.0,
+    'IRIS_POS_RATIO': 0.5,
+    'RIGHT_EYE_CLOSE_THRESHOLD': 0.20,
+    'RIGHT_EYE_OPEN_THRESHOLD': 0.25,
+    'RIGHT_EYE_SQUINT_RATIO': 0.6,
+    'LEFT_EYE_CLOSE_THRESHOLD': 0.20,
+    'LEFT_EYE_OPEN_THRESHOLD': 0.25,
+    'LEFT_EYE_SQUINT_RATIO': 0.6,
+    'HAND_TRACKING': true,
+    'HAND_STABLIZE_RATIO': 0.05,
+    'FINGER_GRIP_RATIO': 1.0,
+    'FINGER_SPREAD_RATIO': 1.5,
+    'POSITION_X_RATIO': 0.12,
+    'POSITION_Y_RATIO': 0.12,
+    'POSITION_Z_RATIO': 0.12,
+    // system parameters
+    'VERSION': VERSION,
+    'DEV_DATE': DEV_DATE,
+    'DEFAULT_MODEL': 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm',
+    'ORG_URL': "https://github.com/OpenLive3D",
+    'REPO_URL': "https://github.com/OpenLive3D/OpenLive3D.github.io",
+    'DOC_URL': "https://github.com/OpenLive3D/OpenLive3D.document",
+    'DISCORD_URL': "https://discord.gg/pGPY5Jfhvz",
+    'BG_UPLOAD': "",
+    'TIME': new Date(),
+    'FPS_RATE': 60,
+    'FPS_WAIT': 10,
+    'HEAD_HAND_RATIO': 0.2,
+    'HEALTH_RATE': 1,
+    'HEALTH_WAIT': 5,
+    'MIN_VI_DURATION': 3,
+    'MAX_VI_DURATION': 300,
+    'MIN_ML_DURATION': 3,
+    'MAX_ML_DURATION': 300,
+    'HAND_CHECK': 3,
+    'MAX_FACES': 1,
+    'NUM_KEYPOINTS': 468,
+    'NUM_IRIS_KEYPOINTS': 5,
+    'PREDICT_IRISES': true,
+    'SCENE_FLIP': false,
+    'CANVAS_RATIO': 0.5,
+    'DEBUG_IMAGE': false,
+    'DEBUG_LANDMARK': true,
+    'MOOD_ANGRY': true,
+    'MOOD_SORROW': true,
+    'MOOD_FUN': true,
+    'MOOD_JOY': true,
+    'MOOD_SURPRISED': true,
+    'MOOD_RELAXED': true,
+    'MOOD_NEUTRAL': true,
+    'MOOD_AUTO': true,
+    'DEFAULT_MOOD': "auto",
+    'MOOD_EXTRA_LIMIT': 10
+};
+function getDefaultCMV(key){
+    return defaultConfig[key];
+}
+function getSystemParameters(){
+    return ['VERSION', 'DEV_DATE', 'DEFAULT_MODEL', 'ORG_URL',
+        'REPO_URL', 'DOC_URL', 'DISCORD_URL', 'BG_UPLOAD',
+        'TIME', 'FPS_RATE', 'FPS_WAIT', 'HEAD_HAND_RATIO',
+        'HEALTH_RATE', 'HEALTH_WAIT', 'MIN_VI_DURATION',
+        'MAX_VI_DURATION', 'MIN_ML_DURATION', 'MAX_ML_DURATION',
+        'HAND_CHECK', 'MAX_FACES', 'NUM_KEYPOINTS',
+        'NUM_IRIS_KEYPOINTS', 'PREDICT_IRISES', 'SCENE_FLIP',
+        'CANVAS_RATIO', 'DEBUG_IMAGE', 'DEBUG_LANDMARK',
+        'MOOD_ANGRY', 'MOOD_SORROW', 'MOOD_FUN', 'MOOD_JOY',
+        'MOOD_SURPRISED', 'MOOD_RELAXED', 'MOOD_NEUTRAL',
+        'MOOD_AUTO', 'DEFAULT_MOOD', 'MOOD_EXTRA_LIMIT'];
+}
 
 let configManager = {};
 
@@ -48,10 +149,11 @@ function loadCMFalse(){
 }
 
 function loadCM(){
+    // console.log(document.cookie);
     if(document.cookie){
         let cuti = document.cookie.indexOf("{");
         let cutl = document.cookie.indexOf("}");
-        if(cuti == -1 || cutl == -1){
+        if(cuti == -1 || cutl == -1 || cutl < cuti){
             return loadCMFalse();
         }else{
             let cookie = document.cookie.substring(cuti, cutl+1);
@@ -65,13 +167,22 @@ function loadCM(){
                     return loadCMFalse();
                 }
                 let checkModifiers = getConfigModifiers();
+                let checkCounter = 0;
+                let checkFalseCounter = 0;
                 for(let key in checkModifiers){
                     let cmk = checkModifiers[key];
                     for(let i = 0; i < cmk.length; i ++){
+                        checkCounter += 1;
                         if(!(cmk[i]['key'] in configManager)){
-                            return loadCMFalse();
+                            let cmkey = cmk[i]['key'];
+                            configManager[cmkey] = getDefaultCMV(cmkey);
+                            checkFalseCounter += 1;
+                            console.log("config missing key ", cmkey);
                         }
                     }
+                }
+                if(checkFalseCounter > checkCounter / 4){
+                    return loadCMFalse();
                 }
                 return true;
             }catch(e){
@@ -88,91 +199,15 @@ function loadCM(){
 function initCM(){
     if(loadCM()){
         console.log("Load Cookie Config");
+        // System Parameters
+        for(let key of getSystemParameters()){
+            configManager[key] = getDefaultCMV(key);
+        }
     }else{
         // Modifiable Parameters
         console.log("Initial Config");
-        configManager['MODEL'] = 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm';
-        configManager['CUSTOM_MODEL'] = false;
-        configManager['SAVE_SETTING'] = false;
-        configManager['BG_COLOR'] = "#00CC00";
-        configManager['CAMERA_FLIP'] = true;
-        configManager['BREATH_FREQUENCY'] = 0.3;
-        configManager['BREATH_STRENGTH'] = 1;
-        configManager['MOOD_AUTO_RATIO'] = 4;
-        configManager['MOOD_AUTO_OFFSET'] = 0.04;
-        configManager['3D_FPS_LIMIT'] = 120;
-        configManager['ML_FPS_LIMIT'] = 120;
-        configManager['SENSITIVITY_SCALE'] = 1;
-        configManager['MOTION_BLUR_RATIO'] = 1.5;
-        configManager['MOMENTUM_RATIO'] = 1.5;
-        configManager['HEAD_RATIO'] = 0.50;
-        configManager['NECK_RATIO'] = 0.40;
-        configManager['CHEST_RATIO'] = 0.1;
-        configManager['HEAD_STABLIZE_RATIO'] = 0.3;
-        configManager['BODY_STABLIZE_RATIO'] = 0.7;
-        configManager['MOUTH_OPEN_OFFSET'] = 0.015;
-        configManager['MOUTH_RATIO'] = 5;
-        configManager['MOUTH_STABLIZE_RATIO'] = 0.01;
-        configManager['BROWS_OFFSET'] = 0.49;
-        configManager['BROWS_RATIO'] = 10;
-        configManager['BROWS_STABLIZE_RATIO'] = 0.01;
-        configManager['EYE_SYNC'] = true;
-        configManager['EYE_LINK_THRESHOLD'] = 0.05;
-        configManager['EYE_STABLIZE_RATIO'] = 0.2;
-        configManager['IRIS_POS_OFFSET'] = 0.0;
-        configManager['IRIS_POS_RATIO'] = 0.5;
-        configManager['RIGHT_EYE_CLOSE_THRESHOLD'] = 0.20;
-        configManager['RIGHT_EYE_OPEN_THRESHOLD'] = 0.25;
-        configManager['RIGHT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['LEFT_EYE_CLOSE_THRESHOLD'] = 0.20;
-        configManager['LEFT_EYE_OPEN_THRESHOLD'] = 0.25;
-        configManager['LEFT_EYE_SQUINT_RATIO'] = 0.6;
-        configManager['HAND_TRACKING'] = true;
-        configManager['HAND_STABLIZE_RATIO'] = 0.05;
-        configManager['FINGER_GRIP_RATIO'] = 1.0;
-        configManager['FINGER_SPREAD_RATIO'] = 1.5;
-        configManager['POSITION_X_RATIO'] = 0.12;
-        configManager['POSITION_Y_RATIO'] = 0.12;
-        configManager['POSITION_Z_RATIO'] = 0.12;
+        configManager = JSON.parse(JSON.stringify(defaultConfig));
     }
-    // System Parameters
-    configManager['VERSION'] = VERSION;
-    configManager['DEV_DATE'] = DEV_DATE;
-    configManager['DEFAULT_MODEL'] = 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm';
-    configManager['ORG_URL'] = "https://github.com/OpenLive3D";
-    configManager['REPO_URL'] = "https://github.com/OpenLive3D/OpenLive3D.github.io";
-    configManager['DOC_URL'] = "https://github.com/OpenLive3D/OpenLive3D.document";
-    configManager['DISCORD_URL'] = "https://discord.gg/pGPY5Jfhvz";
-    configManager['BG_UPLOAD'] = "";
-    configManager['TIME'] = new Date();
-    configManager['FPS_RATE'] = 60;
-    configManager['FPS_WAIT'] = 10;
-    configManager['HEAD_HAND_RATIO'] = 0.2;
-    configManager['HEALTH_RATE'] = 1;
-    configManager['HEALTH_WAIT'] = 5;
-    configManager['MIN_VI_DURATION'] = 3;
-    configManager['MAX_VI_DURATION'] = 300;
-    configManager['MIN_ML_DURATION'] = 3;
-    configManager['MAX_ML_DURATION'] = 300;
-    configManager['HAND_CHECK'] = 3;
-    configManager['MAX_FACES'] = 1;
-    configManager['NUM_KEYPOINTS'] = 468;
-    configManager['NUM_IRIS_KEYPOINTS'] = 5;
-    configManager['PREDICT_IRISES'] = true;
-    configManager['SCENE_FLIP'] = false;
-    configManager['CANVAS_RATIO'] = 0.5;
-    configManager['DEBUG_IMAGE'] = false;
-    configManager['DEBUG_LANDMARK'] = true;
-    configManager['MOOD_ANGRY'] = true;
-    configManager['MOOD_SORROW'] = true;
-    configManager['MOOD_FUN'] = true;
-    configManager['MOOD_JOY'] = true;
-    configManager['MOOD_SURPRISED'] = true;
-    configManager['MOOD_RELAXED'] = true;
-    configManager['MOOD_NEUTRAL'] = true;
-    configManager['MOOD_AUTO'] = true;
-    configManager['DEFAULT_MOOD'] = "auto";
-    configManager['MOOD_EXTRA_LIMIT'] = 10;
 }
 
 function getSR(key){
