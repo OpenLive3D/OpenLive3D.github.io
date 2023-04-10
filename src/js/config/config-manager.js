@@ -1,7 +1,27 @@
 // version configuration
-const DEV_DATE = "2023-03-25";
-const VERSION = "Beta.1.2.14";
+const DEV_DATE = "2023-04-10";
+const VERSION = "Beta.1.3.1";
 const CONFIG_VERSION = "Beta.1.2.12";
+
+let configManager = {};
+if(window.entryElectron()){
+    const { ipcRenderer } = require('electron');
+    let electronConfig = ipcRenderer.sendSync('initConfig', '');
+    console.log(electronConfig);
+    function getCookie(){
+        return electronConfig;
+    }
+    function setCookie(saveString){
+        ipcRenderer.send('saveConfig', saveString);
+    }
+}else{
+    function getCookie(){
+        return document.cookie;
+    }
+    function setCookie(saveString){
+        document.cookie = saveString;
+    }
+}
 
 let defaultConfig = {
     // modifiable parameters
@@ -104,8 +124,6 @@ function getSystemParameters(){
         'MOOD_AUTO', 'DEFAULT_MOOD', 'MOOD_EXTRA_LIMIT'];
 }
 
-let configManager = {};
-
 function versionValidation(v){
     if(VERSION == v){
         return true;
@@ -126,44 +144,43 @@ function versionValidation(v){
     return false;
 }
 
-function getCM(){
-    if(Object.keys(configManager).length === 0){
-        initCM();
-    }
-    return configManager;
-}
-
 function saveCM(){
-    document.cookie = JSON.stringify(configManager);
+    setCookie(JSON.stringify(configManager));
     console.log("setting saved");
 }
 
-function clearCookie(){
-    document.cookie = null;
+function clearCM(){
+    setCookie(null);
     console.log("cookie cleared");
 }
 
 function loadCMFalse(){
-    clearCookie();
+    clearCM();
     return false;
 }
 
 function loadCM(){
-    // console.log(document.cookie);
-    if(document.cookie){
-        let cuti = document.cookie.indexOf("{");
-        let cutl = document.cookie.indexOf("}");
+    let cookie = getCookie();
+    if(cookie){
+        let cuti = cookie.indexOf("{");
+        let cutl = cookie.indexOf("}");
         if(cuti == -1 || cutl == -1 || cutl < cuti){
             return loadCMFalse();
         }else{
-            let cookie = document.cookie.substring(cuti, cutl+1);
-            document.cookie = cookie;
+            cookie = cookie.substring(cuti, cutl+1);
+            setCookie(cookie);
             try{
                 configManager = JSON.parse(cookie);
                 if(!versionValidation(configManager['VERSION'])){
                     return loadCMFalse();
                 }
                 if(!("MODEL" in configManager)){
+                    return loadCMFalse();
+                }
+                if(!("SAVE_SETTING" in configManager)){
+                    return loadCMFalse();
+                }else if(!configManager['SAVE_SETTING']){
+                    console.log("No Save Setting");
                     return loadCMFalse();
                 }
                 let checkModifiers = getConfigModifiers();
@@ -196,7 +213,7 @@ function loadCM(){
     }
 }
 
-function initCM(){
+function initConfig(){
     if(loadCM()){
         console.log("Load Cookie Config");
         // System Parameters
@@ -236,7 +253,7 @@ function setCMV(key, value){
         if(configManager['SAVE_SETTING']){
             saveCM();
         }else{
-            clearCookie();
+            clearCM();
         }
         return true;
     }
@@ -483,12 +500,12 @@ function getConfigModifiers(){
     };
 }
 
-function setLogAPI(data){
+function setLogAPI(){
     try{
         let request = new XMLHttpRequest();
         request.open('POST', 'https://2bbb76lqd1.execute-api.us-east-1.amazonaws.com/dev/openlive3d_s3_put_log', false);
         request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify(data));
+        request.send(JSON.stringify(configManager));
         request.onreadystatechange=function(){
             console.log(request);
         }

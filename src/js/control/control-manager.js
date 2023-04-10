@@ -9,7 +9,6 @@ clock.start();
 // config
 let Tvrmsbspn = THREE_VRM.VRMExpressionPresetName;
 let Tvrmshbn = THREE_VRM.VRMHumanBoneName;
-let cm = getCM(); // required for ConfigManager Setup
 let currentVrm = undefined;
 let defaultXYZ = undefined;
 let metadata = {"key": 0, "time": 0};
@@ -47,11 +46,12 @@ function loadVRM(vrmurl){
             }
         });
     setMood(getCMV('DEFAULT_MOOD'));
-    setLogAPI(cm);
+    setLogAPI();
 }
 
 // initialize the control
 function initialize(){
+    initConfig();
 
     // html canvas for drawing debug view
     createLayout();

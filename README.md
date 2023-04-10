@@ -35,8 +35,8 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-Beta-1.2.X:
- - Ultra-Fast Mode with only Facial Landmark Model
+Beta-1.3.X:
+ - Electron Config Module
 
 
 ## Sponsors
