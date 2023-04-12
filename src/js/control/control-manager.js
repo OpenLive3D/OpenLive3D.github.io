@@ -651,9 +651,15 @@ function checkVIHealthQueue(state){
 function checkHealth(){
     viFPS = viLoopCounter / getCMV("HEALTH_RATE");
     mlFPS = mlLoopCounter / getCMV("HEALTH_RATE");
+    if(isNaN(dynamicMLDura)){
+        dynamicMLDura = getCMV("MIN_ML_DURATION");
+    }
     dynamicMLDura *= (mlFPS / getCMV("ML_FPS_LIMIT"));
     dynamicMLDura = Math.max(dynamicMLDura, getCMV("MIN_ML_DURATION"));
     dynamicMLDura = Math.min(dynamicMLDura, getCMV("MAX_ML_DURATION"));
+    if(isNaN(dynamicVIDura)){
+        dynamicVIDura = getCMV("MIN_VI_DURATION");
+    }
     dynamicVIDura *= (viFPS / getCMV("3D_FPS_LIMIT"));
     dynamicVIDura = Math.max(dynamicVIDura, getCMV("MIN_VI_DURATION"));
     dynamicVIDura = Math.min(dynamicVIDura, getCMV("MAX_VI_DURATION"));
