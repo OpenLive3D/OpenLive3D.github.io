@@ -1,26 +1,14 @@
 // version configuration
-const DEV_DATE = "2023-04-13";
-const VERSION = "Beta.1.3.2";
+const DEV_DATE = "2023-05-07";
+const VERSION = "Beta.1.3.3";
 const CONFIG_VERSION = "Beta.1.2.12";
 
 let configManager = {};
-if(window.entryElectron()){
-    const { ipcRenderer } = require('electron');
-    let electronConfig = ipcRenderer.sendSync('initConfig', '');
-    console.log(electronConfig);
-    function getCookie(){
-        return electronConfig;
-    }
-    function setCookie(saveString){
-        ipcRenderer.send('saveConfig', saveString);
-    }
-}else{
-    function getCookie(){
-        return document.cookie;
-    }
-    function setCookie(saveString){
-        document.cookie = saveString;
-    }
+function getCookie(){
+    return document.cookie;
+}
+function setCookie(saveString){
+    document.cookie = saveString;
 }
 
 let defaultConfig = {
