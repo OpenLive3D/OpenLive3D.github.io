@@ -86,30 +86,6 @@ function updateMouthEyes(keys){
         // mouth
         let mouthRatio = ratioLimit((keys['mouth'] - getCMV("MOUTH_OPEN_OFFSET")) * getCMV('MOUTH_RATIO'));
         Cbsp.setValue(Tvrmsbspn.Aa, mouthRatio);
-        // eyes
-        let leo = keys['leftEyeOpen'];
-        let reo = keys['rightEyeOpen'];
-        if(getCMV("EYE_SYNC") || Math.abs(reo - leo) < getCMV('EYE_LINK_THRESHOLD')){
-            let avgEye = (reo + leo) / 2;
-            leo = avgEye;
-            reo = avgEye;
-        }
-        if(reo < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
-            Cbsp.setValue(Tvrmsbspn.BlinkRight, 1);
-        }else if(reo < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
-            let eRatio = (reo - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
-            Cbsp.setValue(Tvrmsbspn.BlinkRight, ratioLimit((1 - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO')));
-        }else{
-            Cbsp.setValue(Tvrmsbspn.BlinkRight, 0);
-        }
-        if(leo < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
-            Cbsp.setValue(Tvrmsbspn.BlinkLeft, 1);
-        }else if(leo < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
-            let eRatio = (leo - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
-            Cbsp.setValue(Tvrmsbspn.BlinkLeft, ratioLimit((1 - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO')));
-        }else{
-            Cbsp.setValue(Tvrmsbspn.BlinkLeft, 0);
-        }
         // irises
         let irispos = keys['irisPos'];
         let irisY = (irispos - getCMV('IRIS_POS_OFFSET')) * getCMV('IRIS_POS_RATIO');
@@ -123,6 +99,7 @@ function updateMouthEyes(keys){
             Cbsp.setValue("Brows up", browspos);
         }
         // auto mood
+        let happyThresholdForEyes = 1;
         if(mood == "AUTO_MOOD_DETECTION"){
             let autoV = Math.max(-1, Math.min(1, keys["auto"] * getCMV("MOOD_AUTO_RATIO")));
             let absauto = Math.max(0, Math.abs(autoV) - getCMV("MOOD_AUTO_OFFSET"));
@@ -142,11 +119,36 @@ function updateMouthEyes(keys){
                 Cbsp.setValue(Tvrmsbspn.Happy, balFun);
                 Cbsp.setValue(Tvrmsbspn.Ee, 0);
             }else{
+                happyThresholdForEyes = 1 - absauto;
                 Cbsp.setValue(Tvrmsbspn.Angry, balAng);
                 Cbsp.setValue(Tvrmsbspn.Sad, balSor);
                 Cbsp.setValue(Tvrmsbspn.Happy, absauto + balFun);
                 Cbsp.setValue(Tvrmsbspn.Ee, absauto);
             }
+        }
+        // eyes
+        let leo = keys['leftEyeOpen'];
+        let reo = keys['rightEyeOpen'];
+        if(getCMV("EYE_SYNC") || Math.abs(reo - leo) < getCMV('EYE_LINK_THRESHOLD')){
+            let avgEye = (reo + leo) / 2;
+            leo = avgEye;
+            reo = avgEye;
+        }
+        if(reo < getCMV('RIGHT_EYE_CLOSE_THRESHOLD')){
+            Cbsp.setValue(Tvrmsbspn.BlinkRight, happyThresholdForEyes);
+        }else if(reo < getCMV('RIGHT_EYE_OPEN_THRESHOLD')){
+            let eRatio = (reo - getCMV('RIGHT_EYE_CLOSE_THRESHOLD')) / (getCMV('RIGHT_EYE_OPEN_THRESHOLD') - getCMV('RIGHT_EYE_CLOSE_THRESHOLD'));
+            Cbsp.setValue(Tvrmsbspn.BlinkRight, ratioLimit((happyThresholdForEyes - eRatio) * getCMV('RIGHT_EYE_SQUINT_RATIO')));
+        }else{
+            Cbsp.setValue(Tvrmsbspn.BlinkRight, 0);
+        }
+        if(leo < getCMV('LEFT_EYE_CLOSE_THRESHOLD')){
+            Cbsp.setValue(Tvrmsbspn.BlinkLeft, happyThresholdForEyes);
+        }else if(leo < getCMV('LEFT_EYE_OPEN_THRESHOLD')){
+            let eRatio = (leo - getCMV('LEFT_EYE_CLOSE_THRESHOLD')) / (getCMV('LEFT_EYE_OPEN_THRESHOLD') - getCMV('LEFT_EYE_CLOSE_THRESHOLD'));
+            Cbsp.setValue(Tvrmsbspn.BlinkLeft, ratioLimit((happyThresholdForEyes - eRatio) * getCMV('LEFT_EYE_SQUINT_RATIO')));
+        }else{
+            Cbsp.setValue(Tvrmsbspn.BlinkLeft, 0);
         }
     }
 }
