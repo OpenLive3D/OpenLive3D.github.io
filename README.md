@@ -37,6 +37,7 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 Beta-1.3.X:
  - Electron Config Module
+ - Multi-Language
 
 
 ## Sponsors

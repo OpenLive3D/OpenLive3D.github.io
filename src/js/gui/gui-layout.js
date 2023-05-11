@@ -73,6 +73,7 @@ function createLayout(){
     let vrmboxbtn = document.getElementById("vrmboxbutton");
     vrmboxbtn.innerHTML = getL("Model Manager");
     let vrmbox = document.getElementById("vrmbox");
+    vrmbox.innerHTML = "";
     let vrmbtn = document.createElement('input');
     vrmbtn.setAttribute("type", "file");
     vrmbtn.setAttribute("accept", ".vrm");
@@ -165,6 +166,7 @@ function createLayout(){
     let dbglmlabel = document.getElementById("dbglmlabel");
     dbglmlabel.innerHTML = getL("Landmark");
     let confbox = document.getElementById("confbox");
+    confbox.innerHTML = "";
     let confmodifiers = getConfigModifiers();
     Object.keys(confmodifiers).forEach(function(key){
         confmodifier = confmodifiers[key];
@@ -254,7 +256,22 @@ function createLayout(){
                     setBackGround();
                 };
             }else if(configitem['key'] == "LANGUAGE"){
-                // TODO Multi-Selection
+                item.style.display = "none";
+                let itemselect = document.createElement("select");
+                for(let languagename of availableLanguage){
+                    let languageitem = document.createElement("option");
+                    languageitem.value = languagename;
+                    languageitem.innerHTML = languagename;
+                    itemselect.appendChild(languageitem);
+                    if(languagename == getCMV("LANGUAGE")){
+                        itemselect.value = languagename;
+                    }
+                }
+                itemselect.onchange = function myFunction(){
+                    setCMV("LANGUAGE", itemselect.value);
+                    createLayout();
+                };
+                confgroup.appendChild(itemselect);
             }else{
                 item.setAttribute("type", "range");
                 item.setAttribute("min", 0);
@@ -293,6 +310,7 @@ function createLayout(){
     let logboxbtn = document.getElementById("logboxbutton");
     logboxbtn.innerHTML = getL("Parameters");
     let logbox = document.getElementById("logbox");
+    logbox.innerHTML = "";
     let logitems = getLogItems();
     for(let key of logitems){
         let logkey = document.createElement('div');
@@ -318,6 +336,7 @@ function createLayout(){
 
     // about the team
     let about = document.getElementById("about");
+    about.innerHTML = "";
     about.style.color = "white";
     let alinks = [
         [getCMV("ORG_URL"), "OpenLive3D"],

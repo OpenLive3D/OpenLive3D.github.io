@@ -1,5 +1,6 @@
 // multi language
 let defaultLanguage = "en";
+let availableLanguage = ["en", "zh"];
 let languageBox = [{
     "en": 'Model Manager',
     "zh": '模型管理'
