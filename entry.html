@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="asset/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="asset/favicon/favicon-16x16.png">
+    <link rel="manifest" href="asset/favicon/site.webmanifest">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="src/css/openlive3d.css">
+</head>
+<body>
+    <div class="loadbox" id="loadbox">
+        <div class="w3-display-middle" style="width:280px">
+            <img id="loadimg" src="asset/logo.png" style="height:50px"/>
+            <text class="loading"> OpenLive3D </text>
+            <div><br/> An <b>Open-Source</b> to connect <b>Camera</b> with <b>3D Model</b>!! <br/></div>
+            <div><br/>
+                <button class="w3-button w3-green w3-round-large"><h2><a style="text-decoration:none" id="entrylinkdemo"> GO TO DEMO </a></h2></button>
+            <br/></div>
+            <div><br/>
+                <button class="w3-button w3-light-gray w3-round-large"><h6><a style="text-decoration:none" id="entrylinkcode"> GO TO GITHUB </a></h6></button>
+            <br/></div>
+        </div>
+    </div>
+    <script src="src/js/entry/entry-manager.js"></script>
+    <script src="src/js/config/config-manager.js"></script>
+    <script>
+let entrylinkdemo = document.getElementById('entrylinkdemo');
+entrylinkdemo.href = "/";
+let entrylinkcode = document.getElementById('entrylinkcode');
+entrylinkcode.href = defaultConfig["ORG_URL"];
+    </script>
+</body>
+</html>
