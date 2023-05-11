@@ -70,6 +70,8 @@ function createLayout(){
     setBackGround();
 
     // vrm loading button
+    let vrmboxbtn = document.getElementById("vrmboxbutton");
+    vrmboxbtn.innerHTML = getL("Model Manager");
     let vrmbox = document.getElementById("vrmbox");
     let vrmbtn = document.createElement('input');
     vrmbtn.setAttribute("type", "file");
@@ -92,7 +94,7 @@ function createLayout(){
     let vrmbtnkey = document.createElement('div');
     vrmbtnkey.className = "confkey";
     vrmbtnkey.id = "vrmbtnkey";
-    vrmbtnkey.innerHTML = "ᐅ Upload VRM Model";
+    vrmbtnkey.innerHTML = "ᐅ " + getL("Upload VRM Model");
     vrmbtnkey.onclick = function(){
         vrmbtn.click();
     }
@@ -100,7 +102,7 @@ function createLayout(){
     let vrmurlkey = document.createElement('div');
     vrmurlkey.className = "confkey";
     vrmurlkey.id = "vrmurlkey";
-    vrmurlkey.innerHTML = "ᐅ Set VRM URL";
+    vrmurlkey.innerHTML = "ᐅ " + getL("Set VRM URL");
     vrmbox.appendChild(vrmurlkey);
     let vrmurlbox = document.createElement('div');
     vrmurlbox.className = "w3-hide";
@@ -108,10 +110,10 @@ function createLayout(){
     vrmurlbox.style.color = "white";
     vrmurlkey.onclick = function(){
         if(vrmurlbox.className == "w3-hide"){
-            vrmurlkey.innerHTML = "ᐁ Set VRM URL";
+            vrmurlkey.innerHTML = "ᐁ " + getL("Set VRM URL");
             vrmurlbox.className = "";
         }else{
-            vrmurlkey.innerHTML = "ᐅ Set VRM URL";
+            vrmurlkey.innerHTML = "ᐅ " + getL("Set VRM URL");
             vrmurlbox.className = "w3-hide";
         }
     }
@@ -122,7 +124,7 @@ function createLayout(){
     vrmurlbox.appendChild(vrmurlinput);
     let vrmurlsubmit = document.createElement("input");
     vrmurlsubmit.setAttribute("type", "button");
-    vrmurlsubmit.setAttribute("value", "Set URL");
+    vrmurlsubmit.setAttribute("value", getL("Set URL"));
     vrmurlsubmit.onclick = function(){
         loadVRM(vrmurlinput.value);
         setCMV("MODEL", vrmurlinput.value);
@@ -131,6 +133,8 @@ function createLayout(){
     vrmurlbox.appendChild(vrmurlsubmit);
 
     // html canvas for drawing debug view
+    let videoctlbtn = document.getElementById("videoctlbutton");
+    videoctlbtn.innerHTML = getL("Video Control");
     let videoselect = document.getElementById("videoselect");
     videoselect.onchange = function(){
         console.log("set camera: ", videoselect.value);
@@ -154,6 +158,12 @@ function createLayout(){
     }
 
     // config modifier
+    let confboxbtn = document.getElementById("confboxbutton");
+    confboxbtn.innerHTML = getL("Setting");
+    let dbgimlabel = document.getElementById("dbgimlabel");
+    dbgimlabel.innerHTML = getL("Image");
+    let dbglmlabel = document.getElementById("dbglmlabel");
+    dbglmlabel.innerHTML = getL("Landmark");
     let confbox = document.getElementById("confbox");
     let confmodifiers = getConfigModifiers();
     Object.keys(confmodifiers).forEach(function(key){
@@ -161,16 +171,16 @@ function createLayout(){
         let confkey = document.createElement('div');
         confkey.className = "confkey";
         confkey.id = "confkey_" + key;
-        confkey.innerHTML = "ᐅ " + key;
+        confkey.innerHTML = "ᐅ " + getL(key);
         confkey.onclick = function(){
             Object.keys(confmodifiers).forEach(function(otherkey){
                 let tmpkey = document.getElementById("confkey_" + otherkey);
                 let tmpgroup = document.getElementById("confgroup_" + otherkey);
                 if(otherkey == key && tmpgroup.className == "w3-margin w3-hide"){
-                    tmpkey.innerHTML = "ᐁ " + otherkey;
+                    tmpkey.innerHTML = "ᐁ " + getL(otherkey);
                     tmpgroup.className = "w3-margin";
                 }else{
-                    tmpkey.innerHTML = "ᐅ " + otherkey;
+                    tmpkey.innerHTML = "ᐅ " + getL(otherkey);
                     tmpgroup.className = "w3-margin w3-hide";
                 }
             });
@@ -189,12 +199,12 @@ function createLayout(){
             confgroup.appendChild(info);
             let span = document.createElement('span');
             span.className = "w3-text w3-tag";
-            span.innerHTML = configitem['describe'];
+            span.innerHTML = getL(configitem['describe']);
             info.appendChild(span);
             let name = document.createElement('text');
             name.className = "w3-tooltip";
             name.style.color = "#fff";
-            name.innerHTML = configitem['title'];
+            name.innerHTML = getL(configitem['title']);
             confgroup.appendChild(name);
             confgroup.appendChild(document.createElement("br"));
             let item = document.createElement('input');
@@ -243,6 +253,8 @@ function createLayout(){
                     setCMV("BG_COLOR", item.value);
                     setBackGround();
                 };
+            }else if(configitem['key'] == "LANGUAGE"){
+                // TODO Multi-Selection
             }else{
                 item.setAttribute("type", "range");
                 item.setAttribute("min", 0);
@@ -278,23 +290,25 @@ function createLayout(){
     });
 
     // log modifier
+    let logboxbtn = document.getElementById("logboxbutton");
+    logboxbtn.innerHTML = getL("Parameters");
     let logbox = document.getElementById("logbox");
     let logitems = getLogItems();
     for(let key of logitems){
         let logkey = document.createElement('div');
         logkey.className = "confkey";
         logkey.id = "logkey_" + key;
-        logkey.innerHTML = "ᐅ " + key;
+        logkey.innerHTML = "ᐅ " + getL(key);
         let loggroup = document.createElement('div');
         loggroup.className = "w3-margin w3-hide";
         loggroup.id = "logbox_" + key;
         loggroup.style.color = "white";
         logkey.onclick = function(){
             if(loggroup.className == "w3-margin w3-hide"){
-                logkey.innerHTML = "ᐁ " + key;
+                logkey.innerHTML = "ᐁ " + getL(key);
                 loggroup.className = "w3-margin";
             }else{
-                logkey.innerHTML = "ᐅ " + key;
+                logkey.innerHTML = "ᐅ " + getL(key);
                 loggroup.className = "w3-margin w3-hide";
             }
         }
@@ -314,7 +328,7 @@ function createLayout(){
     for(let i = 0; i < alinks.length; i ++){
         let alink = document.createElement("a");
         alink.href = alinks[i][0];
-        alink.innerHTML = alinks[i][1];
+        alink.innerHTML = getL(alinks[i][1]);
         alink.setAttribute("target", "_blank");
         alink.setAttribute("rel", "noopener noreferrer");
         about.appendChild(alink);
@@ -331,7 +345,7 @@ function createCameraLayout(){
         for(let cobj of carr){
             let option = document.createElement('option');
             option.value = cobj['id'];
-            option.innerHTML = cobj['name'];
+            option.innerHTML = getL(cobj['name']);
             videoselect.appendChild(option);
             if(cobj['id'] == getCurrentVideoId()){
                 videoselect.value = cobj['id'];
@@ -480,12 +494,12 @@ function printLog(keys){
                 if(keys[ikey]){
                     Object.keys(keys[ikey]).forEach(function(key){
                         let jsonItem = document.createElement('text');
-                        jsonItem.innerHTML = key + ": " + Math.floor(keys[ikey][key] * 1000) / 1000 + "<br/>";
+                        jsonItem.innerHTML = getL(key) + ": " + Math.floor(keys[ikey][key] * 1000) / 1000 + "<br/>";
                         jsonItem.style.color = "white";
                         logbox.appendChild(jsonItem);
                     });
                 }else{
-                    logbox.innerHTML = 'No ' + ikey + ' Detected';
+                    logbox.innerHTML = 'No ' + getL(ikey) + ' Detected';
                 }
             }
         }
@@ -498,15 +512,15 @@ function raiseAlert(vistate, mlstate){
         alertbox.style.display = "block";
         let alerttext = document.getElementById("alerttext");
         if(vistate == 3){
-            alerttext.innerHTML = "ALERT: Full Screen / Wrong Tab<br/>Browser will stop rendering when other program enters full screen!";
+            alerttext.innerHTML = getL("ALERT: Full Screen / Wrong Tab<br/>Browser will stop rendering when other program enters full screen!");
         } else if(mlstate == 3){
-            alerttext.innerHTML = "ALERT: Error<br/>ML loop stop running, might need to restart to validate.";
+            alerttext.innerHTML = getL("ALERT: Error<br/>ML loop stop running, might need to restart to validate.");
         } else if(mlstate == 2 || vistate == 2){
-            alerttext.innerHTML = "ALERT: Hardware Acceleration<br/>ML loop is running extremely slow, check if hardware acceleration is opened.";
+            alerttext.innerHTML = getL("ALERT: Hardware Acceleration<br/>ML loop is running extremely slow, check if hardware acceleration is opened.");
         } else if(mlstate == 1 && getCMV("HAND_TRACKING")){
-            alerttext.innerHTML = "ALERT: Ultra Fast<br/>ML loop is running slowly, improve performance by using FACE-ONLY mode.";
+            alerttext.innerHTML = getL("ALERT: Ultra Fast<br/>ML loop is running slowly, improve performance by using FACE-ONLY mode.");
         } else if(vistate == 1){
-            alerttext.innerHTML = "ALERT: Slow<br/>Feel free to contact developer for more information.";
+            alerttext.innerHTML = getL("ALERT: Slow<br/>Feel free to contact developer for more information.");
         }
     }
 }
@@ -544,7 +558,7 @@ function hideLoadbox(){
 function drawMobile(){
     let loadbox = document.getElementById('loadinfo');
     loadbox.style.color = 'red';
-    loadbox.innerHTML = "MOBILE NOT SUPPORTED!!";
+    loadbox.innerHTML = getL("MOBILE NOT SUPPORTED!!");
     window.location.replace("mobile.html");
 }
 
@@ -554,21 +568,21 @@ function drawSafari(){
     loadbox.innerHTML = "";
     let tmp1 = document.createElement('p');
     tmp1.style.color = 'red';
-    tmp1.innerHTML = "SAFARI NOT SUPPORTED!!";
+    tmp1.innerHTML = getL("SAFARI NOT SUPPORTED!!");
     loadbox.appendChild(tmp1);
     let tmp2 = document.createElement('p');
-    tmp2.innerHTML = "Safari has no stable support for image processing in web-worker today (2023-03-12)";
-    tmp2.innerHTML += " Please use other browsers for now.";
+    tmp2.innerHTML = getL("Safari has no stable support for image processing in web-worker today (2023-03-12)");
+    tmp2.innerHTML += " " + getL("Please use other browsers for now.");
     loadbox.appendChild(tmp2);
 }
 
-function drawLoading(loadStage){
+function drawLoading(){
     let loadbox = document.getElementById('loadinfo');
     loadbox.innerHTML = "";
     if(checkVRMModel() && checkMLModel() && checkImage()){
         let checkintegrate = document.createElement('p');
         loadbox.appendChild(checkintegrate);
-        checkintegrate.innerHTML = loadStage;
+        checkintegrate.innerHTML = "⟳ " + getL("Integration Validating...");
         let tmp1 = document.createElement('p');
         loadbox.appendChild(tmp1);
         tmp1.innerHTML = ".";
@@ -581,23 +595,23 @@ function drawLoading(loadStage){
         let checkvrm = document.createElement('p');
         loadbox.appendChild(checkvrm);
         if(checkVRMModel()){
-            checkvrm.innerHTML = "✅ VRM-Model Loading...";
+            checkvrm.innerHTML = "✅ " + getL("VRM-Model Loading...");
         }else{
-            checkvrm.innerHTML = "⟳ VRM-Model Loading...";
+            checkvrm.innerHTML = "⟳ " + getL("VRM-Model Loading...");
         }
         let checklm = document.createElement('p');
         loadbox.appendChild(checklm);
         if(checkMLModel()){
-            checklm.innerHTML = "✅ FaceLandMark-Model Loading...";
+            checklm.innerHTML = "✅ " + getL("FaceLandMark-Model Loading...");
         }else{
-            checklm.innerHTML = "⟳ FaceLandMark-Model Loading...";
+            checklm.innerHTML = "⟳ " + getL("FaceLandMark-Model Loading...");
         }
         let checkcamera = document.createElement('p');
         loadbox.appendChild(checkcamera);
         if(checkImage()){
-            checkcamera.innerHTML = "✅ Camera Loading...";
+            checkcamera.innerHTML = "✅ " + getL("Camera Loading...");
         }else{
-            checkcamera.innerHTML = "⟳ Camera Loading...";
+            checkcamera.innerHTML = "⟳ " + getL("Camera Loading...");
         }
     }
 }

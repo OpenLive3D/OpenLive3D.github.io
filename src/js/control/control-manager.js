@@ -557,7 +557,7 @@ function checkVRMMood(mood){
 
 // integration check
 async function checkIntegrate(){
-    drawLoading("⟳ Integration Validating...");
+    drawLoading();
     setNewMeta();
     postImage();
     requestAnimationFrame(viLoop);
@@ -580,7 +580,7 @@ function initLoop(){
     }else if(window.browserCheck() == "Safari"){
         drawSafari();
     }else{
-        drawLoading("Initializing");
+        drawLoading();
         if(checkVRMModel() && checkMLModel() && checkImage()){
             console.log("start integration validation");
             checkIntegrate();

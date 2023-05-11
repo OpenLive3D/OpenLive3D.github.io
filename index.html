@@ -55,23 +55,23 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
     <div class="w3-sidebar w3-animate-left" style="width:270px;background-color:#0006;display:none" id="thesidebar">
         <div class="w3-bar-item" style="height:60px;color:#0000"> . </div>
         <br/>
-        <button onclick="hideObj('vrmbox')" class="w3-button w3-block w3-left-align w3-text-white"> Model Manager </button>
+        <button onclick="hideObj('vrmbox')" id="vrmboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
         <div class="w3-bar-item w3-hide" id="vrmbox"></div>
-        <button onclick="hideObj('dbgbox')" class="w3-button w3-block w3-left-align w3-text-white"> Video Control </button>
+        <button onclick="hideObj('dbgbox')" id="videoctlbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
         <div class="w3-bar-item w3-hide" style="background-color:#000a" id="dbgbox">
             <select id="videoselect"></select>
             <div class="w3-margin-left">
                 <input type="checkbox" id="dbgimcheck">
-                <label style="color:#fff"> Image </label>
+                <label id="dbgimlabel" style="color:#fff"></label>
                 <text style="color:#0000"> . </text>
                 <input type="checkbox" id="dbglmcheck">
-                <label style="color:#fff"> Landmark </label>
+                <label id="dbglmlabel" style="color:#fff"></label>
             </div>
             <canvas id="dbg"></canvas>
         </div>
-        <button onclick="hideObj('confbox')" class="w3-button w3-block w3-left-align w3-text-white"> Setting </button>
+        <button onclick="hideObj('confbox')" id="confboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
         <div class="w3-bar-item w3-hide" id="confbox"></div>
-        <button onclick="hideObj('logbox')" class="w3-button w3-block w3-left-align w3-text-white"> Parameters </button>
+        <button onclick="hideObj('logbox')" id="logboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
         <div class="w3-bar-item w3-hide" id="logbox"></div>
         <div class="w3-bar-item w3-margin" id="about"></div>
     </div>
@@ -103,6 +103,7 @@ if(window.location.host.indexOf('github.io') > -1 && window.location.protocol !=
     <!-- local dependencies -->
     <script src="src/js/config/config-manager.js"></script>
     <script src="src/js/media/media-manager.js"></script>
+    <script src="src/js/gui/multi-language.js"></script>
     <script src="src/js/gui/gui-layout.js"></script>
     <script src="src/js/landmark/facekey.js"></script>
     <script src="src/js/landmark/posekey.js"></script>

@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2023-05-08";
-const VERSION = "Beta.1.3.4";
+const DEV_DATE = "2023-05-11";
+const VERSION = "Beta.1.3.5";
 const CONFIG_VERSION = "Beta.1.2.12";
 
 let configManager = {};
@@ -16,6 +16,7 @@ let defaultConfig = {
     'MODEL': 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm',
     'CUSTOM_MODEL': false,
     'SAVE_SETTING': false,
+    'LANGUAGE': 'en',
     'BG_COLOR': "#00CC00",
     'CAMERA_FLIP': true,
     'BREATH_FREQUENCY': 0.3,
@@ -276,6 +277,11 @@ function getConfigModifiers(){
             'title': 'Camera Flip',
             'describe': 'Flip the camera horizontally.',
             'valid': [true, false]
+        }, {
+            'key': 'LANGUAGE',
+            'title': 'Language',
+            'describe': 'Select the language for the user interface.',
+            'valid': ['en', 'zh']
         }, {
             'key': 'BREATH_FREQUENCY',
             'title': 'Breath Frequency',
