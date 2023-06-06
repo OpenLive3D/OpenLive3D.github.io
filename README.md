@@ -45,3 +45,5 @@ Beta-1.3.X:
 Great Thanks to our Sponsors:
 
  - [Gabrielle666x](https://github.com/Gabrielle666x)
+ - [naruya](https://github.com/naruya)
+
