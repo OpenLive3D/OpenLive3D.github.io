@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2023-05-11";
-const VERSION = "Beta.1.3.7";
+const DEV_DATE = "2023-06-09";
+const VERSION = "Beta.1.3.8";
 const CONFIG_VERSION = "Beta.1.2.12";
 
 let configManager = {};
@@ -94,7 +94,10 @@ let defaultConfig = {
     'MOOD_NEUTRAL': true,
     'MOOD_AUTO': true,
     'DEFAULT_MOOD': "auto",
-    'MOOD_EXTRA_LIMIT': 10
+    'MOOD_EXTRA_LIMIT': 10,
+    'VRM_XR': 1,
+    'VRM_YR': 1,
+    'VRM_ZR': 1
 };
 function getDefaultCMV(key){
     return defaultConfig[key];
@@ -110,7 +113,8 @@ function getSystemParameters(){
         'CANVAS_RATIO', 'DEBUG_IMAGE', 'DEBUG_LANDMARK',
         'MOOD_ANGRY', 'MOOD_SORROW', 'MOOD_FUN', 'MOOD_JOY',
         'MOOD_SURPRISED', 'MOOD_RELAXED', 'MOOD_NEUTRAL',
-        'MOOD_AUTO', 'DEFAULT_MOOD', 'MOOD_EXTRA_LIMIT'];
+        'MOOD_AUTO', 'DEFAULT_MOOD', 'MOOD_EXTRA_LIMIT',
+        'VRM_XR', 'VRM_YR', 'VRM_ZR'];
 }
 
 function versionValidation(v){

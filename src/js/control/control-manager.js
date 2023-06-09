@@ -21,6 +21,11 @@ function loadVRM(vrmurl){
                 scene.remove(currentVrm.scene);
                 THREE_VRM.VRMUtils.deepDispose(currentVrm.scene);
             }
+            let hips = vrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Hips);
+            defaultXYZ = [hips.position.x, hips.position.y, hips.position.z];
+            if(vrm.meta.metaVersion === '1'){
+                hips.rotation.y = Math.PI;
+            }
             currentVrm = vrm;
             scene.add(vrm.scene);
             let head = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Head);
@@ -33,8 +38,6 @@ function loadVRM(vrmurl){
             resetCameraPos(pos);
             resetVRMMood();
             createMoodLayout();
-            let hips = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Hips).position;
-            defaultXYZ = [hips.x, hips.y, hips.z];
             console.log("vrm model loaded");
             console.log(currentVrm);
         }, function(){
@@ -161,19 +164,19 @@ function updateBody(keys){
         let leanRatio = Math.min(1, Math.max(-1, keys['lean'])) * 0.6;
         // head
         let head = Ch.getNormalizedBoneNode(Tvrmshbn.Head).rotation;
-        head.set(radLimit(keys['pitch'] * getCMV('HEAD_RATIO')),
-            radLimit(keys['yaw'] * getCMV('HEAD_RATIO') - leanRatio * 0.3),
-            radLimit(keys['roll'] * getCMV('HEAD_RATIO') - tiltRatio * 0.3));
+        head.set(radLimit(keys['pitch'] * getCMV('HEAD_RATIO')) * getCMV('VRM_XR'),
+            radLimit(keys['yaw'] * getCMV('HEAD_RATIO') - leanRatio * 0.3) * getCMV('VRM_YR'),
+            radLimit(keys['roll'] * getCMV('HEAD_RATIO') - tiltRatio * 0.3) * getCMV('VRM_ZR'));
         // neck
         let neck = Ch.getNormalizedBoneNode(Tvrmshbn.Neck).rotation;
-        neck.set(radLimit(keys['pitch'] * getCMV('NECK_RATIO')),
-            radLimit(keys['yaw'] * getCMV('NECK_RATIO') - leanRatio * 0.7),
-            radLimit(keys['roll'] * getCMV('NECK_RATIO') - tiltRatio * 0.7));
+        neck.set(radLimit(keys['pitch'] * getCMV('NECK_RATIO')) * getCMV('VRM_XR'),
+            radLimit(keys['yaw'] * getCMV('NECK_RATIO') - leanRatio * 0.7) * getCMV('VRM_YR'),
+            radLimit(keys['roll'] * getCMV('NECK_RATIO') - tiltRatio * 0.7) * getCMV('VRM_ZR'));
         // chest
         let chest = Ch.getNormalizedBoneNode(Tvrmshbn.Spine).rotation;
-        chest.set(radLimit(keys['pitch'] * getCMV('CHEST_RATIO')),
-            radLimit(keys['yaw'] * getCMV('CHEST_RATIO') + leanRatio),
-            radLimit(keys['roll'] * getCMV('CHEST_RATIO') + tiltRatio));
+        chest.set(radLimit(keys['pitch'] * getCMV('CHEST_RATIO')) * getCMV('VRM_XR'),
+            radLimit(keys['yaw'] * getCMV('CHEST_RATIO') + leanRatio) * getCMV('VRM_YR'),
+            radLimit(keys['roll'] * getCMV('CHEST_RATIO') + tiltRatio) * getCMV('VRM_ZR'));
         // left right arm
         if(getCMV('HAND_TRACKING')){
             for(let i = 0; i < 2; i ++){
@@ -345,7 +348,7 @@ function onHandLandmarkResult(keyPoints, handInfo, leftright){
                     let ratio = preRate * _ratio * thumbRatios[i] / 180 * Math.PI;
                     let swing = preRate * (0.5 - Math.abs(0.5 - _ratio)) * thumbSwing / 180 * Math.PI;
                     let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
-                    frotate.set(0, ratio, swing);
+                    frotate.set(0, ratio * getCMV('VRM_YR'), swing * getCMV('VRM_ZR'));
                 }
             }else{
                 let ratio = preRate * _ratio * 70 / 180 * Math.PI;
@@ -353,9 +356,9 @@ function onHandLandmarkResult(keyPoints, handInfo, leftright){
                 for(seg of fingerSegs){
                     let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
                     if(seg == "Proximal"){
-                        frotate.set(0, spread, ratio);
+                        frotate.set(0, spread * getCMV('VRM_YR'), ratio * getCMV('VRM_ZR'));
                     }else{
-                        frotate.set(0, 0, ratio);
+                        frotate.set(0, 0, ratio * getCMV('VRM_ZR'));
                     }
                 }
             }
@@ -376,12 +379,12 @@ function noHandLandmarkResult(leftright){
         if(finger == "Thumb"){
             for(seg of thumbSegs){
                 let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
-                frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
+                frotate.set(frotate.x * 0.8 * getCMV('VRM_XR'), frotate.y * 0.8 * getCMV('VRM_YR'), frotate.z * 0.8 * getCMV('VRM_ZR'));
             }
         }else{
             for(seg of fingerSegs){
                 let frotate = Ch.getNormalizedBoneNode(prefix + finger + seg).rotation;
-                frotate.set(frotate.x * 0.8, frotate.y * 0.8, frotate.z * 0.8);
+                frotate.set(frotate.x * 0.8 * getCMV('VRM_XR'), frotate.y * 0.8 * getCMV('VRM_YR'), frotate.z * 0.8 * getCMV('VRM_ZR'));
             }
         }
     });

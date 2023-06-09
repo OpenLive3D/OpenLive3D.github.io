@@ -78,15 +78,17 @@ let armTuneRatios = {
     "LowerArm": 0.6,
 }
 function armMagicEuler(wx, wy, hy, hr, hp, leftright){
+    let VRM_R = [getCMV('VRM_XR'), getCMV('VRM_YR'), getCMV('VRM_ZR')];
     let lrRatio = 1 - leftright * 2;
     let nq = new THREE.Quaternion();
     let armRotate = armMagic(wx, wy, 0, leftright);
     let armEuler = {};
     Object.keys(armRotate).forEach(function(armkey){
-        let ae = new THREE.Euler(...armRotate[armkey]);
+        let rt = armRotate[armkey];
+        let ae = new THREE.Euler(rt[0] * VRM_R[0], rt[1] * VRM_R[1], rt[2] * VRM_R[2]);
         let aq = new THREE.Quaternion().setFromEuler(ae);
         let armTR = armTuneRatios[armkey];
-        let ee = new THREE.Euler(-hy*lrRatio * armTR, 0, 0);
+        let ee = new THREE.Euler(-hy*lrRatio * armTR * VRM_R[0], 0, 0);
         let eq = new THREE.Quaternion().setFromEuler(ee);
         aq.multiply(eq);
         ae = new THREE.Euler().setFromQuaternion(aq);
@@ -94,9 +96,9 @@ function armMagicEuler(wx, wy, hy, hr, hp, leftright){
         armEuler[armkey] = ae;
     });
     nq.invert();
-    let de = new THREE.Euler(0, -Math.PI/2*lrRatio, -Math.PI/2*lrRatio);
+    let de = new THREE.Euler(0, -Math.PI/2*lrRatio * VRM_R[1], -Math.PI/2*lrRatio * VRM_R[2]);
     nq.multiply(new THREE.Quaternion().setFromEuler(de));
-    let he = new THREE.Euler(-hy*lrRatio, hr, -hp*lrRatio);
+    let he = new THREE.Euler(-hy*lrRatio * VRM_R[0], hr * VRM_R[1], -hp*lrRatio * VRM_R[2]);
     nq.multiply(new THREE.Quaternion().setFromEuler(he));
     let ne = new THREE.Euler().setFromQuaternion(nq);
     armEuler["Hand"] = ne;
