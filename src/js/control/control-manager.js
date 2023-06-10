@@ -51,6 +51,12 @@ function loadVRM(vrmurl){
     setMood(getCMV('DEFAULT_MOOD'));
     setLogAPI();
 }
+function getMetaVersion(){
+    if(currentVrm){
+        return currentVrm.meta.metaVersion;
+    }
+    return null;
+}
 
 // initialize the control
 function initialize(){
@@ -254,6 +260,31 @@ function updateInfo(){
     updateMood();
 }
 
+function exportRotate(){
+    let vrmRotate = {};
+    if(currentVrm){
+        for(let area of Object.values(Tvrmshbn)){
+            let areaNode = currentVrm.humanoid.getNormalizedBoneNode(area);
+            if(areaNode){
+                let hasNonZeros = false;
+                let areaRotate = [];
+                for(let j of 'xyz'){
+                    areaRotate.push(areaNode.rotation[j]);
+                    if(areaNode.rotation[j] != 0){
+                        hasNonZeros = true;
+                    }
+                }
+                if(hasNonZeros){
+                    vrmRotate[area] = areaRotate;
+                }
+            }
+        }
+    }else{
+        console.log("VRM not loaded");
+    }
+    return vrmRotate;
+}
+
 // Mood
 let defaultMoodList = ['angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral', 'auto'];
 let moodMap = {
@@ -289,6 +320,21 @@ function getMood(){
 function setMood(newmood){
     oldmood = mood;
     mood = moodMap[newmood];
+}
+
+function exportExpression(){
+    let vrmExpression = {};
+    if(currentVrm){
+        let Cbsp = currentVrm.expressionManager;
+        for(let expression of Object.values(Tvrmsbspn)){
+            if(Cbsp.getValue(expression) && Cbsp.getValue(expression) != 0){
+                vrmExpression[expression] = Cbsp.getValue(expression);
+            }
+        }
+    }else{
+        console.log("VRM not loaded");
+    }
+    return vrmExpression;
 }
 
 // face landmark resolver

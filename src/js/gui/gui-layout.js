@@ -333,6 +333,40 @@ function createLayout(){
         logbox.appendChild(logkey);
         logbox.appendChild(loggroup);
     }
+    let extralogkey = document.createElement('div');
+    extralogkey.className = "confkey";
+    extralogkey.id = "logkey_extra";
+    extralogkey.innerHTML = "ᐅ extra";
+    let extraloggroup = document.createElement('div');
+    extraloggroup.className = "w3-margin w3-hide";
+    let exportVRMRotateButton = document.createElement("input");
+    exportVRMRotateButton.setAttribute("type", "button");
+    exportVRMRotateButton.setAttribute("value", getL("Export Pose & Expression"));
+    exportVRMRotateButton.onclick = function(){
+        let exportJSON = {
+            "metaVersion": getMetaVersion(),
+            "rotate": exportRotate(),
+            "expression": exportExpression()
+        };
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportJSON));
+        let dlAnchorElem = document.createElement("a");
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", "vrm_rotate.json");
+        dlAnchorElem.click();
+        dlAnchorElem.remove();
+    }
+    extralogkey.onclick = function(){
+        if(extraloggroup.className == "w3-margin w3-hide"){
+            extralogkey.innerHTML = "ᐁ extra";
+            extraloggroup.className = "w3-margin";
+        }else{
+            extralogkey.innerHTML = "ᐅ extra";
+            extraloggroup.className = "w3-margin w3-hide";
+        }
+    }
+    extraloggroup.appendChild(exportVRMRotateButton);
+    logbox.appendChild(extralogkey);
+    logbox.appendChild(extraloggroup);
 
     // about the team
     let about = document.getElementById("about");
