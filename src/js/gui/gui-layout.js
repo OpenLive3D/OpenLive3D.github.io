@@ -351,7 +351,7 @@ function createLayout(){
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportJSON));
         let dlAnchorElem = document.createElement("a");
         dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", "vrm_rotate.json");
+        dlAnchorElem.setAttribute("download", "vrm_pose_expression.json");
         dlAnchorElem.click();
         dlAnchorElem.remove();
     }
