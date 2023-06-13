@@ -1,39 +1,63 @@
 // multi language
 let defaultLanguage = "en";
-let availableLanguage = ["en", "zh"];
+let availableLanguage = ["en", "zh","hindi","jp"];
 let languageBox = [{
     "en": 'Model Manager',
-    "zh": '模型管理'
+    "zh": '模型管理',
+    "hindi": 'मॉडल प्रबंधक',
+    "jp": 'モデルマネージャー'
 }, {
     "en": 'Video Control',
-    "zh": '錄影鏡頭管理'
+    "zh": '錄影鏡頭管理',
+    "hindi": 'वीडियो नियंत्रण',
+    "jp": 'ビデオ制御'
 }, {
     "en": 'Setting',
     "zh": '設定'
+    "hindi": 'सेटिंग',
+    "jp": '設定'
 }, {
     "en": 'Parameters',
-    "zh": '參數'
+    "zh": '參數',
+    "hindi": 'पैरामीटर',
+    "jp": 'パラメータ'
 }, {
     "en": 'Upload VRM Model',
-    "zh": '上傳 VRM 模型'
+    "zh": '上傳 VRM 模型',
+    "hindi": 'VRM मॉडल अपलोड करें',
+    "jp": 'VRMモデルのアップロード'
 }, {
     "en": 'Set VRM URL',
-    "zh": '設定 VRM 網址'
+    "zh": '設定 VRM 網址',
+    "hindi": 'VRM URL सेट करें',
+    "jp": 'Vrm URLを設定する'
 }, {
     "en": 'Set URL',
-    "zh": '確認網址'
+    "zh": '確認網址',
+    "hindi": 'URL सेट करें',
+    "jp": 'URLを設定する'
 }, {
     "en": 'Image',
-    "zh": '圖像'
+    "zh": '圖像',
+    "hindi": 'फोटो',
+    "jp": 'イメージ'
 }, {
     "en": 'Landmark',
-    "zh": '標記'
+    "zh": '標記',
+    "hindi": 'लैंडमार्क',
+    "jp": 'ランドマーク'
 }, {
     "en": 'Save Setting'
+    "hindi": 'सेटिंग्स सेव करें',
+    "jp": '設定の保存'
 }, {
     "en": 'Save your settings in your browser as the cookie.'
+    "hindi": 'अपने ब्राउज़र में कुकी के रूप में अपनी सेटिंग',
+    "jp": 'クッキーとしてブラウザに設定を保存します'
 }, {
     "en": 'Camera Flip'
+    "hindi": 'कैमरा फ्लिप',
+    "jp": 'カメラフリップ'
 }, {
     "en": 'Flip the camera horizontally.'
 }, {
