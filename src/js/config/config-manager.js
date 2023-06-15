@@ -3,12 +3,17 @@ const DEV_DATE = "2023-06-10";
 const VERSION = "Beta.1.3.9";
 const CONFIG_VERSION = "Beta.1.2.12";
 
+// electron connector
+const { ipcRenderer } = require('electron');
+let electronConfig = ipcRenderer.sendSync('initConfig', '');
+console.log(electronConfig);
+
 let configManager = {};
 function getCookie(){
-    return document.cookie;
+    return electronConfig;
 }
 function setCookie(saveString){
-    document.cookie = saveString;
+    ipcRenderer.send('saveConfig', saveString);
 }
 
 let defaultConfig = {
