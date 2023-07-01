@@ -13,7 +13,7 @@ let languageBox = [{
     "jp": 'ビデオ制御'
 }, {
     "en": 'Setting',
-    "zh": '設定'
+    "zh": '設定',
     "hindi": 'सेटिंग',
     "jp": '設定'
 }, {
@@ -47,15 +47,15 @@ let languageBox = [{
     "hindi": 'लैंडमार्क',
     "jp": 'ランドマーク'
 }, {
-    "en": 'Save Setting'
+    "en": 'Save Setting',
     "hindi": 'सेटिंग्स सेव करें',
     "jp": '設定の保存'
 }, {
-    "en": 'Save your settings in your browser as the cookie.'
+    "en": 'Save your settings in your browser as the cookie.',
     "hindi": 'अपने ब्राउज़र में कुकी के रूप में अपनी सेटिंग',
     "jp": 'クッキーとしてブラウザに設定を保存します'
 }, {
-    "en": 'Camera Flip'
+    "en": 'Camera Flip',
     "hindi": 'कैमरा फ्लिप',
     "jp": 'カメラフリップ'
 }, {
