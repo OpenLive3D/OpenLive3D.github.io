@@ -18,6 +18,7 @@ let defaultConfig = {
     'SAVE_SETTING': false,
     'LANGUAGE': 'en',
     'BG_COLOR': "#00CC00",
+    'BG_UPLOAD': "",
     'CAMERA_FLIP': true,
     'BREATH_FREQUENCY': 0.3,
     'BREATH_STRENGTH': 1,
@@ -65,7 +66,6 @@ let defaultConfig = {
     'REPO_URL': "https://github.com/OpenLive3D/OpenLive3D.github.io",
     'DOC_URL': "https://github.com/OpenLive3D/OpenLive3D.document",
     'DISCORD_URL': "https://discord.gg/pGPY5Jfhvz",
-    'BG_UPLOAD': "",
     'TIME': new Date(),
     'FPS_RATE': 60,
     'FPS_WAIT': 10,
@@ -97,14 +97,21 @@ let defaultConfig = {
     'MOOD_EXTRA_LIMIT': 10,
     'VRM_XR': 1,
     'VRM_YR': 1,
-    'VRM_ZR': 1
+    'VRM_ZR': 1,
+    'DYNA_VI_DURATION': 3,
+    'DYNA_ML_DURATION': 3,
+    'VI_LOOP_COUNTER': 0,
+    'ML_LOOP_COUNTER': 0,
+    'GOOD_TO_GO': false,
+    'LOADING_SCENE': true,
+    'MOOD': "auto"
 };
 function getDefaultCMV(key){
     return defaultConfig[key];
 }
 function getSystemParameters(){
     return ['VERSION', 'DEV_DATE', 'DEFAULT_MODEL', 'ORG_URL',
-        'REPO_URL', 'DOC_URL', 'DISCORD_URL', 'BG_UPLOAD',
+        'REPO_URL', 'DOC_URL', 'DISCORD_URL',
         'TIME', 'FPS_RATE', 'FPS_WAIT', 'HEAD_HAND_RATIO',
         'HEALTH_RATE', 'HEALTH_WAIT', 'MIN_VI_DURATION',
         'MAX_VI_DURATION', 'MIN_ML_DURATION', 'MAX_ML_DURATION',
@@ -114,7 +121,13 @@ function getSystemParameters(){
         'MOOD_ANGRY', 'MOOD_SORROW', 'MOOD_FUN', 'MOOD_JOY',
         'MOOD_SURPRISED', 'MOOD_RELAXED', 'MOOD_NEUTRAL',
         'MOOD_AUTO', 'DEFAULT_MOOD', 'MOOD_EXTRA_LIMIT',
-        'VRM_XR', 'VRM_YR', 'VRM_ZR'];
+        'VRM_XR', 'VRM_YR', 'VRM_ZR',
+        'DYNA_VI_DURATION', 'DYNA_ML_DURATION',
+        'VI_LOOP_COUNTER', 'ML_LOOP_COUNTER',
+        'GOOD_TO_GO', 'LOADING_SCENE', 'MOOD'];
+}
+function getSavedSystemParameters(){
+    return ['VERSION', 'DEV_DATE'];
 }
 
 function versionValidation(v){
@@ -138,8 +151,15 @@ function versionValidation(v){
 }
 
 function saveCM(){
-    setCookie(JSON.stringify(configManager));
-    console.log("setting saved");
+    let tmpCM = {};
+    for(let key in configManager){
+        if(!getSystemParameters().includes(key) ||
+            getSavedSystemParameters().includes(key)){
+            tmpCM[key] = configManager[key];
+        }
+    }
+    setCookie(JSON.stringify(tmpCM));
+    console.log("setting saved", tmpCM);
 }
 
 function clearCM(){
@@ -192,6 +212,7 @@ function loadCM(){
                     }
                 }
                 if(checkFalseCounter > checkCounter / 4){
+                    console.log("config false counter too many");
                     return loadCMFalse();
                 }
                 return true;
@@ -244,10 +265,20 @@ function setCMV(key, value){
     if(key in configManager){
         configManager[key] = value;
         if(configManager['SAVE_SETTING']){
-            saveCM();
+            if(!getSystemParameters().includes(key)){
+                saveCM();
+            }
         }else{
             clearCM();
         }
+        return true;
+    }
+    return false;
+}
+
+function addCMV(key, value){
+    if(key in configManager){
+        configManager[key] += value;
         return true;
     }
     return false;
