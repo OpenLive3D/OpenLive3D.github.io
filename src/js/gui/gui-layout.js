@@ -61,12 +61,14 @@ function setBackGround(){
 
 function setCameraCallBack(){
     let dbg = document.getElementById("dbg");
+    let instantFrame = getCameraFrame();
     dbg.width = Math.floor(
-        getCameraFrame().videoWidth * getCMV('CANVAS_RATIO'));
+        instantFrame.videoWidth * getCMV('CANVAS_RATIO'));
     dbg.height = Math.floor(
-        getCameraFrame().videoHeight * getCMV('CANVAS_RATIO'));
-    createCameraLayout();
-    reSettingDone();
+        instantFrame.videoHeight * getCMV('CANVAS_RATIO'));
+
+    let videoselect = document.getElementById("videoselect");
+    videoselect.value = getCMV("CURRENT_CAMERA_ID");
 }
 
 function createLayout(){
@@ -142,7 +144,7 @@ function createLayout(){
     let videoselect = document.getElementById("videoselect");
     videoselect.onchange = function(){
         console.log("set camera: ", videoselect.value);
-        setVideoStream(videoselect.value, setCameraCallBack);
+        setVideoStream(videoselect.value);
     }
     let dbg = document.getElementById("dbg");
     dbg.style.width = "100%";
@@ -397,16 +399,12 @@ function createLayout(){
 function createCameraLayout(){
     let videoselect = document.getElementById("videoselect");
     videoselect.innerHTML = "";
-    let currentVideoId = getCurrentVideoId();
     listCameras(carr => {
         for(let cobj of carr){
             let option = document.createElement('option');
             option.value = cobj['id'];
             option.innerHTML = getL(cobj['name']);
             videoselect.appendChild(option);
-            if(cobj['id'] == currentVideoId){
-                videoselect.value = cobj['id'];
-            }
         }
     });
 }
