@@ -28,16 +28,16 @@ Current Virtual Avatar software often require expensive setup. For this project,
 
 The project aims to connect the half-body movement with facial landmarks to the 3D `VRM` avatar.
 
- - Facial landmark model based on `TF.js`
+ - Facial landmark & holistic models based on `mediapipe`
  - Adjustable config to map landmarks to the avatar
  - Modularized and flexible structure
 
 
 ## Project Status
 
-Beta-1.3.X:
- - Electron Config Module
- - Multi-Language
+w-2.1.X:
+ - Core Separation
+ - Thread Control
 
 
 ## Sponsors
