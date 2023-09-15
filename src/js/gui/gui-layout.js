@@ -61,9 +61,14 @@ function setBackGround(){
 
 function setCameraCallBack(){
     let dbg = document.getElementById("dbg");
-    linkCamera2Context(dbg, getCMV('CANVAS_RATIO'));
-    createCameraLayout();
-    reSettingDone();
+    let instantFrame = getCameraFrame();
+    dbg.width = Math.floor(
+        instantFrame.videoWidth * getCMV('CANVAS_RATIO'));
+    dbg.height = Math.floor(
+        instantFrame.videoHeight * getCMV('CANVAS_RATIO'));
+
+    let videoselect = document.getElementById("videoselect");
+    videoselect.value = getCMV("CURRENT_CAMERA_ID");
 }
 
 function createLayout(){
@@ -139,7 +144,7 @@ function createLayout(){
     let videoselect = document.getElementById("videoselect");
     videoselect.onchange = function(){
         console.log("set camera: ", videoselect.value);
-        setVideoStream(videoselect.value, setCameraCallBack);
+        setVideoStream(videoselect.value);
     }
     let dbg = document.getElementById("dbg");
     dbg.style.width = "100%";
@@ -400,9 +405,6 @@ function createCameraLayout(){
             option.value = cobj['id'];
             option.innerHTML = getL(cobj['name']);
             videoselect.appendChild(option);
-            if(cobj['id'] == getCurrentVideoId()){
-                videoselect.value = cobj['id'];
-            }
         }
     });
 }
@@ -606,6 +608,7 @@ function hideLoadbox(){
     let loadbox = document.getElementById('loadbox');
     loadbox.style.display = "none";
     loadbox.innerHTML = "";
+    setCMV("LOADING_SCENE", false);
 }
 
 function drawMobile(){
