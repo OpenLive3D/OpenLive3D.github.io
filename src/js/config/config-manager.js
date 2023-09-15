@@ -1,6 +1,6 @@
 // version configuration
-const DEV_DATE = "2023-07-01";
-const VERSION = "Beta.1.3.10";
+const DEV_DATE = "2023-09-15";
+const VERSION = "w.2.1.1";
 const CONFIG_VERSION = "Beta.1.2.12";
 
 let configManager = {};
@@ -17,6 +17,7 @@ let defaultConfig = {
     'CUSTOM_MODEL': false,
     'SAVE_SETTING': false,
     'LANGUAGE': 'en',
+    'MULTI_THREAD': true,
     'BG_COLOR': "#00CC00",
     'BG_UPLOAD': "",
     'CAMERA_FLIP': true,
@@ -141,16 +142,14 @@ function versionValidation(v){
     }else if(v){
         let varr1 = CONFIG_VERSION.split(".");
         let varr2 = v.split(".");
-        if(varr1[0] == varr2[0]){
-            for(let i = 1; i < varr1.length; i++){
-                if(parseInt(varr1[i]) > parseInt(varr2[i])){
-                    return false;
-                }else if(parseInt(varr1[i]) < parseInt(varr2[i])){
-                    return true;
-                }
+        for(let i = 1; i < varr1.length; i++){
+            if(parseInt(varr1[i]) > parseInt(varr2[i])){
+                return false;
+            }else if(parseInt(varr1[i]) < parseInt(varr2[i])){
+                return true;
             }
-            return true;
         }
+        return true;
     }
     return false;
 }
@@ -294,7 +293,8 @@ function getBinaryCM(){
         'HAND_TRACKING', "EYE_SYNC",
         'MOOD_ANGRY', 'MOOD_SORROW',
         'MOOD_FUN', 'MOOD_JOY',
-        'MOOD_NEUTRAL', 'MOOD_AUTO'];
+        'MOOD_NEUTRAL', 'MOOD_AUTO',
+        'MULTI_THREAD'];
 }
 
 function getSideBoxes(){
@@ -352,6 +352,11 @@ function getConfigModifiers(){
             'title': 'ML_FPS Limit',
             'describe': 'The FPS limit for ML computation, default as 120. Range(1, 120)',
             'range': [1, 120]
+        }, {
+            'key': 'MULTI_THREAD',
+            'title': 'Multi Thread Option',
+            'describe': 'Select to use multi-thread or not',
+            'valid': [true, false]
         }],
         'BACKGROUND': [{
             'key': 'BG_COLOR',
