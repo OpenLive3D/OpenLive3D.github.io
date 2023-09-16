@@ -515,6 +515,32 @@ function drawImage(image){
     }
 }
 
+const MARKCOLOR = {
+    "head" : "#f00", // red
+    "righteye" : "#7ff", // cyan
+    "lefteye" : "#7ff", // cyan
+    "mouth" : "#ff7", // yellow
+    "rightbrow": "#f7f", // purple
+    "leftbrow": "#f7f", // purple
+    
+    "elbow": "#ccc", // light-gray
+    "shoulder": "#fff", // white
+    "wrist": "#77f", // blue
+
+    "leftpaw": "#0f0", // green
+    "leftthumb": "#070", // dark-green
+    "leftindex": "#070", // dark-green
+    "leftmiddle": "#070", // dark-green
+    "leftring": "#070", // dark-green
+    "leftpinky": "#070", // dark-green
+
+    "rightpaw": "#0f0", // green
+    "rightthumb": "#070", // dark-green
+    "rightindex": "#070", // dark-green
+    "rightmiddle": "#070", // dark-green
+    "rightring": "#070", // dark-green
+    "rightpinky": "#070", // dark-green
+};
 function drawLandmark(landmark){
     if(isVisible("dbgbox")){
         // get debug camera canvas
