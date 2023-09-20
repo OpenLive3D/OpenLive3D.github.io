@@ -82,19 +82,34 @@ function updateVRMMovement(keys){
             Cbsp.setValue(key, keys['b'][key]);
         });
         Object.keys(keys['r']).forEach(function(key){
-            let crotate = Ch.getNormalizedBoneNode(key).rotation;
-            let trotate = keys['r'][key];
-            crotate.set(...trotate);
+            let tnode = Ch.getNormalizedBoneNode(key);
+            if(tnode){
+                let crotate = tnode.rotation;
+                let trotate = keys['r'][key];
+                crotate.set(...trotate);
+            }else{
+                console.log("missing key:", key);
+            }
         });
         Object.keys(keys['p']).forEach(function(key){
-            let cposition = Ch.getNormalizedBoneNode(key).position;
-            let tposition = keys['p'][key];
-            cposition.set(...tposition);
+            let tnode = Ch.getNormalizedBoneNode(key);
+            if(tnode){
+                let cposition = Ch.getNormalizedBoneNode(key).position;
+                let tposition = keys['p'][key];
+                cposition.set(...tposition);
+            }else{
+                console.log("missing key:", key);
+            }
         });
         Object.keys(keys['e']).forEach(function(key){
-            let ceuler = Ch.getNormalizedBoneNode(key).rotation;
-            let teuler = keys['e'][key];
-            ceuler.copy(teuler);
+            let tnode = Ch.getNormalizedBoneNode(key);
+            if(tnode){
+                let ceuler = Ch.getNormalizedBoneNode(key).rotation;
+                let teuler = keys['e'][key];
+                ceuler.copy(teuler);
+            }else{
+                console.log("missing key:", key);
+            }
         });
         if(!getCMV('HAND_TRACKING')){
             setDefaultPose(currentVrm);
