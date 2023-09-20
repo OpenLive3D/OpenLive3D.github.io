@@ -35,6 +35,13 @@ div.loadbox {
     z-index: 5;
     background-color: #ffff;
 }
+div.effectkey {
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    background-color: #000a;
+    padding-left: 16px;
+}
 div.confkey {
     color: #fff;
     cursor: pointer;
@@ -79,4 +86,10 @@ span {
     font-size: 16px;
     width: 250px;
     z-index: 5;
+}
+div.vrm {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    z-index: -1;
 }

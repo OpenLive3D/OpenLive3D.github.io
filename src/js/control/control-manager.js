@@ -1,8 +1,4 @@
-// global scene, light, and clock variable
-let scene = new THREE.Scene();
-let light = new THREE.DirectionalLight(0xffffff);
-light.position.set(0.0, 1.0, -1.0).normalize();
-scene.add(light);
+// global clock variable
 let clock = new THREE.Clock();
 clock.start();
 
@@ -17,7 +13,7 @@ function loadVRM(vrmurl){
     loadVRMModel(vrmurl,
         function(vrm){
             if(currentVrm){
-                scene.remove(currentVrm.scene);
+                removeFromScene(currentVrm.scene);
                 THREE_VRM.VRMUtils.deepDispose(currentVrm.scene);
             }
             let hips = vrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Hips);
@@ -26,7 +22,7 @@ function loadVRM(vrmurl){
                 hips.rotation.y = Math.PI;
             }
             currentVrm = vrm;
-            scene.add(vrm.scene);
+            addToScene(vrm.scene);
             let head = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.Head);
             let foot = currentVrm.humanoid.getNormalizedBoneNode(Tvrmshbn.LeftFoot);
             let pos = {
@@ -96,7 +92,7 @@ function updateVRMMovement(keys){
             let teuler = keys['e'][key];
             ceuler.copy(teuler);
         });
-        if(!getCMV('HAND_TRACKING')){
+        if(getCMV('TRACKING_MODE') == "Face-Only"){
             setDefaultPose(currentVrm);
         }
     }
@@ -171,15 +167,15 @@ function exportRotate(){
 }
 
 // Mood
-let defaultMoodList = ['angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral', 'auto'];
+let defaultMoodList = ['auto', 'angry', 'sorrow', 'fun', 'joy', 'surprised', 'relaxed', 'neutral'];
 let moodMap = {
+    "auto": "AUTO_MOOD_DETECTION",
     "angry": Tvrmsbspn.Angry,
     "sorrow": Tvrmsbspn.Sad,
     "fun": Tvrmsbspn.Happy,
     "surprised": "Surprised",
     "relaxed": Tvrmsbspn.Relaxed,
-    "neutral": Tvrmsbspn.Neutral,
-    "auto": "AUTO_MOOD_DETECTION"
+    "neutral": Tvrmsbspn.Neutral
 };
 let mood = 'auto';
 let oldmood = 'auto';
@@ -239,7 +235,20 @@ function updateVideoControl(){
 function updateVRMScene(){
     currentVrm.update(clock.getDelta());
     updateInfo();
-    drawScene(scene);
+    drawScene();
+}
+
+function updateEffect(){
+    let alleffects = getAllEffects();
+    Object.keys(alleffects).forEach(function(key){
+        let effectlist = alleffects[key];
+        for(let effectitem of effectlist){
+            let itemcheck = document.getElementById(effectitem['key'] + "_box");
+            if(itemcheck.checked && effectitem['updateEffect']){
+                effectitem['updateEffect'](clock.getDelta());
+            }
+        }
+    });
 }
 
 function updateLog(){
@@ -258,6 +267,7 @@ async function viLoop(){
 
         updateVideoControl();
         updateVRMScene();
+        updateEffect();
         updateLog();
         
         setTimeout(function(){
@@ -336,6 +346,7 @@ async function checkIntegrate(){
     setCameraCallBack();
     drawLoading();
     setNewMeta();
+    initEffect();
     postImage();
     requestAnimationFrame(viLoop);
     console.log("ml & visual loops initialized");

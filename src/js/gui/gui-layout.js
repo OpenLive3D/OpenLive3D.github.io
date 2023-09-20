@@ -28,6 +28,23 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
+// 3D scene
+let scene = new THREE.Scene();
+function addToScene(obj){
+    scene.add(obj);
+}
+function removeFromScene(obj){
+    scene.remove(obj);
+}
+
+// light
+let light = new THREE.DirectionalLight(0xffffff);
+light.position.set(0.0, 1.0, -1.0).normalize();
+scene.add(light);
+function getDirectionalLight(){
+    return light;
+}
+
 // camera
 let camera = new THREE.PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 0.1, 20.0);
 camera.position.set(0.0, 1.4, -1.4);
@@ -163,13 +180,77 @@ function createLayout(){
         setCMV("DEBUG_LANDMARK", dbglmcheck.checked);
     }
 
-    // config modifier
+    // text alignment
+    let effectboxbutton = document.getElementById("effectboxbutton");
+    effectboxbutton.innerHTML = getL("Visual Effect");
     let confboxbtn = document.getElementById("confboxbutton");
     confboxbtn.innerHTML = getL("Setting");
     let dbgimlabel = document.getElementById("dbgimlabel");
     dbgimlabel.innerHTML = getL("Image");
     let dbglmlabel = document.getElementById("dbglmlabel");
     dbglmlabel.innerHTML = getL("Landmark");
+
+    // effect modifier
+    let effectbox = document.getElementById("effectbox");
+    effectbox.innerHTML = "";
+    let alleffects = getAllEffects();
+    Object.keys(alleffects).forEach(function(key){
+        let effectkey = document.createElement('div');
+        effectkey.className = "effectkey";
+        effectkey.id = "effectkey_" + key;
+        effectkey.innerHTML = "ᐅ " + getL(key);
+        effectkey.onclick = function(){
+            Object.keys(alleffects).forEach(function(otherkey){
+                let tmpkey = document.getElementById("effectkey_" + otherkey);
+                let tmpgroup = document.getElementById("effectgroup_" + otherkey);
+                if(otherkey == key && tmpgroup.className == "w3-margin w3-hide"){
+                    tmpkey.innerHTML = "ᐁ " + getL(otherkey);
+                    tmpgroup.className = "w3-margin";
+                }else{
+                    tmpkey.innerHTML = "ᐅ " + getL(otherkey);
+                    tmpgroup.className = "w3-margin w3-hide";
+                }
+            });
+        }
+        effectbox.appendChild(effectkey);
+        let effectgroup = document.createElement('div');
+        effectgroup.className = "w3-margin w3-hide";
+        effectgroup.id = "effectgroup_" + key;
+        effectbox.appendChild(effectgroup);
+        let effectlist = alleffects[key];
+        for(let effectitem of effectlist){
+            let info = document.createElement('text');
+            info.className = "w3-tooltip";
+            info.style.color = "#fff9";
+            info.innerHTML = " [ℹ] ";
+            effectgroup.appendChild(info);
+            let span = document.createElement('span');
+            span.className = "w3-text w3-tag";
+            span.innerHTML = getL(effectitem['describe']);
+            info.appendChild(span);
+            let itemtext = document.createElement('text');
+            itemtext.className = "w3-tooltip";
+            itemtext.style.color = "#fff";
+            itemtext.innerHTML = " " + effectitem['key'] + " ";
+            effectgroup.appendChild(itemtext);
+            let itemcheck = document.createElement('input');
+            itemcheck.id = effectitem['key'] + "_box";
+            itemcheck.setAttribute("type", "checkbox");
+            itemcheck.checked = false;
+            itemcheck.onclick = function(){
+                if(itemcheck.checked){
+                    effectitem['enableEffect']();
+                }else{
+                    effectitem['disableEffect']();
+                }
+            }
+            effectgroup.appendChild(itemcheck);
+            let itemdiv = document.createElement('div');
+            effectgroup.appendChild(itemdiv);
+        }
+    });
+
+    // config modifier
     let confbox = document.getElementById("confbox");
     confbox.innerHTML = "";
     let confmodifiers = getConfigModifiers();
@@ -222,9 +303,6 @@ function createLayout(){
                 item.checked = getCMV(configitem['key']);
                 item.onclick = function myFunction(){
                     setCMV(configitem['key'], item.checked);
-                    if(configitem['key'] == "HAND_TRACKING"){
-                        showHand(getCMV("HAND_TRACKING"));
-                    }
                 };
             }else if(configitem['key'] == "BG_UPLOAD"){
                 item.setAttribute("type", "file");
@@ -260,21 +338,25 @@ function createLayout(){
                     setCMV("BG_COLOR", item.value);
                     setBackGround();
                 };
-            }else if(configitem['key'] == "LANGUAGE"){
+            }else if(getSelectCM().includes(configitem['key'])){
                 item.style.display = "none";
                 let itemselect = document.createElement("select");
-                for(let languagename of availableLanguage){
-                    let languageitem = document.createElement("option");
-                    languageitem.value = languagename;
-                    languageitem.innerHTML = languagename;
-                    itemselect.appendChild(languageitem);
-                    if(languagename == getCMV("LANGUAGE")){
-                        itemselect.value = languagename;
+                for(let selectitemname of configitem['valid']){
+                    let selectitem = document.createElement("option");
+                    selectitem.value = selectitemname;
+                    selectitem.innerHTML = selectitemname;
+                    itemselect.appendChild(selectitem);
+                    if(selectitemname == getCMV(configitem['key'])){
+                        itemselect.value = selectitemname;
                     }
                 }
                 itemselect.onchange = function myFunction(){
-                    setCMV("LANGUAGE", itemselect.value);
-                    createLayout();
+                    setCMV(configitem['key'], itemselect.value);
+                    if(configitem['key'] == "LANGUAGE"){
+                        createLayout();
+                    }else if(configitem['key'] == "TRACKING_MODE"){
+                        setTrackingModeSelect(itemselect.value);
+                    }
                 };
                 confgroup.appendChild(itemselect);
             }else{
@@ -409,18 +491,6 @@ function createCameraLayout(){
     });
 }
 
-let handobj = document.createElement('img');
-handobj.id = "handobj";
-handobj.style.width = "30px";
-handobj.style.cursor = "pointer";
-handobj.style.marginLeft = "12px";
-function showHand(handon){
-    if(handon){
-        handobj.src = "asset/hand/hand-on.png";
-    }else{
-        handobj.src = "asset/hand/hand-no.png";
-    }
-}
 function createMoodLayout(){
     // reset MoodLayout
     moodbar.innerHTML = "";
@@ -432,32 +502,42 @@ function createMoodLayout(){
     moodbar.appendChild(tmp);
 
     // hand-on hand-no
-    let handbox = document.getElementById("HAND_TRACKING_box");
-    handobj.onclick = function(){
-        if(getCMV("HAND_TRACKING")){
-            handbox.checked = false;
-        }else{
-            handbox.checked = true;
+    for(let i = 0; i < availableTrackingMode.length; i ++){
+        let trackingmode = availableTrackingMode[i];
+        let handdiv = document.createElement('div');
+        handdiv.id = "handdiv_" + trackingmode;
+        handdiv.style.display = "none";
+        let handobj = document.createElement('img');
+        handobj.id = "handobj_" + trackingmode;
+        handobj.src = "asset/hand/" + trackingmode + ".png";
+        handobj.style.width = "30px";
+        handobj.style.cursor = "pointer";
+        handobj.style.marginLeft = "12px";
+        handobj.onclick = function(){
+            if(getCMV("IN_TRACKING_MODE_SELECT")){
+                setCMV("TRACKING_MODE", trackingmode);
+                setCMV("IN_TRACKING_MODE_SELECT", false);
+                setTrackingModeSelect(trackingmode);
+            }else{
+                setCMV("IN_TRACKING_MODE_SELECT", true);
+                displayAllTrackingMode();
+            }
         }
-        setCMV("HAND_TRACKING", handbox.checked);
-        showHand(getCMV("HAND_TRACKING"));
+        handdiv.appendChild(handobj);
+        handdiv.appendChild(document.createElement("br"));
+        handdiv.appendChild(document.createElement("br"));
+        moodbar.appendChild(handdiv);
     }
-    handobj.onmouseover = function(){
-        showHand(!getCMV("HAND_TRACKING"));
-    }
-    handobj.onmouseout = function(){
-        showHand(getCMV("HAND_TRACKING"));
-    }
-    showHand(getCMV("HAND_TRACKING"));
-    moodbar.appendChild(handobj);
-    moodbar.appendChild(document.createElement("br"));
-    moodbar.appendChild(document.createElement("br"));
+    setTrackingModeSelect(getCMV("TRACKING_MODE"));
     
     // mood
     let moods = getAllMoods();
     for(let i = 0; i < moods.length; i ++){
         let mood = moods[i];
         if(checkVRMMood(mood)){
+            let mooddiv = document.createElement('div');
+            mooddiv.id = "mooddiv_" + mood;
+            mooddiv.style.display = "none";
             let moodobj = document.createElement('img');
             moodobj.id = "moodobj_" + mood;
             moodobj.src = "asset/mood/" + mood + ".png";
@@ -465,15 +545,62 @@ function createMoodLayout(){
             moodobj.style.cursor = "pointer";
             moodobj.style.marginLeft = "12px";
             moodobj.onclick = function(){
-                setMoodSelect(mood);
-                setMood(mood);
+                if(getCMV("IN_MOOD_SELECT")){
+                    setCMV("IN_MOOD_SELECT", false);
+                    setMoodSelect(mood);
+                    setMood(mood);
+                }else{
+                    setCMV("IN_MOOD_SELECT", true);
+                    displayAllMood();
+                }
             }
-            moodbar.appendChild(moodobj);
-            moodbar.appendChild(document.createElement("br"));
-            moodbar.appendChild(document.createElement("br"));
+            mooddiv.appendChild(moodobj);
+            mooddiv.appendChild(document.createElement("br"));
+            mooddiv.appendChild(document.createElement("br"));
+            moodbar.appendChild(mooddiv);
         }
     }
     setMoodSelect(getCMV('DEFAULT_MOOD'));
+
+    moodbar.onmouseout = function(e){
+        if(e.target && e.relatedTarget &&
+            !(e.target.id[7] == "_" && e.relatedTarget.id[7] == "_" &&
+            e.target.id.slice(0, 4) == e.relatedTarget.id.slice(0, 4))){
+            setCMV("IN_TRACKING_MODE_SELECT", false);
+            setCMV("IN_MOOD_SELECT", false);
+            setTrackingModeSelect(getCMV("TRACKING_MODE"));
+            setMoodSelect(getCMV("MOOD"));
+        }
+    }
+}
+
+function displayAllTrackingMode(){
+    for(let i = 0; i < availableTrackingMode.length; i ++){
+        let trackingmode = availableTrackingMode[i];
+        let handdiv = document.getElementById("handdiv_" + trackingmode);
+        handdiv.style.display = "block";
+    }
+}
+
+function displayAllMood(){
+    let moods = getAllMoods();
+    for(let i = 0; i < moods.length; i ++){
+        let mood = moods[i];
+        if(checkVRMMood(mood)){
+            let mooddiv = document.getElementById("mooddiv_" + mood);
+            mooddiv.style.display = "block";
+        }
+    }
+}
+
+function setTrackingModeSelect(newtrackingmode){
+    for(let i = 0; i < availableTrackingMode.length; i ++){
+        let trackingmode = availableTrackingMode[i];
+        let handdiv = document.getElementById("handdiv_" + trackingmode);
+        handdiv.style.display = "none";
+    }
+    let handdiv = document.getElementById("handdiv_" + newtrackingmode);
+    handdiv.style.display = "block";
 }
 
 function setMoodSelect(newmood){
@@ -481,12 +608,13 @@ function setMoodSelect(newmood){
     for(let i = 0; i < moods.length; i ++){
         let mood = moods[i];
         if(checkVRMMood(mood)){
-            let moodobj = document.getElementById("moodobj_" + mood);
-            moodobj.style.filter = "";
+            let mooddiv = document.getElementById("mooddiv_" + mood);
+            mooddiv.style.display = "none";
         }
     }
-    let moodobj = document.getElementById("moodobj_" + newmood);
-    moodobj.style.filter = "invert(1)";
+    let mooddiv = document.getElementById("mooddiv_" + newmood);
+    mooddiv.style.display = "block";
+    // moodobj.style.filter = "invert(1)";
 }
 
 function clearDebugCvs(){
@@ -613,7 +741,7 @@ function clearAlert(vistate, mlstate){
     }
 }
 
-function drawScene(scene){
+function drawScene(){
     if(getCMV('CAMERA_FLIP') != getCMV('SCENE_FLIP')){
         setCMV('SCENE_FLIP', getCMV('CAMERA_FLIP'));
         scene.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));

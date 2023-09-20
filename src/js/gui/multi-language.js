@@ -12,6 +12,9 @@ let languageBox = [{
     "hindi": 'वीडियो नियंत्रण',
     "jp": 'ビデオ制御'
 }, {
+    "en": 'Visual Effect',
+    "zh": '視覺特效'
+}, {
     "en": 'Setting',
     "zh": '設定',
     "hindi": 'सेटिंग',
@@ -289,20 +292,3 @@ let languageBox = [{
 }, {
     "en": "Camera Loading..."
 }];
-
-function getL(str){
-    let currentLanguage = getCMV("LANGUAGE");
-    if(currentLanguage == defaultLanguage){
-        return str;
-    }
-    for(let sentence of languageBox){
-        if(sentence[defaultLanguage] == str){
-            if(currentLanguage in sentence){
-                return sentence[currentLanguage];
-            }else{
-                return str;
-            }
-        }
-    }
-    return str;
-}

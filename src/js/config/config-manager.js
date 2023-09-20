@@ -16,7 +16,7 @@ let defaultConfig = {
     'MODEL': 'https://openlive3d.com/asset/vrm/three-vrm-girl.vrm',
     'CUSTOM_MODEL': false,
     'SAVE_SETTING': false,
-    'LANGUAGE': 'en',
+    'LANGUAGE': "en",
     'MULTI_THREAD': true,
     'BG_COLOR': "#00CC00",
     'BG_UPLOAD': "",
@@ -52,7 +52,7 @@ let defaultConfig = {
     'LEFT_EYE_CLOSE_THRESHOLD': 0.20,
     'LEFT_EYE_OPEN_THRESHOLD': 0.25,
     'LEFT_EYE_SQUINT_RATIO': 0.6,
-    'HAND_TRACKING': true,
+    'TRACKING_MODE': "face",
     'HAND_STABLIZE_RATIO': 0.05,
     'FINGER_GRIP_RATIO': 1.0,
     'FINGER_SPREAD_RATIO': 1.5,
@@ -108,7 +108,9 @@ let defaultConfig = {
     'MOOD': "auto",
     'CURRENT_CAMERA_ID': "",
     'RESET_CAMERA': false,
-    'INTEGRATION_SUBMODULE_PATH': "ol3dc"
+    'INTEGRATION_SUBMODULE_PATH': "ol3dc",
+    'IN_MOOD_SELECT': false,
+    'IN_TRACKING_MODE_SELECT': false
 };
 function getDefaultCMV(key){
     return defaultConfig[key];
@@ -130,7 +132,8 @@ function getSystemParameters(){
         'VI_LOOP_COUNTER', 'ML_LOOP_COUNTER',
         'GOOD_TO_GO', 'LOADING_SCENE', 'MOOD',
         'CURRENT_CAMERA_ID', 'RESET_CAMERA',
-        'INTEGRATION_SUBMODULE_PATH'];
+        'INTEGRATION_SUBMODULE_PATH',
+        'IN_MOOD_SELECT', 'IN_TRACKING_MODE_SELECT'];
 }
 function getSavedSystemParameters(){
     return ['VERSION', 'DEV_DATE'];
@@ -288,13 +291,35 @@ function addCMV(key, value){
     return false;
 }
 
+function getL(str){
+    let currentLanguage = getCMV("LANGUAGE");
+    if(currentLanguage == defaultLanguage){
+        return str;
+    }
+    for(let sentence of languageBox){
+        if(sentence[defaultLanguage] == str){
+            if(currentLanguage in sentence){
+                return sentence[currentLanguage];
+            }else{
+                return str;
+            }
+        }
+    }
+    return str;
+}
+
+let availableTrackingMode = ["Face-Only", "Upper-Body"];
+
 function getBinaryCM(){
-    return ['SAVE_SETTING', 'CAMERA_FLIP',
-        'HAND_TRACKING', "EYE_SYNC",
+    return ['SAVE_SETTING', 'CAMERA_FLIP', 'EYE_SYNC',
         'MOOD_ANGRY', 'MOOD_SORROW',
         'MOOD_FUN', 'MOOD_JOY',
         'MOOD_NEUTRAL', 'MOOD_AUTO',
         'MULTI_THREAD'];
+}
+
+function getSelectCM(){
+    return ['LANGUAGE', 'TRACKING_MODE'];
 }
 
 function getSideBoxes(){
@@ -321,7 +346,7 @@ function getConfigModifiers(){
             'key': 'LANGUAGE',
             'title': 'Language',
             'describe': 'Select the language for the user interface.',
-            'valid': ['en', 'zh']
+            'valid': availableLanguage
         }, {
             'key': 'BREATH_FREQUENCY',
             'title': 'Breath Frequency',
@@ -500,10 +525,10 @@ function getConfigModifiers(){
             'range': [0, 1]
         }],
         'HAND': [{
-            'key': 'HAND_TRACKING',
-            'title': 'Hand Tracking',
+            'key': 'TRACKING_MODE',
+            'title': 'Tracking Mode',
             'describe': 'Hand tracking is enabled or not.',
-            'valid': [true, false]
+            'valid': availableTrackingMode
         }, {
             'key': 'HAND_STABLIZE_RATIO',
             'title': 'Hand Stablize Ratio',
