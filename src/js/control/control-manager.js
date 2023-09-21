@@ -369,7 +369,7 @@ function checkVRMModel(){
 function initLoop(){
     if(window.mobileCheck() && !TEST_MOBILE_ENTRY){
         drawMobile();
-    }else if(window.browserCheck() == "Safari"){
+    }else if(window.browserCheck() == "Safari" && !TEST_MOBILE_ENTRY){
         drawSafari();
     }else{
         drawLoading();
