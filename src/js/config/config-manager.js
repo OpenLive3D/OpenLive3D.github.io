@@ -269,12 +269,12 @@ function getCMV(key){
 function setCMV(key, value){
     if(key in configManager){
         configManager[key] = value;
-        if(configManager['SAVE_SETTING']){
-            if(!getSystemParameters().includes(key)){
+        if(!getSystemParameters().includes(key)){
+            if(configManager['SAVE_SETTING']){
                 saveCM();
+            }else{
+                clearCM();
             }
-        }else{
-            clearCM();
         }
         return true;
     }
