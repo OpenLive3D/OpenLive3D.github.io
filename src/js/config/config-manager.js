@@ -108,7 +108,8 @@ let defaultConfig = {
     'MOOD': "auto",
     'CURRENT_CAMERA_ID': "",
     'RESET_CAMERA': false,
-    'INTEGRATION_SUBMODULE_PATH': "ol3dc"
+    'INTEGRATION_SUBMODULE_PATH': "ol3dc",
+    'TEST_MOBILE_ENTRY': false
 };
 function getDefaultCMV(key){
     return defaultConfig[key];
@@ -130,7 +131,7 @@ function getSystemParameters(){
         'VI_LOOP_COUNTER', 'ML_LOOP_COUNTER',
         'GOOD_TO_GO', 'LOADING_SCENE', 'MOOD',
         'CURRENT_CAMERA_ID', 'RESET_CAMERA',
-        'INTEGRATION_SUBMODULE_PATH'];
+        'INTEGRATION_SUBMODULE_PATH', 'TEST_MOBILE_ENTRY'];
 }
 function getSavedSystemParameters(){
     return ['VERSION', 'DEV_DATE'];
