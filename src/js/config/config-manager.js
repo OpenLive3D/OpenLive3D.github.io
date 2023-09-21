@@ -59,6 +59,8 @@ let defaultConfig = {
     'POSITION_X_RATIO': 0.12,
     'POSITION_Y_RATIO': 0.12,
     'POSITION_Z_RATIO': 0.12,
+    'UI_TRACKING_MODE_COLLAPSE': true,
+    'UI_MOOD_COLLAPSE': false,
     // system parameters
     'VERSION': VERSION,
     'DEV_DATE': DEV_DATE,
@@ -110,7 +112,8 @@ let defaultConfig = {
     'RESET_CAMERA': false,
     'INTEGRATION_SUBMODULE_PATH': "ol3dc",
     'IN_MOOD_SELECT': false,
-    'IN_TRACKING_MODE_SELECT': false
+    'IN_TRACKING_MODE_SELECT': false,
+    'TEST_MOBILE_ENTRY': false
 };
 function getDefaultCMV(key){
     return defaultConfig[key];
@@ -132,8 +135,8 @@ function getSystemParameters(){
         'VI_LOOP_COUNTER', 'ML_LOOP_COUNTER',
         'GOOD_TO_GO', 'LOADING_SCENE', 'MOOD',
         'CURRENT_CAMERA_ID', 'RESET_CAMERA',
-        'INTEGRATION_SUBMODULE_PATH',
-        'IN_MOOD_SELECT', 'IN_TRACKING_MODE_SELECT'];
+        'IN_MOOD_SELECT', 'IN_TRACKING_MODE_SELECT',
+        'INTEGRATION_SUBMODULE_PATH', 'TEST_MOBILE_ENTRY'];
 }
 function getSavedSystemParameters(){
     return ['VERSION', 'DEV_DATE'];
@@ -314,8 +317,8 @@ function getBinaryCM(){
     return ['SAVE_SETTING', 'CAMERA_FLIP', 'EYE_SYNC',
         'MOOD_ANGRY', 'MOOD_SORROW',
         'MOOD_FUN', 'MOOD_JOY',
-        'MOOD_NEUTRAL', 'MOOD_AUTO',
-        'MULTI_THREAD'];
+        'MOOD_NEUTRAL', 'MOOD_AUTO', 'MULTI_THREAD',
+        'UI_TRACKING_MODE_COLLAPSE', 'UI_MOOD_COLLAPSE'];
 }
 
 function getSelectCM(){
@@ -560,6 +563,17 @@ function getConfigModifiers(){
             'title': 'Position Z Ratio',
             'describe': 'The larger the number is, the faster the VRM model move forward and backward. Range(-1, 1)',
             'range': [-1, 1]
+        }],
+        'UI': [{
+            'key': 'UI_TRACKING_MODE_COLLAPSE',
+            'title': 'Collapse Tracking Mode UI',
+            'describe': 'Change the UI selection framework format',
+            'valid': [true, false]
+        }, {
+            'key': 'UI_MOOD_COLLAPSE',
+            'title': 'Collapse Mood UI',
+            'describe': 'Change the UI selection framework format',
+            'valid': [true, false]
         }]
     };
 }

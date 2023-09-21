@@ -378,9 +378,9 @@ function checkVRMModel(){
 
 // initialization loop
 function initLoop(){
-    if(window.mobileCheck()){
+    if(window.mobileCheck() && !getCMV("TEST_MOBILE_ENTRY")){
         drawMobile();
-    }else if(window.browserCheck() == "Safari"){
+    }else if(window.browserCheck() == "Safari" && !getCMV("TEST_MOBILE_ENTRY")){
         drawSafari();
     }else{
         drawLoading();

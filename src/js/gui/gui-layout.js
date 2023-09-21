@@ -303,6 +303,9 @@ function createLayout(){
                 item.checked = getCMV(configitem['key']);
                 item.onclick = function myFunction(){
                     setCMV(configitem['key'], item.checked);
+                    if(key == 'UI'){
+                        createMoodLayout();
+                    }
                 };
             }else if(configitem['key'] == "BG_UPLOAD"){
                 item.setAttribute("type", "file");
@@ -506,15 +509,18 @@ function createMoodLayout(){
         let trackingmode = availableTrackingMode[i];
         let handdiv = document.createElement('div');
         handdiv.id = "handdiv_" + trackingmode;
-        handdiv.style.display = "none";
+        if(getCMV("UI_TRACKING_MODE_COLLAPSE")){
+            handdiv.style.display = "none";
+        }
         let handobj = document.createElement('img');
         handobj.id = "handobj_" + trackingmode;
-        handobj.src = "asset/hand/" + trackingmode + ".png";
+        handobj.src = "asset/hand/" + trackingmode + "-2.png";
         handobj.style.width = "30px";
         handobj.style.cursor = "pointer";
         handobj.style.marginLeft = "12px";
         handobj.onclick = function(){
-            if(getCMV("IN_TRACKING_MODE_SELECT")){
+            if(getCMV("IN_TRACKING_MODE_SELECT") ||
+                !getCMV("UI_TRACKING_MODE_COLLAPSE")){
                 setCMV("TRACKING_MODE", trackingmode);
                 setCMV("IN_TRACKING_MODE_SELECT", false);
                 setTrackingModeSelect(trackingmode);
@@ -537,7 +543,9 @@ function createMoodLayout(){
         if(checkVRMMood(mood)){
             let mooddiv = document.createElement('div');
             mooddiv.id = "mooddiv_" + mood;
-            mooddiv.style.display = "none";
+            if(getCMV("UI_MOOD_COLLAPSE")){
+                mooddiv.style.display = "none";
+            }
             let moodobj = document.createElement('img');
             moodobj.id = "moodobj_" + mood;
             moodobj.src = "asset/mood/" + mood + ".png";
@@ -545,7 +553,8 @@ function createMoodLayout(){
             moodobj.style.cursor = "pointer";
             moodobj.style.marginLeft = "12px";
             moodobj.onclick = function(){
-                if(getCMV("IN_MOOD_SELECT")){
+                if(getCMV("IN_MOOD_SELECT") ||
+                    !getCMV("UI_MOOD_COLLAPSE")){
                     setCMV("IN_MOOD_SELECT", false);
                     setMoodSelect(mood);
                     setMood(mood);
@@ -597,10 +606,20 @@ function setTrackingModeSelect(newtrackingmode){
     for(let i = 0; i < availableTrackingMode.length; i ++){
         let trackingmode = availableTrackingMode[i];
         let handdiv = document.getElementById("handdiv_" + trackingmode);
-        handdiv.style.display = "none";
+        let handobj = document.getElementById("handobj_" + trackingmode);
+        handobj.src = "asset/hand/" + trackingmode + "-2.png";
+        if(getCMV("UI_TRACKING_MODE_COLLAPSE")){
+            handdiv.style.display = "none";
+        }else{
+            handdiv.style.display = "block";
+        }
     }
-    let handdiv = document.getElementById("handdiv_" + newtrackingmode);
-    handdiv.style.display = "block";
+    let handobj = document.getElementById("handobj_" + newtrackingmode);
+    handobj.src = "asset/hand/" + newtrackingmode + ".png";
+    if(getCMV("UI_TRACKING_MODE_COLLAPSE")){
+        let handdiv = document.getElementById("handdiv_" + newtrackingmode);
+        handdiv.style.display = "block";
+    }
 }
 
 function setMoodSelect(newmood){
@@ -609,12 +628,19 @@ function setMoodSelect(newmood){
         let mood = moods[i];
         if(checkVRMMood(mood)){
             let mooddiv = document.getElementById("mooddiv_" + mood);
-            mooddiv.style.display = "none";
+            mooddiv.style.filter = "";
+            if(getCMV("UI_MOOD_COLLAPSE")){
+                mooddiv.style.display = "none";
+            }else{
+                mooddiv.style.display = "block";
+            }
         }
     }
     let mooddiv = document.getElementById("mooddiv_" + newmood);
-    mooddiv.style.display = "block";
-    // moodobj.style.filter = "invert(1)";
+    mooddiv.style.filter = "invert(1)";
+    if(getCMV("UI_MOOD_COLLAPSE")){
+        mooddiv.style.display = "block";
+    }
 }
 
 function clearDebugCvs(){
