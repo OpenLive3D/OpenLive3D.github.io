@@ -52,7 +52,7 @@ let defaultConfig = {
     'LEFT_EYE_CLOSE_THRESHOLD': 0.20,
     'LEFT_EYE_OPEN_THRESHOLD': 0.25,
     'LEFT_EYE_SQUINT_RATIO': 0.6,
-    'TRACKING_MODE': "face",
+    'TRACKING_MODE': "Face-Only",
     'HAND_STABLIZE_RATIO': 0.05,
     'FINGER_GRIP_RATIO': 1.0,
     'FINGER_SPREAD_RATIO': 1.5,
