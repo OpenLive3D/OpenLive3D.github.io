@@ -11,8 +11,10 @@
 </head>
 <body>
     <!-- layout -->
-    <div class="vrm" id="div-vrm">
+    <div class="vrm" id="divvrm">
+        <canvas class="foregroundeffect" id="foregroundeffect"></canvas>
         <canvas class="vrm" id="canvas"></canvas>
+        <canvas class="backgroundeffect" id="backgroundeffect"></canvas>
     </div>
     <div class="bgimg" id="bgimg"></div>
     <div class="w3-sidebar w3-animate-left" style="width:270px;background-color:#0006;display:none" id="thesidebar">
@@ -73,6 +75,9 @@
     <script src="ol3dc/face_mesh/single.js"></script>
     <script src="ol3dm/js/entry/entry-manager.js"></script>
     <script src="ol3dm/js/gui/multi-language.js"></script>
+    <script src="ol3dm/js/effect/blur.js"></script>
+    <script src="ol3dm/js/effect/lightcolor.js"></script>
+    <script src="ol3dm/js/effect/rain.js"></script>
     <script src="ol3dm/js/effect/effect-manager.js"></script>
     <script src="ol3dm/js/config/config-manager.js"></script>
     <script src="ol3dc/js/camera/media-manager.js"></script>
