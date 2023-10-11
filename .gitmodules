@@ -1,6 +1,3 @@
 [submodule "OpenLive3D.core"]
 	path = ol3dc
 	url = https://github.com/OpenLive3D/OpenLive3D.core.git
-[submodule "OpenLive3D.module"]
-	path = ol3dm
-	url = https://github.com/OpenLive3D/OpenLive3D.module.git
