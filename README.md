@@ -38,6 +38,7 @@ The project aims to connect the half-body movement with facial landmarks to the 
 w-2.1.X:
  - Core Separation
  - Thread Control
+ - Safari Support
 
 
 ## Sponsors
