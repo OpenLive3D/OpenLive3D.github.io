@@ -17,7 +17,7 @@
         <canvas class="backgroundeffect" id="backgroundeffect"></canvas>
     </div>
     <div class="bgimg" id="bgimg"></div>
-    <div class="w3-sidebar w3-animate-left" style="width:270px;background-color:#0006;display:none" id="thesidebar">
+    <div class="w3-sidebar w3-animate-left" style="width:400px;background-color:#0006;display:none" id="thesidebar">
         <div class="w3-bar-item" style="height:60px;color:#0000"> . </div>
         <br/>
         <button onclick="hideObj('vrmbox')" id="vrmboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
@@ -38,10 +38,15 @@
         <div class="w3-bar-item w3-hide" id="effectbox"></div>
         <button onclick="hideObj('confbox')" id="confboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
         <div class="w3-bar-item w3-hide" id="confbox"></div>
+        <!--music box-->
+        <button onclick="hideObj('musicbox')" id="musicboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
+        <div class="w3-bar-item w3-hide" id="musicbox"></div>
+        <!---->
         <button onclick="hideObj('logbox')" id="logboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
         <div class="w3-bar-item w3-hide" id="logbox"></div>
         <div class="w3-bar-item w3-margin" id="about"></div>
     </div>
+
     <div class="w3-sidebar w3-animate-left" style="width:52px;background-color:#00000008;display:block" id="themoodbar">
     </div>
     <div class="systembox" id="systembox">
@@ -95,11 +100,13 @@
     <script src="ol3dc/js/effect/effect-manager.js"></script>
     <script src="ol3dc/js/config/config-manager.js"></script>
     <script src="ol3dc/js/gui/multi-language.js"></script>
-    <script src="ol3dc/js/gui/gui-layout.js"></script>
     <script src="ol3dc/js/vrm/vrm-manager.js"></script>
     <script src="ol3dc/js/control/health-manager.js"></script>
     <script src="ol3dc/js/control/control-manager.js"></script>
     <script src="ol3dc/js/control/hotkey.js"></script>
+    <script src="ol3dc/js/gui/gui-layout.js"></script>
+    <script src="ol3dc/js/clientStorage/index.js"></script>
+
     <script>
 
 // start camera, load resources, link things
