@@ -17,7 +17,7 @@
         <canvas class="backgroundeffect" id="backgroundeffect"></canvas>
     </div>
     <div class="bgimg" id="bgimg"></div>
-    <div class="w3-sidebar w3-animate-left" style="width:400px;background-color:#0006;display:none" id="thesidebar">
+    <div class="w3-sidebar w3-animate-left" style="width:340px;background-color:#0006;display:none" id="thesidebar">
         <div class="w3-bar-item" style="height:60px;color:#0000"> . </div>
         <br/>
         <button onclick="hideObj('vrmbox')" id="vrmboxbutton" class="w3-button w3-block w3-left-align w3-text-white"></button>
@@ -82,6 +82,7 @@
     <script src="ol3dc/face_mesh/face_mesh.js"></script>
     <script src="ol3dc/face_mesh/single.js"></script>
     <script src="ol3dc/js/camera/media-manager.js"></script>
+    <script src="ol3dc/js/clientStorage/index.js"></script>
     <script src="ol3dc/js/converter/facekey.js"></script>
     <script src="ol3dc/js/converter/posekey.js"></script>
     <script src="ol3dc/js/converter/handkey.js"></script>
@@ -93,7 +94,6 @@
     <script src="ol3dc/js/interpolator/interpolator.js"></script>
     <script src="ol3dc/js/entry/entry-manager.js"></script>
     <script src="ol3dc/js/effect/blur.js"></script>
-    <script src="ol3dc/js/effect/backgroundblur.js"></script>
     <script src="ol3dc/js/effect/frontlight.js"></script>
     <script src="ol3dc/js/effect/toplight.js"></script>
     <script src="ol3dc/js/effect/backlight.js"></script>
@@ -106,8 +106,6 @@
     <script src="ol3dc/js/control/control-manager.js"></script>
     <script src="ol3dc/js/control/hotkey.js"></script>
     <script src="ol3dc/js/gui/gui-layout.js"></script>
-    <script src="ol3dc/js/clientStorage/index.js"></script>
-
     <script>
 
 // start camera, load resources, link things
