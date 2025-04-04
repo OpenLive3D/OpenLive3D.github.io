@@ -49,6 +49,8 @@
 
     <div class="w3-sidebar w3-animate-left" style="width:52px;background-color:#00000008;display:block" id="themoodbar">
     </div>
+    <div class="w3-sidebar w3-animate-right" style="width:52px;background-color:#00000008;right:0;display:block" id="theposebar">
+    </div>
     <div class="systembox" id="systembox">
         <img id="systemimg" src="asset/logo-dark.png" style="height:50px;cursor:pointer"/>
         <text class="systemtext" id="systemtext"> OpenLive3D </text>
@@ -71,12 +73,10 @@
         <video id="webcam" autoplay playsinline></video>
     </div>
     <!-- three-vrm dependencies -->
-    <script src="https://unpkg.com/three@0.146.0/build/three.js"></script>
-    <script src="https://unpkg.com/three@0.146.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://unpkg.com/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://unpkg.com/@pixiv/three-vrm@1.0.10/lib/three-vrm.min.js"></script>
-    <script src="https://pixijs.io/particle-emitter/examples/libs/pixi.js/dist/browser/pixi.js"></script>
-    <script src="https://pixijs.io/particle-emitter/dist/particle-emitter.js"></script>
+    <script src="lib/three.min.js"></script>
+    <script src="lib/GLTFLoader.js"></script>
+    <script src="lib/OrbitControls.js"></script>
+    <script src="lib/three-vrm.min.js"></script>
     <!-- local dependencies -->
     <script src="src/js/interface/interface.js"></script>
     <script src="ol3dc/face_mesh/face_mesh.js"></script>
