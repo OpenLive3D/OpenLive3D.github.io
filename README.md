@@ -35,15 +35,5 @@ The project aims to connect the half-body movement with facial landmarks to the 
 
 ## Project Status
 
-w-2.1.X:
- - Core Separation
- - Thread Control
- - Safari Support
-
-
-## Sponsors
-
-Great Thanks to our Sponsors:
-
- - [Gabrielle666x](https://github.com/Gabrielle666x)
-
+w-2.4.X:
+ - iFacialMoCap by Ghostkwebb (only available via Electron App version)
