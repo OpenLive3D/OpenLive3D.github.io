@@ -113,6 +113,12 @@
 // start camera, load resources, link things
 initialize();
 
+// mobile testing entry: ?test_mobile=1 forces mobile-safe settings
+if (new URLSearchParams(window.location.search).get('test_mobile') === '1') {
+    setCMV("TEST_MOBILE_ENTRY", true);
+    setCMV("MULTI_THREAD", false);
+}
+
 // kick off the initialization loop!
 requestAnimationFrame(initLoop);
 
