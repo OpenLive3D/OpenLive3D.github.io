@@ -19,6 +19,14 @@
     <link rel="preload" href="ol3dc/vision/wasm/vision_wasm_internal.wasm" as="fetch" crossorigin>
     <link rel="preload" href="ol3dc/vision/wasm/vision_wasm_internal.js" as="script" crossorigin>
     <link rel="preload" href="ol3dc/vision/face_landmarker.task" as="fetch" crossorigin>
+    <!-- the VRM avatar is otherwise only requested from loadVRM(), called at
+         the very end of the ~30 blocking <script> tags below - meaning
+         without this hint its download doesn't even start until well after
+         the ML preloads above have already finished, making the two loads
+         sequential rather than actually overlapping. Preloading only the
+         default model here; a custom/cookie-saved MODEL still loads the
+         normal (non-preloaded) way. -->
+    <link rel="preload" href="asset/vrm/three-vrm-girl.vrm" as="fetch" crossorigin>
 </head>
 <body>
     <!-- layout -->
