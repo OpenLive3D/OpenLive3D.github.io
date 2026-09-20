@@ -65,3 +65,6 @@
    - Dev-Log October: https://youtu.be/CTLpmGhzrY8
  - 2022-11-17: Beta-1.2.X
    - Ultra-fast mode: https://youtu.be/9aYzVFt-mxw
+ - 2026-09-20: v.2.7.0
+   - Migrate face/holistic tracking from the legacy MediaPipe Solutions API to the actively-maintained Tasks Vision API (FaceLandmarker / HolisticLandmarker)
+   - Fully self-host all MediaPipe assets (wasm runtime, .task models) under ol3dc/vision/, removing the CDN dependency the legacy face_mesh/holistic workers had
