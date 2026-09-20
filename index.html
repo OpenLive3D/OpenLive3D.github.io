@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="ol3dc/css/openlive3d.css">
     <link rel="stylesheet" href="ol3dc/css/ghostkwebb.css" id="theme-ghostkwebb" disabled>
+    <!-- start fetching the MediaPipe wasm runtime + default (Face-Only) model
+         as early as possible, in parallel with the rest of page load, rather
+         than waiting until deep into script execution when the Worker/
+         FaceLandmarker is actually constructed. Deliberately does not
+         preload holistic_landmarker.task - that one is lazy-loaded only if
+         the user switches to Upper-Body/Heart tracking, and preloading it
+         unconditionally would cost every visitor ~11MB they likely never use. -->
+    <link rel="preload" href="ol3dc/vision/wasm/vision_wasm_internal.wasm" as="fetch" crossorigin>
+    <link rel="preload" href="ol3dc/vision/wasm/vision_wasm_internal.js" as="script" crossorigin>
+    <link rel="preload" href="ol3dc/vision/face_landmarker.task" as="fetch" crossorigin>
 </head>
 <body>
     <!-- layout -->
